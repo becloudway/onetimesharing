@@ -1,5 +1,5 @@
 const {PostSecretsService} = require("./services/PostSecretsService");
-const {buildResponseBody} = require("./helper_functions/buildResponseBody");
+const {buildResponseBody} = require("./helper_functions/buildresponsebody");
 
 /**
  *
