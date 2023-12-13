@@ -1,0 +1,32 @@
+{
+  "version": "35.0.0",
+  "files": {
+    "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c": {
+      "source": {
+        "path": "asset.dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "bbc3d4342862deef39c2421ac0ee00c633659ccdc15c5221be1c96d327a20b60": {
+      "source": {
+        "path": "BolleJeDevStorageStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "bbc3d4342862deef39c2421ac0ee00c633659ccdc15c5221be1c96d327a20b60.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

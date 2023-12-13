@@ -1,0 +1,1949 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "BolleJeDevApiStack": {
+        "id": "BolleJeDevApiStack",
+        "path": "BolleJeDevApiStack",
+        "children": {
+          "Secrets": {
+            "id": "Secrets",
+            "path": "BolleJeDevApiStack/Secrets",
+            "children": {
+              "GetSecretHandler": {
+                "id": "GetSecretHandler",
+                "path": "BolleJeDevApiStack/Secrets/GetSecretHandler",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevApiStack/Secrets/GetSecretHandler/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c.zip"
+                        },
+                        "handler": "getsecrets.handler",
+                        "role": {
+                          "Fn::GetAtt": [
+                            "SecretsGetSecretHandlerServiceRoleBC12B24C",
+                            "Arn"
+                          ]
+                        },
+                        "runtime": "nodejs18.x"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.114.1"
+                }
+              },
+              "PostSecretHandler": {
+                "id": "PostSecretHandler",
+                "path": "BolleJeDevApiStack/Secrets/PostSecretHandler",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevApiStack/Secrets/PostSecretHandler/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c.zip"
+                        },
+                        "handler": "postsecrets.handler",
+                        "role": {
+                          "Fn::GetAtt": [
+                            "SecretsPostSecretHandlerServiceRole42283CF5",
+                            "Arn"
+                          ]
+                        },
+                        "runtime": "nodejs18.x"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.114.1"
+                }
+              },
+              "secrets-api": {
+                "id": "secrets-api",
+                "path": "BolleJeDevApiStack/Secrets/secrets-api",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "This service serves the secrets for the Temporary Secrets API.",
+                        "name": "Temporary Secrets API"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Deployment": {
+                    "id": "Deployment",
+                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Deployment",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevApiStack/Secrets/secrets-api/Deployment/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                          "aws:cdk:cloudformation:props": {
+                            "description": "This service serves the secrets for the Temporary Secrets API.",
+                            "restApiId": {
+                              "Ref": "SecretssecretsapiF341C4B8"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "DeploymentStage.prod": {
+                    "id": "DeploymentStage.prod",
+                    "path": "BolleJeDevApiStack/Secrets/secrets-api/DeploymentStage.prod",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevApiStack/Secrets/secrets-api/DeploymentStage.prod/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                          "aws:cdk:cloudformation:props": {
+                            "deploymentId": {
+                              "Ref": "SecretssecretsapiDeployment4865B1834e0c7a7ad93a4a3bf99362706508b470"
+                            },
+                            "restApiId": {
+                              "Ref": "SecretssecretsapiF341C4B8"
+                            },
+                            "stageName": "prod"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Endpoint": {
+                    "id": "Endpoint",
+                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Endpoint",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnOutput",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Default": {
+                    "id": "Default",
+                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Default",
+                    "children": {
+                      "getsecret": {
+                        "id": "getsecret",
+                        "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Fn::GetAtt": [
+                                    "SecretssecretsapiF341C4B8",
+                                    "RootResourceId"
+                                  ]
+                                },
+                                "pathPart": "getsecret",
+                                "restApiId": {
+                                  "Ref": "SecretssecretsapiF341C4B8"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "GET": {
+                            "id": "GET",
+                            "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/GET",
+                            "children": {
+                              "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret": {
+                                "id": "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/GET/ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsGetSecretHandler09E08D66",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/",
+                                          {
+                                            "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                          },
+                                          "/GET/getsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret": {
+                                "id": "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/GET/ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsGetSecretHandler09E08D66",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/test-invoke-stage/GET/getsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/GET/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "GET",
+                                    "integration": {
+                                      "type": "AWS_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":apigateway:",
+                                            {
+                                              "Ref": "AWS::Region"
+                                            },
+                                            ":lambda:path/2015-03-31/functions/",
+                                            {
+                                              "Fn::GetAtt": [
+                                                "SecretsGetSecretHandler09E08D66",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/invocations"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "POST",
+                                      "requestTemplates": {
+                                        "application/json": "{ \"statusCode\": \"200\" }"
+                                      }
+                                    },
+                                    "resourceId": {
+                                      "Ref": "Secretssecretsapigetsecret50443731"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "{uuid}": {
+                            "id": "{uuid}",
+                            "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                                  "aws:cdk:cloudformation:props": {
+                                    "parentId": {
+                                      "Ref": "Secretssecretsapigetsecret50443731"
+                                    },
+                                    "pathPart": "{uuid}",
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "GET": {
+                                "id": "GET",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET",
+                                "children": {
+                                  "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}": {
+                                    "id": "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}",
+                                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "SecretsGetSecretHandler09E08D66",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:",
+                                              {
+                                                "Ref": "AWS::Region"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "AWS::AccountId"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "SecretssecretsapiF341C4B8"
+                                              },
+                                              "/",
+                                              {
+                                                "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                              },
+                                              "/GET/getsecret/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.114.1"
+                                    }
+                                  },
+                                  "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}": {
+                                    "id": "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}",
+                                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.GET..getsecret.{uuid}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "SecretsGetSecretHandler09E08D66",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:",
+                                              {
+                                                "Ref": "AWS::Region"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "AWS::AccountId"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "SecretssecretsapiF341C4B8"
+                                              },
+                                              "/test-invoke-stage/GET/getsecret/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.114.1"
+                                    }
+                                  },
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "authorizationType": "NONE",
+                                        "httpMethod": "GET",
+                                        "integration": {
+                                          "type": "AWS_PROXY",
+                                          "uri": {
+                                            "Fn::Join": [
+                                              "",
+                                              [
+                                                "arn:",
+                                                {
+                                                  "Ref": "AWS::Partition"
+                                                },
+                                                ":apigateway:",
+                                                {
+                                                  "Ref": "AWS::Region"
+                                                },
+                                                ":lambda:path/2015-03-31/functions/",
+                                                {
+                                                  "Fn::GetAtt": [
+                                                    "SecretsGetSecretHandler09E08D66",
+                                                    "Arn"
+                                                  ]
+                                                },
+                                                "/invocations"
+                                              ]
+                                            ]
+                                          },
+                                          "integrationHttpMethod": "POST",
+                                          "requestTemplates": {
+                                            "application/json": "{ \"statusCode\": \"200\" }"
+                                          }
+                                        },
+                                        "resourceId": {
+                                          "Ref": "SecretssecretsapigetsecretuuidDEB8B9DE"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "SecretssecretsapiF341C4B8"
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.114.1"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                              "version": "2.114.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "addsecret": {
+                        "id": "addsecret",
+                        "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Fn::GetAtt": [
+                                    "SecretssecretsapiF341C4B8",
+                                    "RootResourceId"
+                                  ]
+                                },
+                                "pathPart": "addsecret",
+                                "restApiId": {
+                                  "Ref": "SecretssecretsapiF341C4B8"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "POST": {
+                            "id": "POST",
+                            "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret/POST",
+                            "children": {
+                              "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret": {
+                                "id": "ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret/POST/ApiPermission.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsPostSecretHandler6FCD5B79",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/",
+                                          {
+                                            "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                          },
+                                          "/POST/addsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret": {
+                                "id": "ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret/POST/ApiPermission.Test.BolleJeDevApiStackSecretssecretsapi5FC222C8.POST..addsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsPostSecretHandler6FCD5B79",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/test-invoke-stage/POST/addsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevApiStack/Secrets/secrets-api/Default/addsecret/POST/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "POST",
+                                    "integration": {
+                                      "type": "AWS_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":apigateway:",
+                                            {
+                                              "Ref": "AWS::Region"
+                                            },
+                                            ":lambda:path/2015-03-31/functions/",
+                                            {
+                                              "Fn::GetAtt": [
+                                                "SecretsPostSecretHandler6FCD5B79",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/invocations"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "POST",
+                                      "requestTemplates": {
+                                        "application/json": "{ \"body\" : $input.json(\"$\") }"
+                                      },
+                                      "passthroughBehavior": "WHEN_NO_TEMPLATES"
+                                    },
+                                    "resourceId": {
+                                      "Ref": "Secretssecretsapiaddsecret998B7989"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.114.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+                  "version": "2.114.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "BolleJeDevApiStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "BolleJeDevApiStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.114.1"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "BolleJeDevApiStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.114.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "BolleJeDevApiStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.114.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "BolleJeDevApiStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.114.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.114.1"
+        }
+      },
+      "BolleJeDevStorageStack": {
+        "id": "BolleJeDevStorageStack",
+        "path": "BolleJeDevStorageStack",
+        "children": {
+          "Secrets": {
+            "id": "Secrets",
+            "path": "BolleJeDevStorageStack/Secrets",
+            "children": {
+              "GetSecretHandler": {
+                "id": "GetSecretHandler",
+                "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevStorageStack/Secrets/GetSecretHandler/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c.zip"
+                        },
+                        "handler": "getsecrets.handler",
+                        "role": {
+                          "Fn::GetAtt": [
+                            "SecretsGetSecretHandlerServiceRoleBC12B24C",
+                            "Arn"
+                          ]
+                        },
+                        "runtime": "nodejs18.x"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.114.1"
+                }
+              },
+              "PostSecretHandler": {
+                "id": "PostSecretHandler",
+                "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "managedPolicyArns": [
+                              {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    "arn:",
+                                    {
+                                      "Ref": "AWS::Partition"
+                                    },
+                                    ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                                  ]
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Code": {
+                    "id": "Code",
+                    "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevStorageStack/Secrets/PostSecretHandler/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                      "aws:cdk:cloudformation:props": {
+                        "code": {
+                          "s3Bucket": {
+                            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                          },
+                          "s3Key": "dcd4059078febb51e77832f74035ed6aebee50daa2b88b638dc7f2240c96be4c.zip"
+                        },
+                        "handler": "postsecrets.handler",
+                        "role": {
+                          "Fn::GetAtt": [
+                            "SecretsPostSecretHandlerServiceRole42283CF5",
+                            "Arn"
+                          ]
+                        },
+                        "runtime": "nodejs18.x"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Function",
+                  "version": "2.114.1"
+                }
+              },
+              "secrets-api": {
+                "id": "secrets-api",
+                "path": "BolleJeDevStorageStack/Secrets/secrets-api",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "This service serves the secrets for the Temporary Secrets API.",
+                        "name": "Temporary Secrets API"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Deployment": {
+                    "id": "Deployment",
+                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Deployment",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevStorageStack/Secrets/secrets-api/Deployment/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                          "aws:cdk:cloudformation:props": {
+                            "description": "This service serves the secrets for the Temporary Secrets API.",
+                            "restApiId": {
+                              "Ref": "SecretssecretsapiF341C4B8"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "DeploymentStage.prod": {
+                    "id": "DeploymentStage.prod",
+                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/DeploymentStage.prod",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BolleJeDevStorageStack/Secrets/secrets-api/DeploymentStage.prod/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                          "aws:cdk:cloudformation:props": {
+                            "deploymentId": {
+                              "Ref": "SecretssecretsapiDeployment4865B18358786c0766e73a2f075e9e18917e5e80"
+                            },
+                            "restApiId": {
+                              "Ref": "SecretssecretsapiF341C4B8"
+                            },
+                            "stageName": "prod"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Endpoint": {
+                    "id": "Endpoint",
+                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Endpoint",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnOutput",
+                      "version": "2.114.1"
+                    }
+                  },
+                  "Default": {
+                    "id": "Default",
+                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default",
+                    "children": {
+                      "getsecret": {
+                        "id": "getsecret",
+                        "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Fn::GetAtt": [
+                                    "SecretssecretsapiF341C4B8",
+                                    "RootResourceId"
+                                  ]
+                                },
+                                "pathPart": "getsecret",
+                                "restApiId": {
+                                  "Ref": "SecretssecretsapiF341C4B8"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "GET": {
+                            "id": "GET",
+                            "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/GET",
+                            "children": {
+                              "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret": {
+                                "id": "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/GET/ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsGetSecretHandler09E08D66",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/",
+                                          {
+                                            "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                          },
+                                          "/GET/getsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret": {
+                                "id": "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/GET/ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsGetSecretHandler09E08D66",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/test-invoke-stage/GET/getsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/GET/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "GET",
+                                    "integration": {
+                                      "type": "AWS_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":apigateway:",
+                                            {
+                                              "Ref": "AWS::Region"
+                                            },
+                                            ":lambda:path/2015-03-31/functions/",
+                                            {
+                                              "Fn::GetAtt": [
+                                                "SecretsGetSecretHandler09E08D66",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/invocations"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "POST",
+                                      "requestTemplates": {
+                                        "application/json": "{ \"statusCode\": \"200\" }"
+                                      }
+                                    },
+                                    "resourceId": {
+                                      "Ref": "Secretssecretsapigetsecret50443731"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "{uuid}": {
+                            "id": "{uuid}",
+                            "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                                  "aws:cdk:cloudformation:props": {
+                                    "parentId": {
+                                      "Ref": "Secretssecretsapigetsecret50443731"
+                                    },
+                                    "pathPart": "{uuid}",
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "GET": {
+                                "id": "GET",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET",
+                                "children": {
+                                  "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}": {
+                                    "id": "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}",
+                                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "SecretsGetSecretHandler09E08D66",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:",
+                                              {
+                                                "Ref": "AWS::Region"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "AWS::AccountId"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "SecretssecretsapiF341C4B8"
+                                              },
+                                              "/",
+                                              {
+                                                "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                              },
+                                              "/GET/getsecret/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.114.1"
+                                    }
+                                  },
+                                  "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}": {
+                                    "id": "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}",
+                                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.GET..getsecret.{uuid}",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                      "aws:cdk:cloudformation:props": {
+                                        "action": "lambda:InvokeFunction",
+                                        "functionName": {
+                                          "Fn::GetAtt": [
+                                            "SecretsGetSecretHandler09E08D66",
+                                            "Arn"
+                                          ]
+                                        },
+                                        "principal": "apigateway.amazonaws.com",
+                                        "sourceArn": {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              "arn:",
+                                              {
+                                                "Ref": "AWS::Partition"
+                                              },
+                                              ":execute-api:",
+                                              {
+                                                "Ref": "AWS::Region"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "AWS::AccountId"
+                                              },
+                                              ":",
+                                              {
+                                                "Ref": "SecretssecretsapiF341C4B8"
+                                              },
+                                              "/test-invoke-stage/GET/getsecret/*"
+                                            ]
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                      "version": "2.114.1"
+                                    }
+                                  },
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/getsecret/{uuid}/GET/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "authorizationType": "NONE",
+                                        "httpMethod": "GET",
+                                        "integration": {
+                                          "type": "AWS_PROXY",
+                                          "uri": {
+                                            "Fn::Join": [
+                                              "",
+                                              [
+                                                "arn:",
+                                                {
+                                                  "Ref": "AWS::Partition"
+                                                },
+                                                ":apigateway:",
+                                                {
+                                                  "Ref": "AWS::Region"
+                                                },
+                                                ":lambda:path/2015-03-31/functions/",
+                                                {
+                                                  "Fn::GetAtt": [
+                                                    "SecretsGetSecretHandler09E08D66",
+                                                    "Arn"
+                                                  ]
+                                                },
+                                                "/invocations"
+                                              ]
+                                            ]
+                                          },
+                                          "integrationHttpMethod": "POST",
+                                          "requestTemplates": {
+                                            "application/json": "{ \"statusCode\": \"200\" }"
+                                          }
+                                        },
+                                        "resourceId": {
+                                          "Ref": "SecretssecretsapigetsecretuuidDEB8B9DE"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "SecretssecretsapiF341C4B8"
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.114.1"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                              "version": "2.114.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.114.1"
+                        }
+                      },
+                      "addsecret": {
+                        "id": "addsecret",
+                        "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Fn::GetAtt": [
+                                    "SecretssecretsapiF341C4B8",
+                                    "RootResourceId"
+                                  ]
+                                },
+                                "pathPart": "addsecret",
+                                "restApiId": {
+                                  "Ref": "SecretssecretsapiF341C4B8"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.114.1"
+                            }
+                          },
+                          "POST": {
+                            "id": "POST",
+                            "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret/POST",
+                            "children": {
+                              "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret": {
+                                "id": "ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret/POST/ApiPermission.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsPostSecretHandler6FCD5B79",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/",
+                                          {
+                                            "Ref": "SecretssecretsapiDeploymentStageprodCFEF1D7E"
+                                          },
+                                          "/POST/addsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret": {
+                                "id": "ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret/POST/ApiPermission.Test.BolleJeDevStorageStackSecretssecretsapi745B59F9.POST..addsecret",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                                  "aws:cdk:cloudformation:props": {
+                                    "action": "lambda:InvokeFunction",
+                                    "functionName": {
+                                      "Fn::GetAtt": [
+                                        "SecretsPostSecretHandler6FCD5B79",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "principal": "apigateway.amazonaws.com",
+                                    "sourceArn": {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":execute-api:",
+                                          {
+                                            "Ref": "AWS::Region"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "AWS::AccountId"
+                                          },
+                                          ":",
+                                          {
+                                            "Ref": "SecretssecretsapiF341C4B8"
+                                          },
+                                          "/test-invoke-stage/POST/addsecret"
+                                        ]
+                                      ]
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                                  "version": "2.114.1"
+                                }
+                              },
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "BolleJeDevStorageStack/Secrets/secrets-api/Default/addsecret/POST/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "POST",
+                                    "integration": {
+                                      "type": "AWS_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "arn:",
+                                            {
+                                              "Ref": "AWS::Partition"
+                                            },
+                                            ":apigateway:",
+                                            {
+                                              "Ref": "AWS::Region"
+                                            },
+                                            ":lambda:path/2015-03-31/functions/",
+                                            {
+                                              "Fn::GetAtt": [
+                                                "SecretsPostSecretHandler6FCD5B79",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/invocations"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "POST",
+                                      "requestTemplates": {
+                                        "application/json": "{ \"body\" : $input.json(\"$\") }"
+                                      },
+                                      "passthroughBehavior": "WHEN_NO_TEMPLATES"
+                                    },
+                                    "resourceId": {
+                                      "Ref": "Secretssecretsapiaddsecret998B7989"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "SecretssecretsapiF341C4B8"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.114.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.114.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.114.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                      "version": "2.114.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+                  "version": "2.114.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "BolleJeDevStorageStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "BolleJeDevStorageStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.114.1"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "BolleJeDevStorageStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.114.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "BolleJeDevStorageStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.114.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "BolleJeDevStorageStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.114.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.114.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.114.1"
+    }
+  }
+}
