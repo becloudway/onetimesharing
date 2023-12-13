@@ -1,4 +1,4 @@
-const {buildResponseBody} = require("../helper_functions/buildresponsebody");
+const {buildResponseBody} = require("../helper_functions/buildResponseBody");
 
 module.exports.GetSecretsService = class {
     /**
