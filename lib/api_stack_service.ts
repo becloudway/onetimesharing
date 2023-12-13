@@ -7,19 +7,21 @@ export class ApiStackService extends Construct {
         super(scope, id);
 
         const getSecretHandler = new lambda.Function(this, "GetSecretHandler", {
+            functionName: "bolleje-dev-getsecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
             code: lambda.Code.fromAsset("resources"),
             handler: "getsecrets.handler"
         });
 
         const postSecretHandler = new lambda.Function(this, "PostSecretHandler", {
+            functionName: "bolleje-dev-postsecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
             code: lambda.Code.fromAsset("resources"),
             handler: "postsecrets.handler"
         });
 
         const api = new apigateway.RestApi(this, "secrets-api", {
-            restApiName: "Temporary Secrets API",
+            restApiName: "bolleje-dev-api-gateway",
             description: "This service serves the secrets for the Temporary Secrets API.",
         });
 
