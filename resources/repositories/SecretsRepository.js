@@ -17,9 +17,9 @@ module.exports.SecretsRepository = class {
         const generatedUuid = uuidv4();
 
         const item = {
-            uuid: generatedUuid,
+            hashkey: generatedUuid,
             encryption_type: data.type || "SHE",
-            data: data
+            cyphertext: data
         }
 
         await this.dynamo.send(new PutCommand({
