@@ -34,11 +34,8 @@ export class ApiStackService extends Construct {
             passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
         });
 
-        const getSecrets = api.root.addResource("getsecret");
-        getSecrets.addMethod("GET", getSecretsIntegration); // GET /
-
-        const secret = getSecrets.addResource("{uuid}");
-        secret.addMethod("GET", getSecretsIntegration);
+        const getSecrets = api.root.addResource("getsecret").addResource("{uuid}"); // GET /
+        getSecrets.addMethod("GET", getSecretsIntegration);
 
         const addSecrets = api.root.addResource("addsecret");
         addSecrets.addMethod("POST", postSecretsIntegration); // POST /
