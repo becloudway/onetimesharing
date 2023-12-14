@@ -5,7 +5,11 @@ import { BolleJeDevApiStack } from '../lib/bolleje-dev-api-stack';
 import { BolleJeDevStorageStack } from '../lib/bolleje-dev-storage-stack';
 
 const app = new cdk.App();
+
+const DevStorageStack = new BolleJeDevStorageStack(app, 'BolleJeDevStorageStack', {});
+
 new BolleJeDevApiStack(app, 'BolleJeDevApiStack', {
+  DynamoDBStorage: DevStorageStack.DynamoDBStorage
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -20,4 +24,3 @@ new BolleJeDevApiStack(app, 'BolleJeDevApiStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
-new BolleJeDevStorageStack(app, 'BolleJeDevStorageStack', {});
