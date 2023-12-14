@@ -5,14 +5,28 @@ const { DynamoDBDocumentClient,
     GetCommand,
     DeleteCommand } = require("@aws-sdk/lib-dynamodb");
 
+const { v4: uuidv4 } = require("uuid");
+
 module.exports.SecretsRepository = class {
     static client = new DynamoDBClient({});
     static dynamo = DynamoDBDocumentClient.from(this.client);
-    
-    static async PostItem(tableName, data){
+
+    static #tableName = "bolleje-dev-dynamodb"
+
+    static async PostItem(data) {
+        const generatedUuid = uuidv4();
+
+        const item = {
+            uuid: generatedUuid,
+            encryption_type: data.type || "SHE",
+            data: data
+        }
+
         await this.dynamo.send(new PutCommand({
-            TableName: tableName,
-            Item: data
+            TableName: this.#tableName,
+            Item: item
         }));
+
+        return generatedUuid;
     }
 };
