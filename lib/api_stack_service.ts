@@ -21,9 +21,6 @@ export class ApiStackService extends Construct {
             handler: "postsecrets.handler"
         });
 
-        DynamoDBStorage.grantReadWriteData(getSecretHandler);
-        DynamoDBStorage.grantReadWriteData(postSecretHandler);
-
         const api = new apigateway.RestApi(this, "secrets-api", {
             restApiName: "bolleje-dev-api-gateway",
             description: "This service serves the secrets for the Temporary Secrets API.",
@@ -43,5 +40,8 @@ export class ApiStackService extends Construct {
 
         const addSecrets = api.root.addResource("addsecret");
         addSecrets.addMethod("POST", postSecretsIntegration); // POST /
+
+        DynamoDBStorage.grantReadWriteData(getSecretHandler);
+        DynamoDBStorage.grantReadWriteData(postSecretHandler);
     }
 }
