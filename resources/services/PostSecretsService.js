@@ -14,7 +14,7 @@ module.exports.PostSecretsService = class {
 
           SHE encrypted secrets => Cyphertext needs to have a max of 20032 bytes,
           anything longer than this amount of bytes should be refused.
-          PKI (RSA-248) => Cyphertext needs to have a max of 256 bytes. Anything longer
+          PKI (RSA-2048) => Cyphertext needs to have a max of 256 bytes. Anything longer
           should be refused.
           PKI (RSA-4096) => Cyphertext needs to have a max of 512 bytes. Anything longer
           should be refused.

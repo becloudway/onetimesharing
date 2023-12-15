@@ -10,7 +10,6 @@ export class StorageStackService extends Construct {
 
         const table = new dynamodb.TableV2(this, 'Secret DynamoDB', {
             partitionKey: { name: 'uuid', type: dynamodb.AttributeType.STRING },
-            sortKey: {name: 'encryption_type', type: dynamodb.AttributeType.STRING},
             removalPolicy: RemovalPolicy.DESTROY,
             tableName: "bolleje-dev-dynamodb"
         });
