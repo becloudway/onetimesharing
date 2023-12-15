@@ -11,8 +11,6 @@ module.exports.GetSecretsService = class {
             const uuid = lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid;
             const response = await SecretsRepository.GetSecret(uuid);
 
-            console.log(response.Item);
-
             if (response.Item === undefined) {
                 return buildResponseBody(404, `No data was found for the uuid: ${uuid}`);
             } else {
