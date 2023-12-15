@@ -1,3 +1,4 @@
+const {generateTTL} = require("../helper_functions/timeToLive");
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 const { DynamoDBDocumentClient,
     ScanCommand,
@@ -15,11 +16,15 @@ module.exports.SecretsRepository = class {
 
     static async PostItem(data) {
         const generatedUuid = uuidv4();
+        const time_to_live = generateTTL();
 
         const item = {
-            hashkey: generatedUuid,
+            uuid: generatedUuid,
             encryption_type: data.type || "SHE",
-            cyphertext: data
+            cyphertext: data.cyphertext || "",
+            retrievedCount: 1,
+            second_half_key: data.type === "SHE" ? data.second_half_key : "",
+            ttl: time_to_live
         }
 
         await this.dynamo.send(new PutCommand({
