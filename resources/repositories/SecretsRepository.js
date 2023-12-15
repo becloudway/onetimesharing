@@ -34,4 +34,15 @@ module.exports.SecretsRepository = class {
 
         return generatedUuid;
     }
+
+    static async GetSecret(uuid) {
+        const response = await this.dynamo.send(new GetCommand({
+            TableName: this.#tableName,
+            Key: {
+                uuid: uuid,
+            }
+        }));
+
+        return response;
+    }
 };
