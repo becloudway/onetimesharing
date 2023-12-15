@@ -7,41 +7,86 @@ export class ApiStackService extends Construct {
     constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2) {
         super(scope, id);
 
-        const getSecretHandler = new lambda.Function(this, "GetSecretHandler", {
-            functionName: "bolleje-dev-getsecretlambda",
-            runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "getsecrets.handler"
-        });
-
-        const postSecretHandler = new lambda.Function(this, "PostSecretHandler", {
-            functionName: "bolleje-dev-postsecretlambda",
-            runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "postsecrets.handler"
-        });
+        /*
+            API Gateway
+        */
 
         const api = new apigateway.RestApi(this, "secrets-api", {
             restApiName: "bolleje-dev-api-gateway",
             description: "This service serves the secrets for the Temporary Secrets API.",
         });
 
-        const getSecretsIntegration = new apigateway.LambdaIntegration(getSecretHandler, {
+        /*
+            Lambda functions
+        */
+
+        const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
+            functionName: "bolleje-dev-getshesecretlambda",
+            runtime: lambda.Runtime.NODEJS_18_X,
+            code: lambda.Code.fromAsset("resources"),
+            handler: "getSHEsecrets.handler"
+        });
+
+        const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
+            functionName: "bolleje-dev-postshesecretlambda",
+            runtime: lambda.Runtime.NODEJS_18_X,
+            code: lambda.Code.fromAsset("resources"),
+            handler: "postSHEsecrets.handler"
+        });
+
+        const getPKISecretHandler = new lambda.Function(this, "GetPKISecretHandler", {
+            functionName: "bolleje-dev-getpkisecretlambda",
+            runtime: lambda.Runtime.NODEJS_18_X,
+            code: lambda.Code.fromAsset("resources"),
+            handler: "getPKIsecrets.handler"
+        });
+
+        const postPKISecretHandler = new lambda.Function(this, "PostPKISecretHandler", {
+            functionName: "bolleje-dev-postpkisecretlambda",
+            runtime: lambda.Runtime.NODEJS_18_X,
+            code: lambda.Code.fromAsset("resources"),
+            handler: "postPKIsecrets.handler"
+        });
+
+        /*
+            API Gateway Lambda Integrations
+        */
+
+        const getSHESecretsIntegration = new apigateway.LambdaIntegration(getSHESecretHandler, {
             requestTemplates: { "application/json": '{ "statusCode": "200" }' },
         });
 
-        const postSecretsIntegration = new apigateway.LambdaIntegration(postSecretHandler, {
+        const postSHESecretsIntegration = new apigateway.LambdaIntegration(postSHESecretHandler, {
             requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
             passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
         });
 
-        const getSecrets = api.root.addResource("getsecret").addResource("{uuid}"); // GET /
-        getSecrets.addMethod("GET", getSecretsIntegration);
+        const getPKISecretsIntegration = new apigateway.LambdaIntegration(getPKISecretHandler, {
+            requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+        })
 
-        const addSecrets = api.root.addResource("addsecret");
-        addSecrets.addMethod("POST", postSecretsIntegration); // POST /
+        const postPKISecretsIntegration = new apigateway.LambdaIntegration(postPKISecretHandler, {
+            requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
+            passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES, 
+        });
 
-        DynamoDBStorage.grantReadWriteData(getSecretHandler);
-        DynamoDBStorage.grantReadWriteData(postSecretHandler);
+        /*
+            Defining of the routes from the Gateway to the Lambda functions
+        */
+
+        api.root.addResource("getSHE").addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
+        api.root.addResource("addSHE").addMethod("POST", postSHESecretsIntegration); // POST /
+
+        api.root.addResource("getPKI").addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
+        api.root.addResource("addPKI").addMethod("POST", postPKISecretsIntegration); // POST /
+
+        /*
+            Give the Lambda functions permissions to access the database.
+        */
+
+        DynamoDBStorage.grantReadWriteData(getSHESecretHandler);
+        DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
+        DynamoDBStorage.grantReadWriteData(getPKISecretHandler);
+        DynamoDBStorage.grantReadWriteData(postPKISecretHandler);
     }
 }
