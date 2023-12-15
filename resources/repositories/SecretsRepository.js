@@ -43,6 +43,13 @@ module.exports.SecretsRepository = class {
             }
         }));
 
+        await this.dynamo.send(new DeleteCommand({
+            TableName: this.#tableName,
+            Key: {
+                uuid: uuid,
+            }
+        }));
+
         return response;
     }
 };
