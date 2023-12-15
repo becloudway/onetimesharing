@@ -7,7 +7,7 @@ const {buildResponseBody} = require("./helper_functions/buildresponsebody");
  */
 module.exports.handler = async (event) => {
   try {
-    return await GetSecretsService.routeRequest(event);
+    return await GetSecretsService.routeRequest(event, "/getSHE");
   } catch (err) {
     return buildResponseBody(500, err.message || "Unknown server error");
   }

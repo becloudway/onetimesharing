@@ -6,8 +6,8 @@ module.exports.PostSecretsService = class {
   *
   * @param {LambdaEvent} lambdaEvent
   */
-  static async routeRequest(lambdaEvent, body) {
-    if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path === "/addsecret") {
+  static async routeRequest(lambdaEvent, body, route) {
+    if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path === route) {
 
       /*
           Still need to add the verification of the data.

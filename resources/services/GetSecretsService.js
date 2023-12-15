@@ -6,8 +6,8 @@ module.exports.GetSecretsService = class {
     *
     * @param {LambdaEvent} lambdaEvent
     */
-    static async routeRequest(lambdaEvent) {
-        if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes('/getsecret')) {
+    static async routeRequest(lambdaEvent, route) {
+        if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
             const uuid = lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid;
             const response = await SecretsRepository.GetSecret(uuid);
 
