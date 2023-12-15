@@ -17,6 +17,6 @@ module.exports.GetSecretsService = class {
     }
 
     static #handleGetRequest(response) {
-            return buildResponseBody(200, JSON.stringify(response));
+            return buildResponseBody(200, JSON.stringify(response.Item));
     }
 };
