@@ -1,9 +1,10 @@
 import { Construct } from "constructs";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 export class ApiStackService extends Construct {
-    constructor(scope: Construct, id: string) {
+    constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2) {
         super(scope, id);
 
         const getSecretHandler = new lambda.Function(this, "GetSecretHandler", {
@@ -39,5 +40,8 @@ export class ApiStackService extends Construct {
 
         const addSecrets = api.root.addResource("addsecret");
         addSecrets.addMethod("POST", postSecretsIntegration); // POST /
+
+        DynamoDBStorage.grantReadWriteData(getSecretHandler);
+        DynamoDBStorage.grantReadWriteData(postSecretHandler);
     }
 }
