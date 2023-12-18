@@ -28,6 +28,12 @@ jobs:
     - name: Install deps
       working-directory: ./resources
       run: npm i
+    - name: Install Client-DynamoDB
+      working-directory: ./resources
+      run: npm i @aws-sdk/client-dynamodb
+    - name: Install Lib-DynamoDB
+      working-directory: ./resources
+      run: npm i @aws-sdk/lib/dynamodb
     - name: Run tests
       working-directory: ./resources
       run: npm run test
