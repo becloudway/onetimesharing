@@ -25,6 +25,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd resources
-    - run: npm i
-    - run: npm test
+    - name: Install deps
+      working-directory: ./resources
+      run: npm i
+    - name: Run tests
+      working-directory: ./resources
+      run: npm run test
