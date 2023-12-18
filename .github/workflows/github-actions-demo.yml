@@ -37,3 +37,6 @@ jobs:
     - name: Run tests
       working-directory: ./resources
       run: npm run test
+    - name: Build Lambda functions
+      working-directory: ./resources
+      run: npm run build
