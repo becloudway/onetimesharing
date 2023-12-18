@@ -1,14 +1,12 @@
-const { buildResponseBody } = require("../helper_functions/buildresponsebody");
-const { SecretsRepository } = require("../repositories/SecretsRepository");
+import buildResponseBody from "../helper_functions/buildresponsebody";
+import SecretsRepository from "../repositories/SecretsRepository";
 
-module.exports.PostSecretsService = class {
-  /**
-  *
-  * @param {LambdaEvent} lambdaEvent
-  */
-  static async routeRequest(lambdaEvent, body, route) {
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { SecretsStructure } from "../types/types";
+
+const PostSecretsService = class {
+  static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: SecretsStructure, route: string) {
     if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path === route) {
-
       /*
           Still need to add the verification of the data.
 
@@ -29,20 +27,18 @@ module.exports.PostSecretsService = class {
           }
       */
 
-      const uuid = await SecretsRepository.PostItem({});
+      const uuid = await SecretsRepository.PostItem(data as SecretsStructure);
       return this.#handlePostRequest({
         id: uuid
       });
     }
 
-    const error = new Error(
-      `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`,
-    );
-    error.name = "UnimplementedHTTPMethodError";
-    throw error;
+    return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
   }
 
-  static #handlePostRequest(body) {
+  static #handlePostRequest(body: { id: string }) {
     return buildResponseBody(200, JSON.stringify(body));
   }
 };
+
+export default PostSecretsService;

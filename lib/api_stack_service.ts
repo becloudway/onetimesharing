@@ -2,6 +2,7 @@ import { Construct } from "constructs";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import { eMethods } from "../types/enums";
 
 export class ApiStackService extends Construct {
     constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2) {
@@ -21,31 +22,31 @@ export class ApiStackService extends Construct {
         */
 
         const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
-            functionName: "bolleje-dev-getshesecretlambda",
+            functionName: "bolleje-dev-getSHEsecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "getSHEsecrets.handler"
+            code: lambda.Code.fromAsset("resources/dist/getSHEsecret.zip"),
+            handler: "getSHEsecret.handler"
         });
 
         const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
-            functionName: "bolleje-dev-postshesecretlambda",
+            functionName: "bolleje-dev-postSHEsecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "postSHEsecrets.handler"
+            code: lambda.Code.fromAsset("resources/dist/postSHEsecret.zip"),
+            handler: "postSHEsecret.handler"
         });
 
-        const getPKISecretHandler = new lambda.Function(this, "GetPKISecretHandler", {
-            functionName: "bolleje-dev-getpkisecretlambda",
+        const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
+            functionName: "bolleje-dev-getE2Esecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "getPKIsecrets.handler"
+            code: lambda.Code.fromAsset("resources/dist/getE2Esecret.zip"),
+            handler: "getE2Esecret.handler"
         });
 
-        const postPKISecretHandler = new lambda.Function(this, "PostPKISecretHandler", {
-            functionName: "bolleje-dev-postpkisecretlambda",
+        const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
+            functionName: "bolleje-dev-postE2Esecretlambda",
             runtime: lambda.Runtime.NODEJS_18_X,
-            code: lambda.Code.fromAsset("resources"),
-            handler: "postPKIsecrets.handler"
+            code: lambda.Code.fromAsset("resources/dist/postE2Esecret.zip"),
+            handler: "postE2Esecret.handler"
         });
 
         /*
@@ -61,11 +62,11 @@ export class ApiStackService extends Construct {
             passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
         });
 
-        const getPKISecretsIntegration = new apigateway.LambdaIntegration(getPKISecretHandler, {
+        const getPKISecretsIntegration = new apigateway.LambdaIntegration(getE2ESecretHandler, {
             requestTemplates: { "application/json": '{ "statusCode": "200" }' },
         })
 
-        const postPKISecretsIntegration = new apigateway.LambdaIntegration(postPKISecretHandler, {
+        const postPKISecretsIntegration = new apigateway.LambdaIntegration(postE2ESecretHandler, {
             requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
             passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES, 
         });
@@ -74,11 +75,11 @@ export class ApiStackService extends Construct {
             Defining of the routes from the Gateway to the Lambda functions
         */
 
-        api.root.addResource("getSHE").addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
-        api.root.addResource("addSHE").addMethod("POST", postSHESecretsIntegration); // POST /
+        api.root.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
+        api.root.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
 
-        api.root.addResource("getPKI").addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
-        api.root.addResource("addPKI").addMethod("POST", postPKISecretsIntegration); // POST /
+        api.root.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
+        api.root.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
         /*
             Give the Lambda functions permissions to access the database.
@@ -86,7 +87,7 @@ export class ApiStackService extends Construct {
 
         DynamoDBStorage.grantReadWriteData(getSHESecretHandler);
         DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
-        DynamoDBStorage.grantReadWriteData(getPKISecretHandler);
-        DynamoDBStorage.grantReadWriteData(postPKISecretHandler);
+        DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
+        DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
     }
 }

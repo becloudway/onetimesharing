@@ -1,4 +1,4 @@
-module.exports.generateTTL = () => {
+const generateTTL = () => {
     // Get the current date
     const currentDate = new Date();
 
@@ -10,5 +10,6 @@ module.exports.generateTTL = () => {
     const unixTimestamp = Math.floor(nextWeek.getTime() / 1000);
 
     return unixTimestamp
-
 }
+
+export default generateTTL;
