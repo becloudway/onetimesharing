@@ -15,6 +15,9 @@ export class ApiStackService extends Construct {
         const api = new apigateway.RestApi(this, "secrets-api", {
             restApiName: "bolleje-dev-api-gateway",
             description: "This service serves the secrets for the Temporary Secrets API.",
+            deployOptions: {
+                loggingLevel: apigateway.MethodLoggingLevel.OFF,
+            }
         });
 
         /*
