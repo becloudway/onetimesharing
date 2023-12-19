@@ -25,7 +25,7 @@ describe('PostSecretsService', () => {
         Item: { 
             encryption_type: "SHE",
             cyphertext: "1234",
-            second_half_key: "2134"
+            second_half_key: "12345678901234567890123456789012"
           },
     };
 
