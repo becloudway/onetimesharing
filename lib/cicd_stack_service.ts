@@ -13,7 +13,7 @@ export class CiCdStackService extends Construct {
 		});
 
 		new s3deploy.BucketDeployment(this, "DeployFiles", {
-			sources: [s3deploy.Source.asset(`resources/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`)],
+			sources: [s3deploy.Source.asset(`resources/dist.zip`)],
 			destinationBucket: bucket,
 		});
 	}
