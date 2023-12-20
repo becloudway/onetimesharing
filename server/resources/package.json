@@ -1,40 +1,40 @@
 {
-  "name": "resources",
-  "version": "1.0.0",
-  "description": "",
-  "main": "getsecrets.js",
-  "scripts": {
-    "test": "jest",
-    "build-getSHE": "npm run prebuild && npm run build-getSHEsecret && npm run upload-getSHEsecret",
-    "build-postSHE": "npm run prebuild && npm run build-postSHEsecret && npm run upload-postSHEsecret",
-    "build-getE2E": "npm run prebuild && npm run build-getE2Esecret && npm run upload-getE2Esecret",
-    "build-postE2E": "npm run prebuild && npm run build-postE2Esecret && npm run upload-postE2Esecret",
-    "build": "npm run prebuild && npm run combined-build && npm run combined-upload",
-    "prebuild": "rm -rf dist",
-    "combined-build": "npm run build-getSHEsecret && npm run build-postSHEsecret && npm run build-getE2Esecret && npm run build-postE2Esecret",
-    "build-getSHEsecret": "esbuild getSHEsecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/getSHEsecret.js && cd dist && zip -r getSHEsecret.zip getSHEsecret.js* && rm -rf *.js*",
-    "build-postSHEsecret": "esbuild postSHEsecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/postSHEsecret.js && cd dist && zip -r postSHEsecret.zip postSHEsecret.js* && rm -rf *.js*",
-    "build-getE2Esecret": "esbuild getE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/getE2Esecret.js && cd dist && zip -r getE2Esecret.zip getE2Esecret.js* && rm -rf *.js*",
-    "build-postE2Esecret": "esbuild postE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/postE2Esecret.js && cd dist && zip -r postE2Esecret.zip postE2Esecret.js* && rm -rf *.js*",
-    "combined-upload": "npm run upload-getSHEsecret && npm run upload-postSHEsecret && npm run upload-getE2Esecret && npm run upload-postE2Esecret",
-    "upload-getSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-getSHEsecretlambda --zip-file fileb://dist/getSHEsecret.zip",
-    "upload-postSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-postSHEsecretlambda --zip-file fileb://dist/postSHEsecret.zip",
-    "upload-getE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-getE2Esecretlambda --zip-file fileb://dist/getE2Esecret.zip",
-    "upload-postE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-postE2Esecretlambda --zip-file fileb://dist/postE2Esecret.zip"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@types/aws-lambda": "^8.10.130",
-    "esbuild": "^0.19.9",
-    "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "@types/uuid": "^9.0.7",
-    "aws-sdk-client-mock": "^3.0.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.1",
-    "typescript": "^5.3.3"
-  }
+	"name": "resources",
+	"version": "1.0.0",
+	"description": "",
+	"main": "getsecrets.js",
+	"scripts": {
+		"test": "jest",
+		"build-getSHE": "npm run prebuild && npm run build-getSHEsecret && npm run upload-getSHEsecret",
+		"build-postSHE": "npm run prebuild && npm run build-postSHEsecret && npm run upload-postSHEsecret",
+		"build-getE2E": "npm run prebuild && npm run build-getE2Esecret && npm run upload-getE2Esecret",
+		"build-postE2E": "npm run prebuild && npm run build-postE2Esecret && npm run upload-postE2Esecret",
+		"build": "npm run prebuild && npm run combined-build && npm run combined-upload",
+		"prebuild": "rm -rf dist",
+		"combined-build": "npm run build-getSHEsecret && npm run build-postSHEsecret && npm run build-getE2Esecret && npm run build-postE2Esecret",
+		"build-getSHEsecret": "esbuild getSHEsecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/getSHEsecret.js && cd dist && zip -r $COMMIT_SHE-getSHEsecret.zip getSHEsecret.js* && rm -rf *.js*",
+		"build-postSHEsecret": "esbuild postSHEsecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/postSHEsecret.js && cd dist && zip -r $COMMIT_SHE-postSHEsecret.zip postSHEsecret.js* && rm -rf *.js*",
+		"build-getE2Esecret": "esbuild getE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/getE2Esecret.js && cd dist && zip -r $COMMIT_SHE-getE2Esecret.zip getE2Esecret.js* && rm -rf *.js*",
+		"build-postE2Esecret": "esbuild postE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/postE2Esecret.js && cd dist && zip -r $COMMIT_SHE-postE2Esecret.zip postE2Esecret.js* && rm -rf *.js*",
+		"combined-upload": "npm run upload-getSHEsecret && npm run upload-postSHEsecret && npm run upload-getE2Esecret && npm run upload-postE2Esecret",
+		"upload-getSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-getSHEsecretlambda --zip-file fileb://dist/$COMMIT_SHE-getSHEsecret.zip",
+		"upload-postSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-postSHEsecretlambda --zip-file fileb://dist/$COMMIT_SHE-postSHEsecret.zip",
+		"upload-getE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-getE2Esecretlambda --zip-file fileb://dist/$COMMIT_SHE-getE2Esecret.zip",
+		"upload-postE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-postE2Esecretlambda --zip-file fileb://dist/$COMMIT_SHE-postE2Esecret.zip"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@types/aws-lambda": "^8.10.130",
+		"esbuild": "^0.19.9",
+		"uuid": "^9.0.1"
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.11",
+		"@types/uuid": "^9.0.7",
+		"aws-sdk-client-mock": "^3.0.0",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.1.1",
+		"typescript": "^5.3.3"
+	}
 }
