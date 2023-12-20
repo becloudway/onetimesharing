@@ -13,9 +13,8 @@ export class CiCdStackService extends Construct {
 		});
 
 		new s3deploy.BucketDeployment(this, "DeployWebsite", {
-			sources: [s3deploy.Source.asset("resources/dist")],
+			sources: [s3deploy.Source.asset("../resources/dist")],
 			destinationBucket: bucket,
-			destinationKeyPrefix: "web/static", // optional prefix in destination bucket
 		});
 	}
 }
