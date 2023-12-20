@@ -1,16 +1,13 @@
 import { Construct } from "constructs";
+import * as s3 from "aws-cdk-lib/aws-s3";
 import { RemovalPolicy } from "aws-cdk-lib";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 
 export class CiCdStackService extends Construct {
 	constructor(scope: Construct, id: string) {
 		super(scope, id);
 
-		const table = new dynamodb.TableV2(this, "Secret DynamoDB", {
-			partitionKey: { name: "uuid", type: dynamodb.AttributeType.STRING },
-			timeToLiveAttribute: "ttl",
+		const bucket = new s3.Bucket(this, "bolleje-dev-s3-codestorage", {
 			removalPolicy: RemovalPolicy.DESTROY,
-			tableName: "bolleje-dev-dynamodb",
 		});
 	}
 }
