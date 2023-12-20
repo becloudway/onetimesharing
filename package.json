@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "deploy": "cd resources && npm run build && cd .. && cdk destroy --all -f && cdk deploy --all --require-approval='never'"
+    "deploy": "cd resources && npm run build && cd .. && cdk synth && cdk deploy --all --require-approval='never'"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.473.0",

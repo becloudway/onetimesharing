@@ -17,10 +17,10 @@
     "build-getE2Esecret": "esbuild getE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/getE2Esecret.js && cd dist && zip -r getE2Esecret.zip getE2Esecret.js* && rm -rf *.js*",
     "build-postE2Esecret": "esbuild postE2Esecrets.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/postE2Esecret.js && cd dist && zip -r postE2Esecret.zip postE2Esecret.js* && rm -rf *.js*",
     "combined-upload": "npm run upload-getSHEsecret && npm run upload-postSHEsecret && npm run upload-getE2Esecret && npm run upload-postE2Esecret",
-    "upload-getSHEsecret": "aws s3 --region eu-west-1 cp dist/getSHEsecret.zip s3://bolleje-dev-s3/getSHEsecret.zip",
-    "upload-postSHEsecret": "aws s3 --region eu-west-1 cp dist/postSHEsecret.zip s3://bolleje-dev-s3/postSHEsecret.zip",
-    "upload-getE2Esecret": "aws s3 --region eu-west-1 cp dist/getE2Esecret.zip s3://bolleje-dev-s3/getE2Esecret.zip",
-    "upload-postE2Esecret": "aws s3 --region eu-west-1 cp dist/postE2Esecret.zip s3://bolleje-dev-s3/postE2Esecret.zip"
+    "upload-getSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-getSHEsecretlambda --zip-file fileb://dist/getSHEsecret.zip",
+    "upload-postSHEsecret": "aws lambda update-function-code --function-name bolleje-dev-postSHEsecretlambda --zip-file fileb://dist/postSHEsecret.zip",
+    "upload-getE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-getE2Esecretlambda --zip-file fileb://dist/getE2Esecret.zip",
+    "upload-postE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-postE2Esecretlambda --zip-file fileb://dist/postE2Esecret.zip"
   },
   "author": "",
   "license": "ISC",
