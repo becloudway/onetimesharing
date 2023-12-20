@@ -52,5 +52,4 @@ jobs:
         working-directory: ./resources
         run: npm run build
       - name: Deploy the CDK
-        working-directory: ./resources
         run: npm run deploy --require-approval="never"
