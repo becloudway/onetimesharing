@@ -1,14 +1,40 @@
-const openpgp = require('openpgp');
+const openpgp = require("openpgp");
 
-(async () => {
-    const { privateKey, publicKey } = await openpgp.generateKey({
-        type: 'ecc', // Type of the key, defaults to ECC
-        curve: 'curve25519', // ECC curve name, defaults to curve25519
-        userIDs: [{ name: 'Jon Smith', email: 'jon@example.com' }], // you can pass multiple user IDs
-        passphrase: 'super long and hard to guess secret', // protects the private key
-        format: 'armored' // output key format, defaults to 'armored' (other options: 'binary' or 'object')
-    });
+module.exports.OpenPGP = class {
+	static async generateKeyPair(passphrase) {
+		const { privateKey, publicKey } = await openpgp.generateKey({
+			type: "ecc", // Type of the key, defaults to ECC
+			curve: "curve25519", // ECC curve name, defaults to curve25519
+			userIDs: [{ name: "Jensen", email: "test@test.com" }], // you can pass multiple user IDs
+			passphrase: passphrase, // protects the private key
+			format: "armored", // output key format, defaults to 'armored' (other options: 'binary' or 'object')
+		});
 
-    console.log(privateKey);     // '-----BEGIN PGP PRIVATE KEY BLOCK ... '
-    console.log(publicKey);      // '-----BEGIN PGP PUBLIC KEY BLOCK ... '
-})();
+		return { privateKey, publicKey };
+	}
+
+	static async encryptSecret(secret, publicKey) {
+		const key = await openpgp.readKey({ armoredKey: publicKey });
+
+		const encrypted = await openpgp.encrypt({
+			message: await openpgp.createMessage({ text: secret }), // input as Message object
+			encryptionKeys: key,
+		});
+
+		return encrypted;
+	}
+
+	static async decryptSecret(encrypted, privateKey, passphrase) {
+		const key = await openpgp.decryptKey({
+			privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
+			passphrase: passphrase,
+		});
+
+		const decrypted = await openpgp.decrypt({
+			message: await openpgp.readMessage({ armoredMessage: encrypted }), // parse armored message
+			decryptionKeys: key,
+		});
+
+		return decrypted.data;
+	}
+};
