@@ -34,6 +34,11 @@ const PostSecretsService = class {
 
 			if (verification !== true) return verification;
 
+			data.Item = {
+				...data.Item,
+				encryption_type: route === "/addSHE" ? "SHE" : "E2E",
+			};
+
 			const uuid = await SecretsRepository.PostItem(data as SecretsStructure);
 			return this.#handlePostRequest({
 				id: uuid,
