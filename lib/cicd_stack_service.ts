@@ -12,8 +12,8 @@ export class CiCdStackService extends Construct {
 			removalPolicy: RemovalPolicy.DESTROY,
 		});
 
-		new s3deploy.BucketDeployment(this, "DeployWebsite", {
-			sources: [s3deploy.Source.asset("../resources/dist")],
+		new s3deploy.BucketDeployment(this, "DeployFiles", {
+			sources: [s3deploy.Source.asset(`../resources/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`)],
 			destinationBucket: bucket,
 		});
 	}
