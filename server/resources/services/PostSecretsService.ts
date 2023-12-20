@@ -74,7 +74,7 @@ const PostSecretsService = class {
 		}
 
 		if (data.Item.cyphertext.length > 20032) {
-			return buildResponseBody(400, "The cyphertext field must be set to a string of 20032 characters or less.");
+			return buildResponseBody(400, "The cyphertext field must be set to a size of 20032 characters or less.");
 		}
 
 		return true;
@@ -92,9 +92,8 @@ const PostSecretsService = class {
 			return buildResponseBody(400, "The cyphertext field cannot be empty.");
 		}
 
-		//Diferentiate between RSA-2048 and RSA-4096
-		if (data.Item.cyphertext.length > 512) {
-			return buildResponseBody(400, "The cyphertext field must be set to a string of 512 characters or less.");
+		if (data.Item.cyphertext.length > 20032) {
+			return buildResponseBody(400, "The cyphertext field must be set to a size of 20032 characters or less.");
 		}
 
 		return true;
