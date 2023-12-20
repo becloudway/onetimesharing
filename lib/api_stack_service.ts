@@ -30,28 +30,28 @@ export class ApiStackService extends Construct {
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: "bolleje-dev-getSHEsecretlambda",
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, "getSHEsecret.zip"),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getSHEsecret.zip`),
 			handler: "getSHEsecret.handler",
 		});
 
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
 			functionName: "bolleje-dev-postSHEsecretlambda",
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, "postSHEsecret.zip"),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postSHEsecret.zip`),
 			handler: "postSHEsecret.handler",
 		});
 
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
 			functionName: "bolleje-dev-getE2Esecretlambda",
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, "getE2Esecret.zip"),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getE2Esecret.zip`),
 			handler: "getE2Esecret.handler",
 		});
 
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
 			functionName: "bolleje-dev-postE2Esecretlambda",
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, "postE2Esecret.zip"),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postE2Esecret.zip`),
 			handler: "postE2Esecret.handler",
 		});
 
