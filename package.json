@@ -9,6 +9,7 @@
 		"watch": "tsc -w",
 		"test": "jest",
 		"cdk": "cdk",
+		"integration-test": "npx playwright test --workers=1",
 		"deploy": "cd resources && npm run build && cd dist && zip -r ../dist.zip * && cd ../.. && cdk synth && cdk deploy --all --require-approval='never'"
 	},
 	"devDependencies": {
