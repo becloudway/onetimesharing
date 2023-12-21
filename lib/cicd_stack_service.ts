@@ -10,6 +10,7 @@ export class CiCdStackService extends Construct {
 		const bucket = new s3.Bucket(this, "bolleje-dev-s3-codestorage", {
 			bucketName: "bolleje-dev-s3-codestorage",
 			removalPolicy: RemovalPolicy.DESTROY,
+			autoDeleteObjects: true,
 		});
 
 		new s3deploy.BucketDeployment(this, "DeployFiles", {
