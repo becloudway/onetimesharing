@@ -13,14 +13,14 @@ function E2Eencryption() {
 	const postSecret = (encryptedSecret: string) => {
 		axios
 			.post(
-				"https://rf1yauwvyj.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
+				"https://dh4iwzvx7l.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
 				{
 					cyphertext: encryptedSecret,
 				},
 				{
 					headers: {
 						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*", // Allow requests from any origin (you might want to restrict this in a production environment)
+						"Access-Control-Allow-Origin": "*",
 					},
 				}
 			)
