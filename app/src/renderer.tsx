@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import GlobalStyle from "./GlobalStyle";
 import KeyGenerator from "./KeyGenerator";
-import SecretEncryption from "./SecretEncryption";
+import E2Eencryption from "./E2E-encryption";
 
 const rootElement = document.getElementById("root");
 
@@ -24,7 +24,7 @@ if (rootElement) {
 			element: (
 				<>
 					<GlobalStyle />
-					<SecretEncryption />
+					<E2Eencryption />
 				</>
 			),
 		},

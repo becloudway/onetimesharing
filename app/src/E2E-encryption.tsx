@@ -1,17 +1,42 @@
 import React, { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
 import OpenPGP from "./openpgp";
 
-function SecretEncryption() {
+function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
 
+	const postSecret = (encryptedSecret: string) => {
+		axios
+			.post(
+				"https://rf1yauwvyj.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
+				{
+					cyphertext: encryptedSecret,
+				},
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"Access-Control-Allow-Origin": "*", // Allow requests from any origin (you might want to restrict this in a production environment)
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res.data);
+				setSecretURL(res.data);
+			})
+			.catch((error) => {
+				console.error("Error posting secret:", error);
+				// Handle the error accordingly
+			});
+	};
+
 	const encryptSecret = () => {
 		OpenPGP.encryptSecret(secret, publicKey).then((encryptedSecret) => {
-			alert(encryptedSecret);
+			postSecret(encryptedSecret);
 		});
 	};
 
@@ -57,7 +82,7 @@ function SecretEncryption() {
 	);
 }
 
-export default SecretEncryption;
+export default E2Eencryption;
 
 const Container = styled.div`
 	width: 100vw;

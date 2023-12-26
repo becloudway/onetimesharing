@@ -19,6 +19,11 @@ export class ApiStackService extends Construct {
 			deployOptions: {
 				loggingLevel: apigateway.MethodLoggingLevel.OFF,
 			},
+			defaultCorsPreflightOptions: {
+				allowOrigins: apigateway.Cors.ALL_ORIGINS,
+				allowMethods: apigateway.Cors.ALL_METHODS,
+				allowHeaders: ["*"],
+			},
 		});
 
 		/*
