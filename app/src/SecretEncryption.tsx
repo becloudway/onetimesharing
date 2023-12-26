@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { PublicKey } from "openpgp";
+import React, { useState } from "react";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
