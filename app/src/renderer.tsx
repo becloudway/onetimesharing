@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import GlobalStyle from "./GlobalStyle";
 import KeyGenerator from "./KeyGenerator";
+import SecretEncryption from "./SecretEncryption";
 
 const rootElement = document.getElementById("root");
 
@@ -15,6 +16,15 @@ if (rootElement) {
 				<>
 					<GlobalStyle />
 					<KeyGenerator />
+				</>
+			),
+		},
+		{
+			path: "/secret-encryption",
+			element: (
+				<>
+					<GlobalStyle />
+					<SecretEncryption />
 				</>
 			),
 		},

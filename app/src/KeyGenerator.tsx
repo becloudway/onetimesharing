@@ -8,12 +8,24 @@ import OpenPGP from "./openpgp";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
-	const [keyPair, setKeyPair] = useState<any>();
+	const [publicKey, setPublicKey] = useState<string>("");
+	const [privateKey, setPrivateKey] = useState<string>("");
 
 	const generateKeyPair = () => {
-		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) return alert("Please enter a passphrase");
+		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) {
+			return alert("Please enter a passphrase");
+		}
+
 		OpenPGP.generateKeyPair(passCode).then((keyPair: any) => {
-			setKeyPair(keyPair);
+			setPublicKey(keyPair.publicKey);
+			setPrivateKey(keyPair.privateKey);
+			navigator.clipboard.writeText(keyPair.publicKey);
+
+			// Optionally, you may want to clear the passphrase after generating the key pair.
+			setPassCode("");
+
+			// Optionally, you may want to show a success message or perform other actions.
+			// alert("Key pair generated successfully!");
 		});
 	};
 
@@ -37,19 +49,21 @@ function KeyGenerator() {
 						value={passCode}
 						onChange={(e) => setPassCode(e.target.value)}
 					/>
-					<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Private key</div>
+					<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Private key (Read-only)</div>
 					<textarea
 						readOnly
 						placeholder="Private key"
 						className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#EC0000] resize-none"
-						value={keyPair?.privateKey}
+						value={privateKey}
 					/>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Public key (Give this key to the secret provider)</div>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
+						Public key (Give this key to the secret provider) (Read-only)
+					</div>
 					<textarea
 						readOnly
 						placeholder="Public key"
 						className="w-full h-[240px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={keyPair?.publicKey}
+						value={publicKey}
 					/>
 					<button
 						onClick={generateKeyPair}
