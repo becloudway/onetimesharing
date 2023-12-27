@@ -2,7 +2,7 @@ import * as openpgp from "openpgp";
 
 export default class OpenPGP {
 	static async generateKeyPair(passphrase: string) {
-		return new Promise(async (res, rej) => {
+		try {
 			const { privateKey, publicKey } = await openpgp.generateKey({
 				type: "ecc", // Type of the key, defaults to ECC
 				curve: "curve25519", // ECC curve name, defaults to curve25519
@@ -11,32 +11,49 @@ export default class OpenPGP {
 				format: "armored", // output key format, defaults to 'armored' (other options: 'binary' or 'object')
 			});
 
-			res({ privateKey, publicKey });
-		});
+			return { privateKey, publicKey };
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	static async encryptSecret(secret: string, publicKey: string) {
-		const key = await openpgp.readKey({ armoredKey: publicKey });
+		try {
+			const encryptionKeys = await openpgp.readKey({ armoredKey: publicKey });
 
-		const encrypted = await openpgp.encrypt({
-			message: await openpgp.createMessage({ text: secret }), // input as Message object
-			encryptionKeys: key,
-		});
+			const encrypted = await openpgp.encrypt({
+				message: await openpgp.createMessage({ text: secret }), // input as Message object
+				encryptionKeys: encryptionKeys,
+			});
 
-		return encrypted;
+			return encrypted;
+		} catch (error) {
+			throw error;
+		}
 	}
 
-	static async decryptSecret(encrypted: string, privateKey: string, passphrase: string) {
-		const key = await openpgp.decryptKey({
-			privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
-			passphrase: passphrase,
-		});
+	private static replaceNewLines(inputString: string) {
+		let stringWithoutNewLines = inputString.replace(/\n/g, "\n");
+		let stringWithoutTabs = stringWithoutNewLines.replace(/\t/g, "");
 
-		const decrypted = await openpgp.decrypt({
-			message: await openpgp.readMessage({ armoredMessage: encrypted }), // parse armored message
-			decryptionKeys: key,
-		});
+		return stringWithoutTabs;
+	}
 
-		return decrypted.data;
+	static async decryptSecret(message: string, privateKey: string, passphrase: string) {
+		try {
+			const privateKeyObj = await openpgp.decryptKey({
+				privateKey: await openpgp.readPrivateKey({ armoredKey: this.replaceNewLines(privateKey) }),
+				passphrase: passphrase,
+			});
+
+			const decrypted = await openpgp.decrypt({
+				message: await openpgp.readMessage({ armoredMessage: this.replaceNewLines(message) }),
+				decryptionKeys: [privateKeyObj],
+			});
+
+			return decrypted.data;
+		} catch (error) {
+			throw error;
+		}
 	}
 }

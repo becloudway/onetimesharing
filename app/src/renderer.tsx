@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import GlobalStyle from "./GlobalStyle";
 import KeyGenerator from "./KeyGenerator";
+import E2Eencryption from "./E2E-encryption";
+import E2Edecryption from "./E2E-decryption";
 
 const rootElement = document.getElementById("root");
 
@@ -15,6 +17,42 @@ if (rootElement) {
 				<>
 					<GlobalStyle />
 					<KeyGenerator />
+				</>
+			),
+		},
+		{
+			path: "/encrypt",
+			element: (
+				<>
+					<GlobalStyle />
+					<E2Eencryption />
+				</>
+			),
+		},
+		{
+			path: "/decrypt",
+			element: (
+				<>
+					<GlobalStyle />
+					<E2Edecryption />
+				</>
+			),
+		},
+		{
+			path: "/encryptSHE",
+			element: (
+				<>
+					<GlobalStyle />
+					<div>SHE encryption page</div>
+				</>
+			),
+		},
+		{
+			path: "/decryptSHE",
+			element: (
+				<>
+					<GlobalStyle />
+					<div>SHE decryption page</div>
 				</>
 			),
 		},
