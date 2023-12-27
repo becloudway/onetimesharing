@@ -13,13 +13,26 @@ function E2Edecryption() {
 	const getSecret = (uuid: string) => {
 		//Get the secret
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
-			alert(uuid);
+			axios
+				.get(`https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/getE2E/${uuid}`, {
+					headers: {
+						"Content-Type": "application/json",
+						"Access-Control-Allow-Origin": "*",
+					},
+				})
+				.then((res) => {
+					setSecret(res.data.cyphertext);
+				})
+				.catch((error) => {
+					alert("Error getting secret: " + error);
+				});
 		}
 	};
 
 	const decryptSecret = () => {
-		//Decrypt the secret
-		alert("Decrypting secret");
+		OpenPGP.decryptSecret(secret, privateKey, passphrase).then((decryptedSecret) => {
+			setSecret(decryptedSecret);
+		});
 	};
 
 	const handleEnter = (event: { key: string }) => {
@@ -30,17 +43,13 @@ function E2Edecryption() {
 	};
 
 	useEffect(() => {
-		window.addEventListener("keypress", handleEnter);
-
 		const searchParams = new URLSearchParams(window.location.search);
 		if (searchParams.has("uuid")) {
 			getSecret(searchParams.get("uuid") || "");
 		} else {
 			alert("No uuid found");
 		}
-
-		return () => window.removeEventListener("keypress", handleEnter);
-	});
+	}, []);
 
 	return (
 		<Container className="bg-white w-full h-full">
