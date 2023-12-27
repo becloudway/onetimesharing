@@ -32,19 +32,26 @@ export default class OpenPGP {
 		}
 	}
 
-	static async decryptSecret(encrypted: string, privateKey: string, passphrase: string) {
+	private static replaceNewLines(inputString: string) {
+		let stringWithoutNewLines = inputString.replace(/\n/g, "\n");
+		let stringWithoutTabs = stringWithoutNewLines.replace(/\t/g, "");
+
+		return stringWithoutTabs;
+	}
+
+	static async decryptSecret(message: string, privateKey: string, passphrase: string) {
 		try {
-			const decryptionKey = await openpgp.decryptKey({
-				privateKey: await openpgp.readPrivateKey({ armoredKey: privateKey }),
+			const privateKeyObj = await openpgp.decryptKey({
+				privateKey: await openpgp.readPrivateKey({ armoredKey: this.replaceNewLines(privateKey) }),
 				passphrase: passphrase,
 			});
 
 			const decrypted = await openpgp.decrypt({
-				message: await openpgp.readMessage({ armoredMessage: encrypted }), // parse armored message
-				decryptionKeys: decryptionKey,
+				message: await openpgp.readMessage({ armoredMessage: this.replaceNewLines(message) }),
+				decryptionKeys: [privateKeyObj],
 			});
 
-			return decrypted.data; // Return the decrypted data
+			return decrypted.data;
 		} catch (error) {
 			throw error;
 		}

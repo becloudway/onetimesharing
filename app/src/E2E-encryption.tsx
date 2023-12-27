@@ -13,7 +13,7 @@ function E2Eencryption() {
 	const postSecret = (encryptedSecret: string) => {
 		axios
 			.post(
-				"https://dh4iwzvx7l.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
+				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
 				{
 					cyphertext: encryptedSecret,
 				},
@@ -25,12 +25,10 @@ function E2Eencryption() {
 				}
 			)
 			.then((res) => {
-				console.log(res.data);
-				setSecretURL(res.data);
+				setSecretURL(res.data.id);
 			})
 			.catch((error) => {
 				console.error("Error posting secret:", error);
-				// Handle the error accordingly
 			});
 	};
 
@@ -74,7 +72,7 @@ function E2Eencryption() {
 						type="text"
 						placeholder="Your secret link will be generated here"
 						className="text-center w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={secretURL}
+						value={secretURL && `http://localhost:9000/decrypt?uuid=${secretURL}`}
 					/>
 				</div>
 			</div>
