@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
-import OpenPGP from "./openpgp";
+import AES256 from "./aes-256";
 
 function GenerateSHE() {
 	const [secret, setSecret] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
+
+	useEffect(() => {
+		// AES256.encryptSecret("dit is een test").then((res) => {
+		// 	console.log(res);
+		// });
+	});
 
 	return (
 		<Container className="bg-white">
