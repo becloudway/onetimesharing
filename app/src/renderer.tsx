@@ -6,6 +6,7 @@ import GlobalStyle from "./GlobalStyle";
 import KeyGenerator from "./KeyGenerator";
 import E2Eencryption from "./E2E-encryption";
 import E2Edecryption from "./E2E-decryption";
+import GenerateSHE from "./GenerateSHE";
 
 const rootElement = document.getElementById("root");
 
@@ -39,11 +40,11 @@ if (rootElement) {
 			),
 		},
 		{
-			path: "/encryptSHE",
+			path: "/generateSHE",
 			element: (
 				<>
 					<GlobalStyle />
-					<div>SHE encryption page</div>
+					<GenerateSHE />
 				</>
 			),
 		},

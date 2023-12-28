@@ -5,38 +5,9 @@ import CloudWayLogo from "./assets/logo.png";
 
 import OpenPGP from "./openpgp";
 
-function E2Eencryption() {
+function GenerateSHE() {
 	const [secret, setSecret] = useState<string>("");
-	const [publicKey, setPublicKey] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
-
-	const postSecret = (encryptedSecret: string) => {
-		axios
-			.post(
-				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
-				{
-					cyphertext: encryptedSecret,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
-				}
-			)
-			.then((res) => {
-				setSecretURL(res.data.id);
-			})
-			.catch((error) => {
-				console.error("Error posting secret:", error);
-			});
-	};
-
-	const encryptSecret = () => {
-		OpenPGP.encryptSecret(secret, publicKey).then((encryptedSecret) => {
-			postSecret(encryptedSecret);
-		});
-	};
 
 	return (
 		<Container className="bg-white">
@@ -51,22 +22,10 @@ function E2Eencryption() {
 						value={secret}
 						onChange={(e) => setSecret(e.target.value)}
 					/>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
-						Enter the public key that is provided by the recipient of the secret
-					</div>
-					<textarea
-						placeholder="Enter public key here"
-						className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={publicKey}
-						onChange={(e) => setPublicKey(e.target.value)}
-					/>
-					<button
-						onClick={encryptSecret}
-						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
-					>
+					<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
 						Create a secret
 					</button>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[20px]">Send the following link to the recipient</div>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
 					<input
 						readOnly
 						type="text"
@@ -80,7 +39,7 @@ function E2Eencryption() {
 	);
 }
 
-export default E2Eencryption;
+export default GenerateSHE;
 
 const Container = styled.div`
 	width: 100vw;

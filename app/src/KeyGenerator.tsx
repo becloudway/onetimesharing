@@ -30,7 +30,7 @@ function KeyGenerator() {
 	};
 
 	return (
-		<Container className="bg-white w-full h-full">
+		<Container className="bg-white">
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={CloudWayLogo} />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full max-w-[1400px] rounded-t-[12px] bg-white">
