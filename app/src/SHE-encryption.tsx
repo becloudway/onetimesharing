@@ -5,7 +5,7 @@ import CloudWayLogo from "./assets/logo.png";
 
 import AES256 from "./aes-256";
 
-function GenerateSHE() {
+function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<{ uuid: string; first_half_key: string; iv: string }>({
 		uuid: "",
@@ -87,7 +87,7 @@ function GenerateSHE() {
 	);
 }
 
-export default GenerateSHE;
+export default SHEEncryption;
 
 const Container = styled.div`
 	width: 100vw;
