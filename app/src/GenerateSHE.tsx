@@ -3,6 +3,9 @@ import axios from "axios";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
+import AES from "crypto-js/aes";
+import SHA256 from "crypto-js/sha256";
+
 import AES256 from "./aes-256";
 
 function GenerateSHE() {
@@ -10,9 +13,28 @@ function GenerateSHE() {
 	const [secretURL, setSecretURL] = useState<string>("");
 
 	useEffect(() => {
-		// AES256.encryptSecret("dit is een test").then((res) => {
-		// 	console.log(res);
-		// });
+		new Promise(async (resolve, reject) => {
+			let resp: any;
+
+			await AES256.encryptSecret("dit is een test")
+				.then((res) => {
+					resp = res;
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+
+			console.log(resp);
+			if (!resp) return;
+
+			await AES256.decryptSecret(resp.encrypted, resp.key, resp.iv)
+				.then((res) => {
+					console.log(res);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		});
 	});
 
 	return (
