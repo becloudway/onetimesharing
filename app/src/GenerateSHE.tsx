@@ -3,39 +3,53 @@ import axios from "axios";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
-import AES from "crypto-js/aes";
-import SHA256 from "crypto-js/sha256";
-
 import AES256 from "./aes-256";
 
 function GenerateSHE() {
 	const [secret, setSecret] = useState<string>("");
-	const [secretURL, setSecretURL] = useState<string>("");
-
-	useEffect(() => {
-		new Promise(async (resolve, reject) => {
-			let resp: any;
-
-			await AES256.encryptSecret("dit is een test")
-				.then((res) => {
-					resp = res;
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-
-			console.log(resp);
-			if (!resp) return;
-
-			await AES256.decryptSecret(resp.encrypted, resp.key, resp.iv)
-				.then((res) => {
-					console.log(res);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		});
+	const [secretURL, setSecretURL] = useState<{ uuid: string; first_half_key: string; iv: string }>({
+		uuid: "",
+		first_half_key: "",
+		iv: "",
 	});
+
+	const postSecret = (encryptedSecret: string, second_half_key: string, first_half_key: string, iv: string) => {
+		axios
+			.post(
+				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addSHE",
+				{
+					cyphertext: encryptedSecret,
+					second_half_key: second_half_key,
+				},
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"Access-Control-Allow-Origin": "*",
+					},
+				}
+			)
+			.then((res) => {
+				setSecretURL({
+					uuid: res.data.id,
+					first_half_key: first_half_key,
+					iv: iv,
+				});
+			})
+			.catch((error) => {
+				console.error("Error posting secret:", error);
+			});
+	};
+
+	const encryptSecret = async () => {
+		if (!secret) {
+			alert("Please enter a secret");
+			return;
+		}
+
+		await AES256.encryptSecret(secret).then((res) => {
+			postSecret(res.encrypted, res.key.slice(0, 32), res.key.slice(32, 64), res.iv);
+		});
+	};
 
 	return (
 		<Container className="bg-white">
@@ -50,7 +64,10 @@ function GenerateSHE() {
 						value={secret}
 						onChange={(e) => setSecret(e.target.value)}
 					/>
-					<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
+					<button
+						onClick={encryptSecret}
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+					>
 						Create a secret
 					</button>
 					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
@@ -59,7 +76,10 @@ function GenerateSHE() {
 						type="text"
 						placeholder="Your secret link will be generated here"
 						className="text-center w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={secretURL && `http://localhost:9000/decrypt?uuid=${secretURL}`}
+						value={
+							secretURL.uuid &&
+							`http://localhost:9000/decryptSHE?uuid=${secretURL.uuid}&first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
+						}
 					/>
 				</div>
 			</div>

@@ -19,7 +19,7 @@ export default class AES256 {
 		}
 	}
 
-	static async encryptSecret(secret: string) {
+	static async encryptSecret(secret: string): Promise<{ encrypted: string; key: string; iv: string }> {
 		try {
 			const { key, iv } = this.generateAesKeyAndIV();
 
@@ -40,7 +40,7 @@ export default class AES256 {
 		}
 	}
 
-	static async decryptSecret(encrypted: string, key: string, iv: string) {
+	static async decryptSecret(encrypted: string, key: string, iv: string): Promise<string> {
 		try {
 			// Convert the key and IV to WordArray
 			const cryptoKey = CryptoJS.enc.Hex.parse(key);
