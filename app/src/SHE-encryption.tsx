@@ -13,7 +13,7 @@ function SHEEncryption() {
 		iv: "",
 	});
 
-	const postSecret = (encryptedSecret: string, second_half_key: string, first_half_key: string, iv: string) => {
+	const postSecret = (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		axios
 			.post(
 				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addSHE",
