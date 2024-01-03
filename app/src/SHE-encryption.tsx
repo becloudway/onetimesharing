@@ -1,21 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
-import OpenPGP from "./openpgp";
+import AES256 from "./aes-256";
 
-function E2Eencryption() {
+function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
-	const [publicKey, setPublicKey] = useState<string>("");
-	const [secretURL, setSecretURL] = useState<string>("");
+	const [secretURL, setSecretURL] = useState<{ uuid: string; first_half_key: string; iv: string }>({
+		uuid: "",
+		first_half_key: "",
+		iv: "",
+	});
 
-	const postSecret = (encryptedSecret: string) => {
+	const postSecret = (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		axios
 			.post(
-				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addE2E",
+				"https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/addSHE",
 				{
 					cyphertext: encryptedSecret,
+					second_half_key: second_half_key,
 				},
 				{
 					headers: {
@@ -25,16 +29,25 @@ function E2Eencryption() {
 				}
 			)
 			.then((res) => {
-				setSecretURL(res.data.id);
+				setSecretURL({
+					uuid: res.data.id,
+					first_half_key: first_half_key,
+					iv: iv,
+				});
 			})
 			.catch((error) => {
 				console.error("Error posting secret:", error);
 			});
 	};
 
-	const encryptSecret = () => {
-		OpenPGP.encryptSecret(secret, publicKey).then((encryptedSecret) => {
-			postSecret(encryptedSecret);
+	const encryptSecret = async () => {
+		if (!secret) {
+			alert("Please enter a secret");
+			return;
+		}
+
+		await AES256.encryptSecret(secret).then((res) => {
+			postSecret(res.encrypted, res.key.slice(0, 32), res.key.slice(32, 64), res.iv);
 		});
 	};
 
@@ -51,28 +64,22 @@ function E2Eencryption() {
 						value={secret}
 						onChange={(e) => setSecret(e.target.value)}
 					/>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
-						Enter the public key that is provided by the recipient of the secret
-					</div>
-					<textarea
-						placeholder="Enter public key here"
-						className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={publicKey}
-						onChange={(e) => setPublicKey(e.target.value)}
-					/>
 					<button
 						onClick={encryptSecret}
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 					>
 						Create a secret
 					</button>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[20px]">Send the following link to the recipient</div>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
 					<input
 						readOnly
 						type="text"
 						placeholder="Your secret link will be generated here"
 						className="text-center w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={secretURL && `http://localhost:9000/decrypt?uuid=${secretURL}`}
+						value={
+							secretURL.uuid &&
+							`http://localhost:9000/decryptSHE?uuid=${secretURL.uuid}&first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
+						}
 					/>
 				</div>
 			</div>
@@ -80,7 +87,7 @@ function E2Eencryption() {
 	);
 }
 
-export default E2Eencryption;
+export default SHEEncryption;
 
 const Container = styled.div`
 	width: 100vw;
