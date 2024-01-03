@@ -6,7 +6,7 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
 
 export class ApiStackService extends Construct {
-	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2) {
+	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string) {
 		super(scope, id);
 
 		/*
@@ -14,7 +14,7 @@ export class ApiStackService extends Construct {
         */
 
 		const api = new apigateway.RestApi(this, "secrets-api", {
-			restApiName: "bolleje-dev-api-gateway",
+			restApiName: `bolleje-${environmentName}-api-gateway`,
 			description: "This service serves the secrets for the Temporary Secrets API.",
 			deployOptions: {
 				loggingLevel: apigateway.MethodLoggingLevel.OFF,
@@ -30,34 +30,46 @@ export class ApiStackService extends Construct {
             Lambda functions
         */
 
-		const CodeBucket = Bucket.fromBucketName(this, "code-bucket", "bolleje-dev-s3-codestorage");
+		const CodeBucket = Bucket.fromBucketName(this, "code-bucket", `bolleje-${environmentName}-s3-codestorage`);
 
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
-			functionName: "bolleje-dev-getSHEsecretlambda",
+			functionName: `bolleje-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getSHEsecret.zip`),
 			handler: "getSHEsecret.handler",
+			environment: {
+				tableName: DynamoDBStorage.tableName,
+			},
 		});
 
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
-			functionName: "bolleje-dev-postSHEsecretlambda",
+			functionName: `bolleje-${environmentName}-postSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postSHEsecret.zip`),
 			handler: "postSHEsecret.handler",
+			environment: {
+				tableName: DynamoDBStorage.tableName,
+			},
 		});
 
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
-			functionName: "bolleje-dev-getE2Esecretlambda",
+			functionName: `bolleje-${environmentName}-getE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getE2Esecret.zip`),
 			handler: "getE2Esecret.handler",
+			environment: {
+				tableName: DynamoDBStorage.tableName,
+			},
 		});
 
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
-			functionName: "bolleje-dev-postE2Esecretlambda",
+			functionName: `bolleje-${environmentName}-postE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postE2Esecret.zip`),
 			handler: "postE2Esecret.handler",
+			environment: {
+				tableName: DynamoDBStorage.tableName,
+			},
 		});
 
 		/*

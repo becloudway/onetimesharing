@@ -8,8 +8,6 @@ const SecretsRepository = class {
 	static client = new DynamoDBClient({});
 	static dynamo = DynamoDBDocumentClient.from(this.client);
 
-	static #tableName = "bolleje-dev-dynamodb";
-
 	//This should be of the type that the data is structured in
 	static async PostItem(data: SecretsStructure) {
 		const generatedUuid = uuidv4();
@@ -26,7 +24,7 @@ const SecretsRepository = class {
 
 		await this.dynamo.send(
 			new PutCommand({
-				TableName: this.#tableName,
+				TableName: process.env.tableName,
 				Item: item,
 			})
 		);
@@ -37,7 +35,7 @@ const SecretsRepository = class {
 	static async GetSecret(uuid: string): Promise<SecretsStructure> {
 		const response = await this.dynamo.send(
 			new GetCommand({
-				TableName: this.#tableName,
+				TableName: process.env.tableName,
 				Key: {
 					uuid: uuid,
 				},
@@ -46,7 +44,7 @@ const SecretsRepository = class {
 
 		await this.dynamo.send(
 			new DeleteCommand({
-				TableName: this.#tableName,
+				TableName: process.env.tableName,
 				Key: {
 					uuid: uuid,
 				},
