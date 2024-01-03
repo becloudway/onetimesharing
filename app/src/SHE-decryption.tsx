@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import getAPIURL from "./getAPIURL";
+
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
 
@@ -12,7 +14,7 @@ function SHEDecryption() {
 		//Get the secret
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			await axios
-				.get(`https://3ql01myh6d.execute-api.eu-west-1.amazonaws.com/prod/getSHE/${uuid}`, {
+				.get(`${getAPIURL()}/getSHE/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
