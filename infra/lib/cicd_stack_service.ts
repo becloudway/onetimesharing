@@ -14,7 +14,7 @@ export class CiCdStackService extends Construct {
 		});
 
 		new s3deploy.BucketDeployment(this, "DeployFiles", {
-			sources: [s3deploy.Source.asset(`resources/dist.zip`)],
+			sources: [s3deploy.Source.asset(`../handlers/dist.zip`)],
 			destinationBucket: bucket,
 		});
 	}
