@@ -1,18 +1,40 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
-import { BolleJeDevApiStack } from "../lib/bolleje-dev-api-stack";
-import { BolleJeDevStorageStack } from "../lib/bolleje-dev-storage-stack";
-import { BolleJeDevCiCdStack } from "../lib/bolleje-dev-cicd-stack";
+import { BolleJeApiStack } from "../lib/bolleje-api-stack";
+import { BolleJeStorageStack } from "../lib/bolleje-storage-stack";
+import { BolleJeCiCdStack } from "../lib/bolleje-cicd-stack";
 
 const app = new cdk.App();
 
-const DevStorageStack = new BolleJeDevStorageStack(app, "BolleJeDevStorageStack", {});
+/*
+	Production stack
+*/
 
-const DevCiCdStack = new BolleJeDevCiCdStack(app, "BolleJeDevCiCdStack", {});
+const ProdStorageStack = new BolleJeStorageStack(app, "BolleJeProdStorageStack", {
+	environmentName: "prod",
+});
+const ProdCiCdStack = new BolleJeCiCdStack(app, "BolleJeProdCiCdStack", {
+	environmentName: "prod",
+});
+const ProdApiStack = new BolleJeApiStack(app, "BolleJeProdApiStack", {
+	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
+	environmentName: "prod",
+});
 
-new BolleJeDevApiStack(app, "BolleJeDevApiStack", {
+/*
+	Development stack
+*/
+
+const DevStorageStack = new BolleJeStorageStack(app, "BolleJeDevStorageStack", {
+	environmentName: "dev",
+});
+const DevCiCdStack = new BolleJeCiCdStack(app, "BolleJeDevCiCdStack", {
+	environmentName: "dev",
+});
+const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
 	DynamoDBStorage: DevStorageStack.DynamoDBStorage,
+	environmentName: "dev",
 	/* If you don't specify 'env', this stack will be environment-agnostic.
 	 * Account/Region-dependent features and context lookups will not work,
 	 * but a single synthesized template can be deployed anywhere. */
