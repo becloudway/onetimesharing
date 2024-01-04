@@ -4,6 +4,7 @@ import * as cdk from "aws-cdk-lib";
 import { BolleJeApiStack } from "../lib/bolleje-api-stack";
 import { BolleJeStorageStack } from "../lib/bolleje-storage-stack";
 import { BolleJeCiCdStack } from "../lib/bolleje-cicd-stack";
+import { BolleJeFrontendStack } from "../lib/bolleje-frontend-stack";
 
 const app = new cdk.App();
 
@@ -15,6 +16,9 @@ const ProdStorageStack = new BolleJeStorageStack(app, "BolleJeProdStorageStack",
 	environmentName: "prod",
 });
 const ProdCiCdStack = new BolleJeCiCdStack(app, "BolleJeProdCiCdStack", {
+	environmentName: "prod",
+});
+const ProdFrontendStack = new BolleJeFrontendStack(app, "BolleJeProdFrontendStack", {
 	environmentName: "prod",
 });
 const ProdApiStack = new BolleJeApiStack(app, "BolleJeProdApiStack", {
@@ -30,6 +34,9 @@ const DevStorageStack = new BolleJeStorageStack(app, "BolleJeDevStorageStack", {
 	environmentName: "dev",
 });
 const DevCiCdStack = new BolleJeCiCdStack(app, "BolleJeDevCiCdStack", {
+	environmentName: "dev",
+});
+const DevFrontendStack = new BolleJeFrontendStack(app, "BolleJeDevFrontendStack", {
 	environmentName: "dev",
 });
 const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
