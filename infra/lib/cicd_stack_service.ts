@@ -7,7 +7,7 @@ export class CiCdStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
-		const bucket = new s3.Bucket(this, `bolleje-dev-s3-codestorage`, {
+		const bucket = new s3.Bucket(this, `bolleje-${environmentName}-s3-codestorage`, {
 			bucketName: `bolleje-${environmentName}-s3-codestorage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
