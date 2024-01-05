@@ -2,9 +2,13 @@ import React from "react";
 
 import CloudWayLogo from "../assets/loading-icon.png";
 
-const LoadingScreen = () => {
+interface ILoadingProps {
+	show: boolean;
+}
+
+const LoadingScreen = ({ show }: ILoadingProps) => {
 	return (
-		<div className="fixed top-0 left-0 right-0 bottom-0 bg-black/75 flex items-center justify-center">
+		<div className={`z-50 fixed top-0 left-0 right-0 bottom-0 bg-black/75 ${show ? "flex" : "hidden"} items-center justify-center`}>
 			<img className="h-[60px] animate-bounce" src={CloudWayLogo} />
 		</div>
 	);

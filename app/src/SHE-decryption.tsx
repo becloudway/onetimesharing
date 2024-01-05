@@ -7,12 +7,20 @@ import CloudWayLogo from "./assets/logo.png";
 
 import AES256 from "./aes-256";
 
+import { ToastContainer } from "react-toastify";
+import errorHandling from "./components/errorHandling";
+import "react-toastify/dist/ReactToastify.min.css";
+
+import LoadingScreen from "./components/LoadingScreen";
+import CopyToClipBoard from "./components/CopyToClipBoard";
+
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const getSecret = async (uuid: string, first_half_key: string, iv: string) => {
-		//Get the secret
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
+			setLoading(true);
 			await axios
 				.get(`${getAPIURL()}/getSHE/${uuid}`, {
 					headers: {
@@ -24,8 +32,9 @@ function SHEDecryption() {
 					decryptSecret(res.data.cyphertext, `${first_half_key}${res.data.second_half_key}`, iv);
 				})
 				.catch((error) => {
-					alert("Error getting secret: " + error);
+					errorHandling("Error getting secret: " + error);
 				});
+			setLoading(false);
 		}
 	};
 
@@ -36,7 +45,7 @@ function SHEDecryption() {
 				setSecret(decryptedSecret);
 			})
 			.catch((err) => {
-				console.log(err);
+				errorHandling(err);
 			});
 	};
 
@@ -71,22 +80,36 @@ function SHEDecryption() {
 				}
 			})
 			.catch((error) => {
-				alert("Error checking params: " + error);
+				errorHandling("Error checking params: " + error);
 			});
 	}, []);
 
 	return (
 		<Container className="bg-white">
+			<LoadingScreen show={loading} />
+			<ToastContainer
+				position="bottom-right"
+				autoClose={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				theme="colored"
+			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={CloudWayLogo} />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[#007BEC] text-[18px] font-bold">Secret:</div>
-					<textarea
-						readOnly
-						placeholder="Your secret will be displayed here."
-						className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={secret}
-					/>
+					<div className="relative">
+						<CopyToClipBoard text={secret} />
+						<textarea
+							readOnly
+							placeholder="Your secret will be displayed here."
+							className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+							value={secret}
+						/>
+					</div>
 				</div>
 			</div>
 		</Container>

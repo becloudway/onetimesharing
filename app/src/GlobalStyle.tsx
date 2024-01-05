@@ -26,6 +26,16 @@ html, body{
   
     transition: background ease 0.3s, background-color ease 0.3s, color ease 0.05s, border ease 0.3s, transform ease 0.3s, fill ease 0.3s, stroke ease 0.3s;
   }
+
+  /* For Webkit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* For IE and Edge */
+*::-ms-scrollbar {
+  width: 0px;
+}
 `;
 
 export default GlobalStyle;
