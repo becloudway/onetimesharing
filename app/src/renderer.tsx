@@ -41,7 +41,7 @@ if (rootElement) {
 			),
 		},
 		{
-			path: "/generateSHE",
+			path: "/encryptSHE",
 			element: (
 				<>
 					<GlobalStyle />
