@@ -4,6 +4,7 @@ import * as cdk from "aws-cdk-lib";
 import { BolleJeApiStack } from "../lib/bolleje-api-stack";
 import { BolleJeStorageStack } from "../lib/bolleje-storage-stack";
 import { BolleJeCiCdStack } from "../lib/bolleje-cicd-stack";
+import { BolleJeFrontendStack } from "../lib/bolleje-frontend-stack";
 
 const app = new cdk.App();
 
@@ -20,6 +21,10 @@ const ProdCiCdStack = new BolleJeCiCdStack(app, "BolleJeProdCiCdStack", {
 const ProdApiStack = new BolleJeApiStack(app, "BolleJeProdApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
+});
+const ProdFrontendStack = new BolleJeFrontendStack(app, "BolleJeProdFrontendStack", {
+	environmentName: "prod",
+	apiGateway: ProdApiStack.ApiGateway,
 });
 
 /*
@@ -48,4 +53,8 @@ const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
 	// env: { account: '123456789012', region: 'us-east-1' },
 
 	/* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+});
+const DevFrontendStack = new BolleJeFrontendStack(app, "BolleJeDevFrontendStack", {
+	environmentName: "dev",
+	apiGateway: DevApiStack.ApiGateway,
 });
