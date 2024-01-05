@@ -79,7 +79,7 @@ function SHEDecryption() {
 		<Container className="bg-white">
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={CloudWayLogo} />
-				<div className="flex flex-col mt-[34px] py-[30px] px-[36px] w-full max-w-[1400px] rounded-[12px] bg-white">
+				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[#007BEC] text-[18px] font-bold">Secret:</div>
 					<textarea
 						readOnly
