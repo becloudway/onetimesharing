@@ -18,12 +18,13 @@ const ProdStorageStack = new BolleJeStorageStack(app, "BolleJeProdStorageStack",
 const ProdCiCdStack = new BolleJeCiCdStack(app, "BolleJeProdCiCdStack", {
 	environmentName: "prod",
 });
-const ProdFrontendStack = new BolleJeFrontendStack(app, "BolleJeProdFrontendStack", {
-	environmentName: "prod",
-});
 const ProdApiStack = new BolleJeApiStack(app, "BolleJeProdApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
+});
+const ProdFrontendStack = new BolleJeFrontendStack(app, "BolleJeProdFrontendStack", {
+	environmentName: "prod",
+	apiGateway: ProdApiStack.ApiGateway,
 });
 
 /*
@@ -34,9 +35,6 @@ const DevStorageStack = new BolleJeStorageStack(app, "BolleJeDevStorageStack", {
 	environmentName: "dev",
 });
 const DevCiCdStack = new BolleJeCiCdStack(app, "BolleJeDevCiCdStack", {
-	environmentName: "dev",
-});
-const DevFrontendStack = new BolleJeFrontendStack(app, "BolleJeDevFrontendStack", {
 	environmentName: "dev",
 });
 const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
@@ -55,4 +53,8 @@ const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
 	// env: { account: '123456789012', region: 'us-east-1' },
 
 	/* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+});
+const DevFrontendStack = new BolleJeFrontendStack(app, "BolleJeDevFrontendStack", {
+	environmentName: "dev",
+	apiGateway: DevApiStack.ApiGateway,
 });

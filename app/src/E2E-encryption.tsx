@@ -74,7 +74,7 @@ function E2Eencryption() {
 						type="text"
 						placeholder="Your secret link will be generated here"
 						className="text-center w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-						value={secretURL && `http://localhost:9000/decrypt?uuid=${secretURL}`}
+						value={secretURL && `${window.location.origin}/decrypt?uuid=${secretURL}`}
 					/>
 				</div>
 			</div>

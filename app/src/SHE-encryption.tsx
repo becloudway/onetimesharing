@@ -80,7 +80,7 @@ function SHEEncryption() {
 						className="text-center w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
 						value={
 							secretURL.uuid &&
-							`http://localhost:9000/decryptSHE?uuid=${secretURL.uuid}&first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
+							`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}&first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
 						}
 					/>
 				</div>

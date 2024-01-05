@@ -1,7 +1,7 @@
 import { Construct } from "constructs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
-import { Distribution, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
+import { OriginAccessIdentity, Distribution } from "aws-cdk-lib/aws-cloudfront";
 import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
@@ -40,3 +40,25 @@ export class FrontendStackService extends Construct {
 		});
 	}
 }
+
+// const webDistribution = new Distribution(this, `bolleje-${environmentName}-cloudfront`, {
+// 	defaultBehavior: {
+// 		origin: new S3Origin(bucket, {
+// 			originAccessIdentity,
+// 		}),
+// 		allowedMethods: AllowedMethods.ALLOW_ALL,
+// 		viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+// 	},
+// 	additionalBehaviors: {
+// 		"v1/*": {
+// 			origin: new RestApiOrigin(apiGateway, {
+// 				originPath: "/prod",
+// 			}),
+// 			viewerProtocolPolicy: ViewerProtocolPolicy.HTTPS_ONLY,
+// 			allowedMethods: AllowedMethods.ALLOW_ALL,
+// 			cachePolicy: CachePolicy.CACHING_DISABLED,
+// 			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+// 			compress: true,
+// 		},
+// 	},
+// });

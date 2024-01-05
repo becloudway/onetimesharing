@@ -10,8 +10,13 @@
 		"test": "jest",
 		"cdk": "cdk",
 		"integration-test": "npx playwright test --workers=1",
-		"deploy": " npm run synth && cdk deploy --all --require-approval='never'",
+		"deploy": "npm run deploy-dev && npm run deploy-prod",
+		"deploy-dev": "npm run deploy-dev-backend && npm run deploy-dev-frontend",
+		"deploy-prod": "npm run deploy-prod-backend && npm run deploy-prod-frontend",
+		"deploy-dev-backend": "npm run synth && cdk deploy BolleJeDevStorageStack BolleJeDevCiCdStack BolleJeDevFrontendStack BolleJeDevApiStack --require-approval='never'",
+		"deploy-prod-backend": "npm run synth && cdk deploy BolleJeProdStorageStack BolleJeProdCiCdStack BolleJeProdFrontendStack BolleJeProdApiStack --require-approval='never'",
 		"deploy-dev-frontend": "npm run synth && cdk deploy BolleJeDevFrontendStack --require-approval='never'",
+		"deploy-prod-frontend": "npm run synth && cdk deploy BolleJeProdFrontendStack --require-approval='never'",
 		"synth": "cd ../handlers && npm run build && cd dist && zip -r ../dist.zip * && cd ../../app && npm run build && cd ../infra && cdk synth --app 'npx ts-node bin/bolleje-temporarysecret-cdk.ts'"
 	},
 	"devDependencies": {

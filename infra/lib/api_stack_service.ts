@@ -6,6 +6,8 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
 
 export class ApiStackService extends Construct {
+	public readonly ApiGateway: apigateway.RestApi;
+
 	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string) {
 		super(scope, id);
 
@@ -112,5 +114,7 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
+
+		this.ApiGateway = api;
 	}
 }
