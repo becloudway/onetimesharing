@@ -26,7 +26,7 @@ function SHEEncryption() {
 		setLoading(true);
 		await axios
 			.post(
-				`${window.location.hostname}/api/addSHE`,
+				`/api/addSHE`,
 				{
 					cyphertext: encryptedSecret,
 					second_half_key: second_half_key,

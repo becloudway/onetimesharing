@@ -21,7 +21,7 @@ function SHEDecryption() {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
 			await axios
-				.get(`${window.location.hostname}/api/getSHE/${uuid}`, {
+				.get(`/api/getSHE/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",

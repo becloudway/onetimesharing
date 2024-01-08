@@ -23,7 +23,7 @@ function E2Eencryption() {
 		setLoading(true);
 		await axios
 			.post(
-				`${window.location.hostname}/api/addE2E`,
+				`/api/addE2E`,
 				{
 					cyphertext: encryptedSecret,
 				},
