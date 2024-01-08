@@ -15,9 +15,12 @@ export class ApiStackService extends Construct {
             API Gateway
         */
 
-		const api = new apigateway.RestApi(this, "secrets-api", {
+		const apiGateway = new apigateway.RestApi(this, "secrets-api", {
 			restApiName: `bolleje-${environmentName}-api-gateway`,
 			description: "This service serves the secrets for the Temporary Secrets API.",
+			endpointConfiguration: {
+				types: [apigateway.EndpointType.REGIONAL],
+			},
 			deployOptions: {
 				loggingLevel: apigateway.MethodLoggingLevel.OFF,
 			},
@@ -100,11 +103,13 @@ export class ApiStackService extends Construct {
             Defining of the routes from the Gateway to the Lambda functions
         */
 
-		api.root.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
-		api.root.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
+		const apiRoute = apiGateway.root.addResource("api"); // /api
 
-		api.root.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
-		api.root.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
+		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
+		apiRoute.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
+
+		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
+		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
 		/*
             Give the Lambda functions permissions to access the database.
@@ -115,6 +120,6 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
 
-		this.ApiGateway = api;
+		this.ApiGateway = apiGateway;
 	}
 }

@@ -6,7 +6,7 @@ import { SecretsStructure } from "../types/types";
 
 const PostSecretsService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: SecretsStructure, route: string) {
-		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path === route) {
+		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
 			/*
           Still need to add the verification of the data.
 

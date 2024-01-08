@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import getAPIURL from "./getAPIURL";
 
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
@@ -25,7 +24,7 @@ function E2Edecryption() {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
 			await axios
-				.get(`${getAPIURL()}/getE2E/${uuid}`, {
+				.get(`${window.location.hostname}/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
