@@ -143,7 +143,7 @@ test("Get E2E data", async () => {
 	expect(responseData.cyphertext).toBe(e2eData.cyphertext);
 });
 
-test("Get SHE data with invalid ID should return status code 404", async () => {
+test("Get SHE data with invalid ID should return status code 400", async () => {
 	const response = await fetch(`${BASE_URL}/getSHE/123`, {
 		method: "GET",
 		headers: {
@@ -151,5 +151,5 @@ test("Get SHE data with invalid ID should return status code 404", async () => {
 		},
 	});
 
-	expect(response.status).toBe(404);
+	expect(response.status).toBe(400);
 });

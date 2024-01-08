@@ -1,12 +1,19 @@
 import { Construct } from "constructs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
-import { OriginAccessIdentity, Distribution } from "aws-cdk-lib/aws-cloudfront";
-import { S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
+import {
+	OriginAccessIdentity,
+	Distribution,
+	ViewerProtocolPolicy,
+	AllowedMethods,
+	CachePolicy,
+	OriginRequestPolicy,
+} from "aws-cdk-lib/aws-cloudfront";
+import { RestApiOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
 export class FrontendStackService extends Construct {
-	constructor(scope: Construct, id: string, environmentName: string) {
+	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any) {
 		super(scope, id);
 
 		const bucket = new s3.Bucket(this, `bolleje-${environmentName}-frontend-s3`, {
@@ -24,7 +31,7 @@ export class FrontendStackService extends Construct {
 		const originAccessIdentity = new OriginAccessIdentity(this, `OriginAccessIdentity`);
 		bucket.grantRead(originAccessIdentity);
 
-		new Distribution(this, `bolleje-${environmentName}-frontend-cloudfront`, {
+		const cloudfrontDistribution = new Distribution(this, `bolleje-${environmentName}-frontend-cloudfront`, {
 			defaultRootObject: "index.html",
 			defaultBehavior: {
 				origin: new S3Origin(bucket, { originAccessIdentity }),
@@ -37,6 +44,14 @@ export class FrontendStackService extends Construct {
 					ttl: Duration.seconds(0),
 				},
 			],
+		});
+
+		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {
+			viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+			allowedMethods: AllowedMethods.ALLOW_ALL,
+			cachePolicy: CachePolicy.CACHING_DISABLED,
+			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+			compress: true,
 		});
 	}
 }
