@@ -24,7 +24,7 @@ function E2Edecryption() {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
 			await axios
-				.get(`${window.location.hostname}/api/getE2E/${uuid}`, {
+				.get(`/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
