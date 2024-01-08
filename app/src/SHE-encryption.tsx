@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import getAPIURL from "./getAPIURL";
 
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
@@ -27,7 +26,7 @@ function SHEEncryption() {
 		setLoading(true);
 		await axios
 			.post(
-				`${getAPIURL()}/addSHE`,
+				`${window.location.hostname}/api/addSHE`,
 				{
 					cyphertext: encryptedSecret,
 					second_half_key: second_half_key,

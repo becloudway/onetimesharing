@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import getAPIURL from "./getAPIURL";
 
 import styled from "styled-components";
 import CloudWayLogo from "./assets/logo.png";
@@ -24,7 +23,7 @@ function E2Eencryption() {
 		setLoading(true);
 		await axios
 			.post(
-				`${getAPIURL()}/addE2E`,
+				`${window.location.hostname}/api/addE2E`,
 				{
 					cyphertext: encryptedSecret,
 				},
