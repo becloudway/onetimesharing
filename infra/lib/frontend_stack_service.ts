@@ -8,6 +8,7 @@ import {
 	AllowedMethods,
 	CachePolicy,
 	OriginRequestPolicy,
+	ResponseHeadersPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { RestApiOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
@@ -52,6 +53,7 @@ export class FrontendStackService extends Construct {
 			cachePolicy: CachePolicy.CACHING_DISABLED,
 			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
 			compress: true,
+			responseHeadersPolicy: ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS,
 		});
 	}
 }
