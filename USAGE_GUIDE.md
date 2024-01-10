@@ -7,10 +7,11 @@
 
 ## Table of Contents
 
-- [Routes](#routes)
 - [Types](#different-types)
 - [Second-half encryption](#second-half-encryption)
 - [Keypair encryption](#publicprivate-key-encryption)
+- [Routes](#routes)
+- [How do we handle your secret](#how-we-handle-the-secrets)
 
 ## Different types
 
@@ -47,3 +48,11 @@ In the root route, a keypair generation tool is provided that generates a keypai
 | **/decrypt**    | [**E2E**](#publicprivate-key-encryption) | Decrypt an OpenPGP encryped message using an OpenPGP private key. |
 | **/encryptshe** | [**SHE**](#second-half-encryption)       | Encrypt a secret with the AES-256 encryption algorithm.           |
 | **/decryptshe** | [**SHE**](#second-half-encryption)       | Decrypt a secret with the AES-256 encryption algorighm.           |
+
+## How we handle the secrets
+
+To provide some more transparency for non-developers, we decided to provide these flowcharts with some explanation on how we handle your secrets. We will start with how a E2E is stored in the database.
+
+![Alt text](screenshots/image-13.png)
+![Alt text](screenshots/image-11.png)
+![Alt text](screenshots/image-12.png)
