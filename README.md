@@ -3,7 +3,7 @@
 </p>
 <h3 align="center">Safely share your secrets.</h3>
 
-![Screenshot](image.png)
+![Screenshot](screenshots/image.png)
 
 ## Introduction
 
@@ -148,4 +148,4 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 ## License
 
-TBD
+MIT
