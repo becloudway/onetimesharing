@@ -10,7 +10,7 @@
 		"react:start": "vite preview",
 		"build": "npm run react:build"
 	},
-	"author": "John Doe",
+	"author": "Cloudway",
 	"license": "MIT",
 	"devDependencies": {
 		"@openpgp/web-stream-tools": "^0.0.11-patch-0",
