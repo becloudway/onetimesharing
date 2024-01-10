@@ -53,6 +53,48 @@ In the root route, a keypair generation tool is provided that generates a keypai
 
 To provide some more transparency for non-developers, we decided to provide these flowcharts with some explanation on how we handle your secrets. We will start with how a E2E is stored in the database.
 
+### Posting an E2E secret
+
+1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side only the ciphertext needs to be sent to the backend. So the payload of the request to the server will look somthing like this.
+
+```json
+{
+    cyphertext: "-----BEGIN PGP MESSAGE-----wV4DruSh2egv+fgSAQdAmG5hJf32xNijfbvU9EpjrGUA7pmjQ6uSfsQzQRC/
+7WwwQqdg96TXJtzOa1ymXvUhwrOVZhC5jOAcK4jbmGFADMm/IKgUMu5am2rB
+xJzRusog0jUBYErYrIOIvZhRt2rdZE0XxlIIPKEwc3LP8E3rjxs1vHHQzxo9
+yPEPkvELWrrPDReAQ+CsLA==
+=r2D3-----END PGP MESSAGE-----"
+}
+```
+
+2. Based on this response a couple of checks need to be executed, mainly about the length of the secret. We want to make sure we don't store any empty data in the database so we check if the object includes a ciphertext and also if this text is not empty. We also decided on a maximum length of 10MB so a check is used to confirm the encrypted version of this text does not exceed 20MB.
+3. If these checks pass, the data is stored in the database and the ID of the data is returned.
+4. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters.
+
 ![Post E2E secrets](screenshots/image-13.png)
+
+### Posting an SHE secret
+
+1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead in a SHE request the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. So the payload of the request to the server will look somthing like this.
+
+```json
+{
+	"cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
+	"second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
+}
+```
+
+2. Based on this response a couple of checks need to be executed, mainly about the length of the secret as well as the length of the key. The checks of the ciphertext are identical to the ones above, but we also include checks if there is a key included, the key is not empty and the key is exactly 32 bits long. As the full encryption key is 64 bits.
+3. If these checks pass, the data is stored in the database and the ID of the data is returned.
+4. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the IV of the encryption.
+
 ![Post SHE secret](screenshots/image-11.png)
+
+### Fetching a secret (Valid for both encryption types)
+
+1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included.
+2. The backend will then check if the value exists and will otherwise return a 400 error.
+3. The data is retrieved from the server and sent back to the frontend.
+4. The data will be decrypted client-side.
+
 ![Get Secrets](screenshots/image-12.png)
