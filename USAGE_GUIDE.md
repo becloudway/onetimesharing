@@ -53,6 +53,6 @@ In the root route, a keypair generation tool is provided that generates a keypai
 
 To provide some more transparency for non-developers, we decided to provide these flowcharts with some explanation on how we handle your secrets. We will start with how a E2E is stored in the database.
 
-![Alt text](screenshots/image-13.png)
-![Alt text](screenshots/image-11.png)
-![Alt text](screenshots/image-12.png)
+![Post E2E secrets](screenshots/image-13.png)
+![Post SHE secret](screenshots/image-11.png)
+![Get Secrets](screenshots/image-12.png)
