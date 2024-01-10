@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import CloudWayLogo from "./assets/logo.png";
+import OneTimeSharingLogo from "./assets/logo.png";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
 import InfoBox from "./components/InfoBox";
 
@@ -49,7 +49,7 @@ function KeyGenerator() {
 				theme="colored"
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
-				<img className="h-[40px]" src={CloudWayLogo} />
+				<img className="h-[40px]" src={OneTimeSharingLogo} />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<InfoBox
 						text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a

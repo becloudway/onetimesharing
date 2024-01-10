@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import styled from "styled-components";
-import CloudWayLogo from "./assets/logo.png";
+import OneTimeSharingLogo from "./assets/logo.png";
 
 import OpenPGP from "./openpgp";
 
@@ -73,7 +73,7 @@ function E2Edecryption() {
 				theme="colored"
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
-				<img className="h-[40px]" src={CloudWayLogo} />
+				<img className="h-[40px]" src={OneTimeSharingLogo} />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[#EC0000] text-[18px] font-bold">Enter your passphrase</div>
 					<input

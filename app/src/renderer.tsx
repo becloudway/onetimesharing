@@ -8,6 +8,7 @@ import E2Eencryption from "./E2E-encryption";
 import E2Edecryption from "./E2E-decryption";
 import GenerateSHE from "./SHE-encryption";
 import SHEDecryption from "./SHE-decryption";
+import Navigation from "./Navigation";
 
 const rootElement = document.getElementById("root");
 
@@ -15,6 +16,15 @@ if (rootElement) {
 	const router = createBrowserRouter([
 		{
 			path: "/",
+			element: (
+				<>
+					<GlobalStyle />
+					<Navigation />
+				</>
+			),
+		},
+		{
+			path: "/keygenerator",
 			element: (
 				<>
 					<GlobalStyle />
