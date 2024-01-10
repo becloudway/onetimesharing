@@ -148,4 +148,4 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 ## License
 
-TBD
+MIT
