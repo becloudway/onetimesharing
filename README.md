@@ -3,7 +3,7 @@
 </p>
 <h3 align="center">Safely share your secrets.</h3>
 
-![Screenshot](image.png)
+![Screenshot](screenshots/image.png)
 
 ## Introduction
 
