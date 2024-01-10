@@ -19,6 +19,8 @@
 		"deploy-prod-frontend": "npm run synth && cdk deploy BolleJeProdFrontendStack --require-approval='never'",
 		"synth": "cd ../handlers && npm run build && cd dist && zip -r ../dist.zip * && cd ../../app && npm run build && cd ../infra && cdk synth --app 'npx ts-node bin/bolleje-temporarysecret-cdk.ts'"
 	},
+	"author": "Cloudway",
+	"license": "MIT",
 	"devDependencies": {
 		"@types/jest": "^29.5.8",
 		"@types/node": "20.9.1",

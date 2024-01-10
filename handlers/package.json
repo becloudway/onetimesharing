@@ -23,8 +23,8 @@
 		"upload-getE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-getE2Esecretlambda --zip-file fileb://dist/$SHORT_SHA-getE2Esecret.zip",
 		"upload-postE2Esecret": "aws lambda update-function-code --function-name bolleje-dev-postE2Esecretlambda --zip-file fileb://dist/$SHORT_SHA-postE2Esecret.zip"
 	},
-	"author": "",
-	"license": "ISC",
+	"author": "Cloudway",
+	"license": "MIT",
 	"dependencies": {
 		"@aws-sdk/client-dynamodb": "^3.484.0",
 		"@aws-sdk/lib-dynamodb": "^3.484.0",
