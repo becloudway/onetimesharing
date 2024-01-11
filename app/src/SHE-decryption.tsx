@@ -31,7 +31,7 @@ function SHEDecryption() {
 					decryptSecret(res.data.cyphertext, `${first_half_key}${res.data.second_half_key}`, iv);
 				})
 				.catch((error) => {
-					errorHandling("Error getting secret: " + error);
+					errorHandling("Error getting secret: " + error.message);
 				});
 			setLoading(false);
 		}
@@ -44,7 +44,7 @@ function SHEDecryption() {
 				setSecret(decryptedSecret);
 			})
 			.catch((err) => {
-				errorHandling(err);
+				errorHandling(err.message);
 			});
 	};
 

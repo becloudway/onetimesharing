@@ -25,17 +25,21 @@ function KeyGenerator() {
 			return;
 		}
 
-		OpenPGP.generateKeyPair(passCode).then((keyPair: any) => {
-			setPublicKey(keyPair.publicKey);
-			setPrivateKey(keyPair.privateKey);
-			navigator.clipboard.writeText(keyPair.publicKey);
+		OpenPGP.generateKeyPair(passCode)
+			.then((keyPair: any) => {
+				setPublicKey(keyPair.publicKey);
+				setPrivateKey(keyPair.privateKey);
+				navigator.clipboard.writeText(keyPair.publicKey);
 
-			// Optionally, you may want to clear the passphrase after generating the key pair.
-			setPassCode("");
+				// Optionally, you may want to clear the passphrase after generating the key pair.
+				setPassCode("");
 
-			// Optionally, you may want to show a success message or perform other actions.
-			// alert("Key pair generated successfully!");
-		});
+				// Optionally, you may want to show a success message or perform other actions.
+				// alert("Key pair generated successfully!");
+			})
+			.catch((err) => {
+				errorHandling(err.message);
+			});
 	};
 
 	return (

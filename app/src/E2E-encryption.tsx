@@ -38,7 +38,7 @@ function E2Eencryption() {
 				setSecretURL(res.data.id);
 			})
 			.catch((error) => {
-				errorHandling(`Error posting secret: ${error}`);
+				errorHandling(`Error posting secret: ${error.message}`);
 			});
 		setLoading(false);
 	};
@@ -49,7 +49,7 @@ function E2Eencryption() {
 				postSecret(encryptedSecret);
 			})
 			.catch((err) => {
-				errorHandling(err);
+				errorHandling(err.message);
 			});
 	};
 

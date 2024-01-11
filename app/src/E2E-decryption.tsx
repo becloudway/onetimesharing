@@ -36,7 +36,7 @@ function E2Edecryption() {
 					setSecret(res.data.cyphertext);
 				})
 				.catch((error) => {
-					errorHandling("Error getting secret: " + error);
+					errorHandling("Error getting secret: " + error.message);
 				});
 			setLoading(false);
 		}
@@ -48,7 +48,7 @@ function E2Edecryption() {
 				setSecret(decryptedSecret);
 			})
 			.catch((err) => {
-				errorHandling(err);
+				errorHandling(err.message);
 			});
 	};
 

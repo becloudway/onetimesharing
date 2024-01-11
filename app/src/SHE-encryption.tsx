@@ -46,7 +46,7 @@ function SHEEncryption() {
 				});
 			})
 			.catch((error) => {
-				errorHandling(`Error posting secret: ${error}`);
+				errorHandling(`Error posting secret: ${error.message}`);
 			});
 		setLoading(false);
 	};
