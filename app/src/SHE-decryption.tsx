@@ -66,10 +66,14 @@ function SHEDecryption() {
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
+		const hashValue = {
+			first_half_key: window.location.hash.split("&")[0].split("=")[1],
+			iv: window.location.hash.split("&")[1].split("=")[1],
+		};
 		const params = {
 			uuid: searchParams.get("uuid") || "",
-			first_half_key: searchParams.get("first_half_key") || "",
-			iv: searchParams.get("iv") || "",
+			first_half_key: hashValue.first_half_key || "",
+			iv: hashValue.iv || "",
 		};
 
 		handleParamsCheck(params)
