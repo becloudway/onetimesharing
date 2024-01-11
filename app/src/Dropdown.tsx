@@ -16,7 +16,7 @@ const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
 	useEffect(() => {
 		setTimeout(() => {
 			setDelayedProperties(show);
-		}, 300);
+		}, 200);
 	}, [show]);
 
 	return (
@@ -71,7 +71,7 @@ const StyledArrowDownIcon = styled(ArrowDownIcon)<{ show: boolean }>`
 	height: 32px;
 
 	transform: rotate(${({ show }) => (show ? "180deg" : "0deg")});
-	transition: transform 0.2s;
+	transition: transform 0.2s linear;
 `;
 
 const Title = styled.div`

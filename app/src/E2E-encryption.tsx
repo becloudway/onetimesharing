@@ -12,14 +12,12 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
-import Dropdown from "./Dropdown";
 
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
-	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
 
 	const postSecret = async (encryptedSecret: string) => {
 		setLoading(true);
@@ -70,50 +68,42 @@ function E2Eencryption() {
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={CloudWayLogo} />
-				<Dropdown
-					title="Browser-based encryption"
-					show={showBrowserBased}
-					toggle={() => {
-						setShowBrowserBased(!showBrowserBased);
-					}}
-				>
-					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lg-[12px] bg-white">
-						<div className="text-[#007BEC] text-[18px] font-bold">Enter the secret</div>
-						<input
-							type="text"
-							placeholder="Enter your secret"
-							className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-							value={secret}
-							onChange={(e) => setSecret(e.target.value)}
-						/>
-						<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
-							Enter the public key that is provided by the recipient of the secret
-						</div>
-						<textarea
-							placeholder="Enter public key here"
-							className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-							value={publicKey}
-							onChange={(e) => setPublicKey(e.target.value)}
-						/>
-						<button
-							onClick={encryptSecret}
-							className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
-						>
-							Create a secret
-						</button>
-						<div className="text-[#007BEC] text-[18px] font-bold mt-[20px]">Send the following link to the recipient</div>
-						<div className="relative">
-							<CopyToClipBoard text={secretURL && `${window.location.origin}/decrypt?uuid=${secretURL}`} />
-							<input
-								readOnly
-								type="text"
-								placeholder="Your secret link will be generated here"
-								className="text-center w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-								value={secretURL && `${window.location.origin}/decrypt?uuid=${secretURL}`}
-							/>
-						</div>
+				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
+					<div className="text-[#007BEC] text-[18px] font-bold">Enter the secret</div>
+					<input
+						type="text"
+						placeholder="Enter your secret"
+						className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+						value={secret}
+						onChange={(e) => setSecret(e.target.value)}
+					/>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
+						Enter the public key that is provided by the recipient of the secret
 					</div>
-				</Dropdown>
+					<textarea
+						placeholder="Enter public key here"
+						className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+						value={publicKey}
+						onChange={(e) => setPublicKey(e.target.value)}
+					/>
+					<button
+						onClick={encryptSecret}
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+					>
+						Create a secret
+					</button>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[20px]">Send the following link to the recipient</div>
+					<div className="relative">
+						<CopyToClipBoard text={secretURL && `${window.location.origin}/decrypt?uuid=${secretURL}`} />
+						<input
+							readOnly
+							type="text"
+							placeholder="Your secret link will be generated here"
+							className="text-center w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+							value={secretURL && `${window.location.origin}/decrypt?uuid=${secretURL}`}
+						/>
+					</div>
+				</div>
 			</div>
 		</Container>
 	);
