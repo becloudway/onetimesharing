@@ -11,11 +11,13 @@ import errorHandling from "./components/errorHandling";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import CopyToClipBoard from "./components/CopyToClipBoard";
+import Dropdown from "./Dropdown";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [privateKey, setPrivateKey] = useState<string>("");
+	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
 
 	const generateKeyPair = () => {
 		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) {
@@ -48,53 +50,61 @@ function KeyGenerator() {
 				draggable
 				theme="colored"
 			/>
-			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
+			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={CloudWayLogo} />
-				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
-					<InfoBox
-						text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a
+				<Dropdown
+					title="Browser-based generation"
+					show={showBrowserBased}
+					toggle={() => {
+						setShowBrowserBased(!showBrowserBased);
+					}}
+				>
+					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lg-[12px] bg-white">
+						<InfoBox
+							text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a
 			password manager for example. This keypair can be reused for sharing secrets indefinitely. Meaning the private key can be reused
 			unless it is compromised."
-						Icon={WarningIcon}
-						type="warning"
-					/>
-					<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Passphrase</div>
-					<input
-						type="text"
-						placeholder="Please fill in a passphrase in order to generate a PGP keypair"
-						className="w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#EC0000] resize-none"
-						value={passCode}
-						onChange={(e) => setPassCode(e.target.value)}
-					/>
-					<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Private key (Read-only)</div>
-					<div className="relative">
-						<textarea
-							readOnly
-							placeholder="Private key"
-							className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#EC0000] resize-none"
-							value={privateKey}
+							Icon={WarningIcon}
+							type="warning"
 						/>
-						<CopyToClipBoard text={privateKey} />
-					</div>
-					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
-						Public key (Give this key to the secret provider) (Read-only)
-					</div>
-					<div className="relative">
-						<textarea
-							readOnly
-							placeholder="Public key"
-							className="w-full h-[240px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-							value={publicKey}
+						<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Passphrase</div>
+						<input
+							type="text"
+							placeholder="Please fill in a passphrase in order to generate a PGP keypair"
+							className="w-full h-[36px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#EC0000] resize-none"
+							value={passCode}
+							onChange={(e) => setPassCode(e.target.value)}
 						/>
-						<CopyToClipBoard text={publicKey} />
+						<div className="text-[#EC0000] text-[18px] font-bold mt-[12px]">Private key (Read-only)</div>
+						<div className="relative">
+							<textarea
+								readOnly
+								placeholder="Private key"
+								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#EC0000] resize-none"
+								value={privateKey}
+							/>
+							<CopyToClipBoard text={privateKey} />
+						</div>
+						<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">
+							Public key (Give this key to the secret provider) (Read-only)
+						</div>
+						<div className="relative">
+							<textarea
+								readOnly
+								placeholder="Public key"
+								className="w-full h-[240px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+								value={publicKey}
+							/>
+							<CopyToClipBoard text={publicKey} />
+						</div>
+						<button
+							onClick={generateKeyPair}
+							className="mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+						>
+							Generate a new PGP keypair
+						</button>
 					</div>
-					<button
-						onClick={generateKeyPair}
-						className="mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
-					>
-						Generate a new PGP keypair
-					</button>
-				</div>
+				</Dropdown>
 			</div>
 		</Container>
 	);
