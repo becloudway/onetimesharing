@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import styled from "styled-components";
-import OneTimeSharingLogo from "./assets/logo.png";
 
 import OpenPGP from "./openpgp";
 
@@ -12,6 +11,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
+import ClickableLogo from "./components/ClickableLogo";
 
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -67,7 +67,7 @@ function E2Eencryption() {
 				theme="colored"
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
-				<img className="h-[40px]" src={OneTimeSharingLogo} />
+				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[#007BEC] text-[18px] font-bold">Enter the secret</div>
 					<input
