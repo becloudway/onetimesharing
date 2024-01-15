@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
+import DownloadFile from "./components/DownloadFile";
 import Dropdown from "./Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 
@@ -103,6 +104,7 @@ function E2Edecryption() {
 					<div className="text-[#007BEC] text-[18px] font-bold">Secret:</div>
 					<div className="relative">
 						<CopyToClipBoard text={secret} />
+						<DownloadFile text={secret} />
 						<textarea
 							readOnly
 							placeholder="Your secret will be displayed here."
