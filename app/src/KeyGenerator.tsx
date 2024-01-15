@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import CloudWayLogo from "./assets/logo.png";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
 import InfoBox from "./components/InfoBox";
 
@@ -12,6 +11,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import Dropdown from "./Dropdown";
+import ClickableLogo from "./components/ClickableLogo";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
@@ -55,7 +55,7 @@ function KeyGenerator() {
 				theme="colored"
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
-				<img className="h-[40px]" src={CloudWayLogo} />
+				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[20px] font-bold">1. Install GPG</div>
 					<br />
