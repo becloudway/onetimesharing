@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import styled from "styled-components";
-import CloudWayLogo from "./assets/logo.png";
 
 import OpenPGP from "./openpgp";
 
@@ -13,6 +12,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import Dropdown from "./Dropdown";
+import ClickableLogo from "./components/ClickableLogo";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -75,7 +75,7 @@ function E2Edecryption() {
 				theme="colored"
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
-				<img className="h-[40px]" src={CloudWayLogo} />
+				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[20px] font-bold mt-[12px]">1. Get the encrypted message from below.</div>
 					<br />
@@ -98,6 +98,18 @@ function E2Edecryption() {
 							<b>If the decryption was successful, you will find the secret in the file you specified in the command above.</b>
 						</li>
 					</ul>
+				</div>
+				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
+					<div className="text-[#007BEC] text-[18px] font-bold">Secret:</div>
+					<div className="relative">
+						<CopyToClipBoard text={secret} />
+						<textarea
+							readOnly
+							placeholder="Your secret will be displayed here."
+							className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+							value={secret}
+						/>
+					</div>
 				</div>
 				<Dropdown
 					title="Browser-based decryption"
@@ -128,16 +140,6 @@ function E2Edecryption() {
 						>
 							Decrypt the secret
 						</button>
-						<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Secret:</div>
-						<div className="relative">
-							<CopyToClipBoard text={secret} />
-							<textarea
-								readOnly
-								placeholder="Your secret will be displayed here."
-								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-								value={secret}
-							/>
-						</div>
 					</div>
 				</Dropdown>
 			</div>
