@@ -4,6 +4,9 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
 
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl, S3RequestPresigner } from "@aws-sdk/s3-request-presigner";
+
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
 	static dynamo = DynamoDBDocumentClient.from(this.client);
@@ -52,6 +55,12 @@ const SecretsRepository = class {
 		);
 
 		return response as unknown as SecretsStructure;
+	}
+
+	static async GetS3URL(filename: string) {
+		const client = new S3Client({});
+		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: filename });
+		return getSignedUrl(client, command, { expiresIn: 3600 });
 	}
 };
 
