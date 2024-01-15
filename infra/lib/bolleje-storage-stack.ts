@@ -10,6 +10,7 @@ interface StorageStackProps extends cdk.StackProps {
 
 export class BolleJeStorageStack extends cdk.Stack {
 	public readonly DynamoDBStorage: any;
+	public readonly S3Storage: any;
 
 	constructor(scope: Construct, id: string, props: StorageStackProps) {
 		super(scope, id, props);
@@ -17,5 +18,6 @@ export class BolleJeStorageStack extends cdk.Stack {
 		// The code that defines your stack goes here
 		const StorageStack = new storage_stack_service.StorageStackService(this, "Secrets", props.environmentName);
 		this.DynamoDBStorage = StorageStack.DynamoDBStorage;
+		this.S3Storage = StorageStack.S3Storage;
 	}
 }

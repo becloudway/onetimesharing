@@ -8,7 +8,7 @@ import { eMethods } from "../types/enums";
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
 
-	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string) {
+	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string, S3Storage: Bucket) {
 		super(scope, id);
 
 		/*
@@ -77,6 +77,16 @@ export class ApiStackService extends Construct {
 			},
 		});
 
+		const getS3URLHandler = new lambda.Function(this, "GetS3URLHandler", {
+			functionName: `bolleje-${environmentName}-getS3URLlambda`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getS3URL.zip`),
+			handler: "getS3URL.handler",
+			environment: {
+				bucketName: S3Storage.bucketName,
+			},
+		});
+
 		/*
             API Gateway Lambda Integrations
         */
@@ -96,7 +106,10 @@ export class ApiStackService extends Construct {
 
 		const postPKISecretsIntegration = new apigateway.LambdaIntegration(postE2ESecretHandler, {
 			requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
-			passthroughBehavior: apigateway.PassthroughBehavior.WHEN_NO_TEMPLATES,
+		});
+
+		const getS3URLIntegration = new apigateway.LambdaIntegration(getS3URLHandler, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
 		/*
@@ -110,6 +123,8 @@ export class ApiStackService extends Construct {
 
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
+
+		apiRoute.addResource(eMethods.GET_S3_URL).addResource("{filename}").addMethod("GET", getS3URLIntegration); // GET /
 
 		/*
             Give the Lambda functions permissions to access the database.

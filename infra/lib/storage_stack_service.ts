@@ -1,9 +1,11 @@
 import { Construct } from "constructs";
 import { RemovalPolicy } from "aws-cdk-lib";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export class StorageStackService extends Construct {
 	public readonly DynamoDBStorage: dynamodb.TableV2;
+	public readonly S3Storage: Bucket;
 
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
@@ -15,6 +17,13 @@ export class StorageStackService extends Construct {
 			tableName: `bolleje-${environmentName}-dynamodb`,
 		});
 
+		const bucket = new Bucket(this, `bolleje-${environmentName}-s3-codestorage`, {
+			bucketName: `bolleje-${environmentName}-public-key-storage`,
+			removalPolicy: RemovalPolicy.DESTROY,
+			autoDeleteObjects: true,
+		});
+
 		this.DynamoDBStorage = table;
+		this.S3Storage = bucket;
 	}
 }

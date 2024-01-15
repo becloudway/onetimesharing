@@ -21,6 +21,7 @@ const ProdCiCdStack = new BolleJeCiCdStack(app, "BolleJeProdCiCdStack", {
 const ProdApiStack = new BolleJeApiStack(app, "BolleJeProdApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
+	S3Storage: ProdStorageStack.S3Storage,
 });
 const ProdFrontendStack = new BolleJeFrontendStack(app, "BolleJeProdFrontendStack", {
 	environmentName: "prod",
@@ -40,6 +41,7 @@ const DevCiCdStack = new BolleJeCiCdStack(app, "BolleJeDevCiCdStack", {
 const DevApiStack = new BolleJeApiStack(app, "BolleJeDevApiStack", {
 	DynamoDBStorage: DevStorageStack.DynamoDBStorage,
 	environmentName: "dev",
+	S3Storage: DevStorageStack.S3Storage,
 	/* If you don't specify 'env', this stack will be environment-agnostic.
 	 * Account/Region-dependent features and context lookups will not work,
 	 * but a single synthesized template can be deployed anywhere. */
