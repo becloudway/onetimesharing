@@ -2,12 +2,14 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as api_stack_service from "./api_stack_service";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 interface ApiStackProps extends cdk.StackProps {
 	DynamoDBStorage: dynamodb.TableV2;
 	environmentName: string;
+	S3Storage: Bucket;
 }
 
 export class BolleJeApiStack extends cdk.Stack {
@@ -16,7 +18,7 @@ export class BolleJeApiStack extends cdk.Stack {
 		super(scope, id, props);
 
 		// The code that defines your stack goes here
-		const apiStack = new api_stack_service.ApiStackService(this, "Secrets", props.DynamoDBStorage, props.environmentName);
+		const apiStack = new api_stack_service.ApiStackService(this, "Secrets", props.DynamoDBStorage, props.environmentName, props.S3Storage);
 		this.ApiGateway = apiStack.ApiGateway;
 	}
 }
