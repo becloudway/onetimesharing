@@ -5,9 +5,9 @@ import { eMethods } from "./types/enums";
 import { Handler } from "aws-lambda";
 import { PublicKeyRequestBody } from "./types/types";
 
-export const handler: Handler = async (event) => {
+export const handler: Handler = async (event: any) => {
 	try {
-		return await PostPublicKeyService.routeRequest(event, JSON.parse(event.body) as PublicKeyRequestBody, `/${eMethods.POST_PUBLIC_KEY}`);
+		return await PostPublicKeyService.routeRequest(event, JSON.parse(event.body), `/${eMethods.POST_PUBLIC_KEY}`);
 	} catch (err: any) {
 		return buildResponseBody(500, err.message || "Unknown server error");
 	}

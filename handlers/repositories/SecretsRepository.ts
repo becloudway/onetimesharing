@@ -4,8 +4,7 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure, SignedURLResponse } from "../types/types";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -61,12 +60,12 @@ const SecretsRepository = class {
 		const fileName = `${uuidv4()}.gpg`;
 
 		const client = new S3Client({});
-		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: fileName });
+		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: fileName, Body: public_key });
 
-		const response: SignedURLResponse = {
-			signedURL: await getSignedUrl(client, command, { expiresIn: 3600 }),
-			fileName: fileName,
-		};
+		const response: any = new GetObjectCommand({
+			Bucket: process.env.bucketName,
+			Key: fileName,
+		});
 
 		return response;
 	}

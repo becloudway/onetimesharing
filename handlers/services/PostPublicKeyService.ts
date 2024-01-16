@@ -13,7 +13,7 @@ const PostPublicKeyService = class {
 			/**
 			 * Verifies the request body.
 			 */
-			const verification: true | ReturnType<typeof buildResponseBody> = this.verifiyPublicKeyRequest(data);
+			const verification: true | ReturnType<typeof buildResponseBody> = this.#verifiyPublicKeyRequest(data);
 			if (verification !== true) return verification;
 
 			/**
@@ -34,7 +34,11 @@ const PostPublicKeyService = class {
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod} for route ${route}`);
 	}
 
-	private static verifiyPublicKeyRequest = (body: PublicKeyRequestBody) => {
+	static #verifiyPublicKeyRequest = (body: PublicKeyRequestBody) => {
+		/**
+		 * Verify if there is any data in the request body.
+		 */
+		if (body === undefined || body === null) return buildResponseBody(400, "Missing request body.");
 		/**
 		 * Verifies the request body.
 		 */
@@ -53,7 +57,7 @@ const PostPublicKeyService = class {
 		return true;
 	};
 
-	static #handlePostRequest(response: SignedURLResponse) {
+	static #handlePostRequest(response: any) {
 		return buildResponseBody(200, JSON.stringify(response));
 	}
 };
