@@ -2,10 +2,9 @@ import generateTTL from "../helper_functions/timeToLive";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-import { SecretsStructure, SignedURLResponse } from "../types/types";
+import { SecretsStructure } from "../types/types";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -57,18 +56,42 @@ const SecretsRepository = class {
 		return response as unknown as SecretsStructure;
 	}
 
-	static async GetS3URL() {
-		const fileName = `${uuidv4()}.gpg`;
+	static async PostPublicKey(public_key: string) {
+		const id = uuidv4();
+		const fileName = `${id}.gpg`;
 
 		const client = new S3Client({});
-		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: fileName });
+		const command = new PutObjectCommand({
+			Bucket: process.env.bucketName,
+			Key: fileName,
+			Body: public_key,
+			ContentType: "text/plain",
+		});
 
-		const response: SignedURLResponse = {
-			signedURL: await getSignedUrl(client, command, { expiresIn: 3600 }),
-			fileName: fileName,
-		};
+		try {
+			await client.send(command);
+			return id;
+		} catch (err) {
+			console.log(err);
+		}
+	}
 
-		return response;
+	static async GetPublicKey(public_key: string) {
+		const fileName = `${public_key}.gpg`;
+
+		const client = new S3Client({});
+		const command = new GetObjectCommand({
+			Bucket: process.env.bucketName,
+			Key: fileName,
+		});
+
+		try {
+			const response = await client.send(command);
+			const str = await response.Body?.transformToString();
+			return str;
+		} catch (err) {
+			console.log(err);
+		}
 	}
 };
 
