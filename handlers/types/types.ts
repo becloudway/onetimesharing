@@ -12,3 +12,7 @@ export type SignedURLResponse = {
 	signedURL: string;
 	fileName: string;
 };
+
+export type PublicKeyRequestBody = {
+	public_key: string;
+};

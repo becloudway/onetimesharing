@@ -57,7 +57,7 @@ const SecretsRepository = class {
 		return response as unknown as SecretsStructure;
 	}
 
-	static async GetS3URL() {
+	static async PostPublicKey(public_key: string) {
 		const fileName = `${uuidv4()}.gpg`;
 
 		const client = new S3Client({});

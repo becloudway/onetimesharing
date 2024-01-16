@@ -77,11 +77,11 @@ export class ApiStackService extends Construct {
 			},
 		});
 
-		const getS3URLHandler = new lambda.Function(this, "GetS3URLHandler", {
-			functionName: `bolleje-${environmentName}-getS3URLlambda`,
+		const postPublicKeyHandler = new lambda.Function(this, "PostPublicKeyHandler", {
+			functionName: `bolleje-${environmentName}-postPublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getS3URL.zip`),
-			handler: "getS3URL.handler",
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postPublicKey.zip`),
+			handler: "postPublicKey.handler",
 			environment: {
 				bucketName: S3Storage.bucketName,
 			},
@@ -108,7 +108,7 @@ export class ApiStackService extends Construct {
 			requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
 		});
 
-		const getS3URLIntegration = new apigateway.LambdaIntegration(getS3URLHandler, {
+		const postPublicKeyIntegration = new apigateway.LambdaIntegration(postPublicKeyHandler, {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
@@ -124,7 +124,7 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
-		apiRoute.addResource(eMethods.GET_S3_URL).addMethod("GET", getS3URLIntegration); // GET /
+		apiRoute.addResource(eMethods.POST_PUBLIC_KEY).addMethod("POST", postPublicKeyIntegration); // GET /
 
 		/*
             Give the Lambda functions permissions to access the database.
