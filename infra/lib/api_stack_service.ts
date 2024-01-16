@@ -124,7 +124,7 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
-		apiRoute.addResource(eMethods.GET_S3_URL).addResource("{filename}").addMethod("GET", getS3URLIntegration); // GET /
+		apiRoute.addResource(eMethods.GET_S3_URL).addMethod("GET", getS3URLIntegration); // GET /
 
 		/*
             Give the Lambda functions permissions to access the database.

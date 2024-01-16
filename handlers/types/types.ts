@@ -7,3 +7,8 @@ export type SecretsStructure = {
 		ttl?: number;
 	};
 };
+
+export type SignedURLResponse = {
+	signedURL: string;
+	fileName: string;
+};
