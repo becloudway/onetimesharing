@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import Dropdown from "./Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
+import WhiteContainer from "./components/WhiteContainer";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
@@ -56,7 +57,7 @@ function KeyGenerator() {
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<ClickableLogo />
-				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
+				<WhiteContainer>
 					<div className="text-[20px] font-bold">1. Install GPG</div>
 					<br />
 					<ul>
@@ -100,7 +101,7 @@ function KeyGenerator() {
 							The key is defined in the output file <code>public.pgp</code> that was generated above.
 						</li>
 					</ul>
-				</div>
+				</WhiteContainer>
 				<Dropdown
 					title="Browser-based generation"
 					show={showBrowserBased}
@@ -108,7 +109,7 @@ function KeyGenerator() {
 						setShowBrowserBased(!showBrowserBased);
 					}}
 				>
-					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lg-[12px] bg-white">
+					<WhiteContainer>
 						<InfoBox
 							text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a
 			password manager for example. This keypair can be reused for sharing secrets indefinitely. Meaning the private key can be reused
@@ -152,7 +153,7 @@ function KeyGenerator() {
 						>
 							Generate a new PGP keypair
 						</button>
-					</div>
+					</WhiteContainer>
 				</Dropdown>
 			</div>
 		</Container>
