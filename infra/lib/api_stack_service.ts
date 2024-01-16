@@ -40,7 +40,7 @@ export class ApiStackService extends Construct {
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `bolleje-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getSHEsecret.zip`),
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`),
 			handler: "getSHEsecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -50,7 +50,7 @@ export class ApiStackService extends Construct {
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
 			functionName: `bolleje-${environmentName}-postSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postSHEsecret.zip`),
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecret.zip`),
 			handler: "postSHEsecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -60,7 +60,7 @@ export class ApiStackService extends Construct {
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
 			functionName: `bolleje-${environmentName}-getE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getE2Esecret.zip`),
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecret.zip`),
 			handler: "getE2Esecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -70,18 +70,28 @@ export class ApiStackService extends Construct {
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
 			functionName: `bolleje-${environmentName}-postE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postE2Esecret.zip`),
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecret.zip`),
 			handler: "postE2Esecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
 			},
 		});
 
-		const getS3URLHandler = new lambda.Function(this, "GetS3URLHandler", {
-			functionName: `bolleje-${environmentName}-getS3URLlambda`,
+		const postPublicKeyHandler = new lambda.Function(this, "PostPublicKeyHandler", {
+			functionName: `bolleje-${environmentName}-postPublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getS3URL.zip`),
-			handler: "getS3URL.handler",
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postPublicKey.zip`),
+			handler: "postPublicKey.handler",
+			environment: {
+				bucketName: S3Storage.bucketName,
+			},
+		});
+
+		const getPublicKeyHandler = new lambda.Function(this, "GetPublicKeyHandler", {
+			functionName: `bolleje-${environmentName}-getPublicKeylambda`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getPublicKey.zip`),
+			handler: "getPublicKey.handler",
 			environment: {
 				bucketName: S3Storage.bucketName,
 			},
@@ -108,7 +118,11 @@ export class ApiStackService extends Construct {
 			requestTemplates: { "application/json": '{ "body" : $input.json("$") }' },
 		});
 
-		const getS3URLIntegration = new apigateway.LambdaIntegration(getS3URLHandler, {
+		const postPublicKeyIntegration = new apigateway.LambdaIntegration(postPublicKeyHandler, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
+		const getPublicKeyIntegration = new apigateway.LambdaIntegration(getPublicKeyHandler, {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
@@ -124,7 +138,8 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
-		apiRoute.addResource(eMethods.GET_S3_URL).addMethod("GET", getS3URLIntegration); // GET /
+		apiRoute.addResource(eMethods.POST_PUBLIC_KEY).addMethod("POST", postPublicKeyIntegration); // GET /
+		apiRoute.addResource(eMethods.GET_PUBLIC_KEY).addResource("{uuid}").addMethod("GET", getPublicKeyIntegration); // POST /
 
 		/*
             Give the Lambda functions permissions to access the database.
@@ -134,6 +149,9 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
+
+		S3Storage.grantWrite(postPublicKeyHandler);
+		S3Storage.grantRead(getPublicKeyHandler);
 
 		this.ApiGateway = apiGateway;
 	}
