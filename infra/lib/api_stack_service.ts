@@ -135,6 +135,8 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
 
+		S3Storage.grantReadWrite(postPublicKeyHandler);
+
 		this.ApiGateway = apiGateway;
 	}
 }
