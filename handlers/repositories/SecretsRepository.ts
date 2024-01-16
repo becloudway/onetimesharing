@@ -2,10 +2,10 @@ import generateTTL from "../helper_functions/timeToLive";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-import { SecretsStructure } from "../types/types";
+import { SecretsStructure, SignedURLResponse } from "../types/types";
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl, S3RequestPresigner } from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -57,10 +57,18 @@ const SecretsRepository = class {
 		return response as unknown as SecretsStructure;
 	}
 
-	static async GetS3URL(filename: string) {
+	static async GetS3URL() {
+		const generatedUuid = uuidv4();
+
 		const client = new S3Client({});
-		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: filename });
-		return getSignedUrl(client, command, { expiresIn: 3600 });
+		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: generatedUuid });
+
+		const response: SignedURLResponse = {
+			signedURL: await getSignedUrl(client, command, { expiresIn: 3600 }),
+			fileName: generatedUuid,
+		};
+
+		return response;
 	}
 };
 
