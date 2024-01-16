@@ -58,14 +58,14 @@ const SecretsRepository = class {
 	}
 
 	static async GetS3URL() {
-		const generatedUuid = uuidv4();
+		const fileName = `${uuidv4()}.gpg`;
 
 		const client = new S3Client({});
-		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: generatedUuid });
+		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: fileName });
 
 		const response: SignedURLResponse = {
 			signedURL: await getSignedUrl(client, command, { expiresIn: 3600 }),
-			fileName: generatedUuid,
+			fileName: fileName,
 		};
 
 		return response;
