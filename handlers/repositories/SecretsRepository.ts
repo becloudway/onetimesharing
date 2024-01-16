@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure, SignedURLResponse } from "../types/types";
 
-import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client, GetObjectCommand, S3 } from "@aws-sdk/client-s3";
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -57,17 +57,19 @@ const SecretsRepository = class {
 	}
 
 	static async PostPublicKey(public_key: string) {
-		const fileName = `${uuidv4()}.gpg`;
+		const id = uuidv4();
+		const fileName = `${id}.gpg`;
 
-		const client = new S3Client({});
-		const command = new PutObjectCommand({ Bucket: process.env.bucketName, Key: fileName, Body: public_key });
+		let S3Client = new S3({ region: process.env.AWS_REGION });
 
-		const response: any = new GetObjectCommand({
+		await S3Client.putObject({
 			Bucket: process.env.bucketName,
 			Key: fileName,
+			Body: public_key,
+			ContentType: "text/plain",
 		});
 
-		return response;
+		return id;
 	}
 };
 

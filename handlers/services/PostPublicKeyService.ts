@@ -19,7 +19,7 @@ const PostPublicKeyService = class {
 			/**
 			 * Sends the request to the SecretsRepository.
 			 */
-			const response: SignedURLResponse = await SecretsRepository.PostPublicKey(data.public_key);
+			const response: string = await SecretsRepository.PostPublicKey(data.public_key);
 
 			/**
 			 * Handles the response from the SecretsRepository.
