@@ -9,7 +9,7 @@
 		"build-postSHE": "npm run prebuild && npm run build-postSHEsecret && npm run upload-postSHEsecret",
 		"build-getE2E": "npm run prebuild && npm run build-getE2Esecret && npm run upload-getE2Esecret",
 		"build-postE2E": "npm run prebuild && npm run build-postE2Esecret && npm run upload-postE2Esecret",
-		"build-postPublic": "npm run prebuild && npm run build-postKey && npm run upload-postPublicKey",
+		"build-postPublic": "npm run prebuild && npm run build-postPublicKey && npm run upload-postPublicKey",
 		"build-getPublic": "npm run prebuild && npm run build-getPublicKey && npm run upload-getPublicKey",
 		"build": "npm run prebuild && npm run combined-build",
 		"build-upload": "npm run prebuild && npm run combined-build && npm run combined-upload",

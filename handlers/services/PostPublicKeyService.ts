@@ -19,15 +19,17 @@ const PostPublicKeyService = class {
 			/**
 			 * Sends the request to the SecretsRepository.
 			 */
-			const response: any = await SecretsRepository.PostPublicKey(data.public_key);
+			const id: any = await SecretsRepository.PostPublicKey(data.public_key);
 
 			/**
 			 * Handles the response from the SecretsRepository.
 			 */
-			if (response === undefined) {
+			if (id === undefined) {
 				return buildResponseBody(400, `Cannot satisfy the request.`);
 			} else {
-				return this.#handlePostRequest(response);
+				return this.#handlePostRequest({
+					id,
+				});
 			}
 		}
 

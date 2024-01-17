@@ -88,7 +88,9 @@ const SecretsRepository = class {
 		try {
 			const response = await client.send(command);
 			const str = await response.Body?.transformToString();
-			return str;
+			return {
+				public_key: str,
+			};
 		} catch (err) {
 			console.log(err);
 		}
