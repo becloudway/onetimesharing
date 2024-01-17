@@ -31,7 +31,6 @@ function E2Eencryption() {
 				errorHandling(err);
 				setLoading(false);
 			});
-		setLoading(false);
 	};
 
 	const encryptSecret = () => {
