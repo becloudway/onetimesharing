@@ -90,6 +90,29 @@ export class Api {
 		});
 	};
 
+	public static GetPublicKey = async (uuid: string) => {
+		return new Promise(async (resolve: (value: string) => void, reject) => {
+			await axios
+				.get(`${dev && apiURL}/api/getpublickey/${uuid}`, {
+					headers: {
+						"Content-Type": "application/json",
+						"Access-Control-Allow-Origin": "*",
+					},
+				})
+				.then((res) => {
+					resolve(
+						res.data.public_key
+							.replace(/\\n/g, "\n")
+							.replace(/\r?\n(?!\r?\n)/g, "\n")
+							.replace(/\n$/, "")
+					);
+				})
+				.catch((error) => {
+					reject("Error getting secret: " + error.message);
+				});
+		});
+	};
+
 	public static PostPublicKey = async (publicKey: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios

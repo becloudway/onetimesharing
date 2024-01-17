@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
 
@@ -16,6 +16,7 @@ import { Api } from "./classes/api";
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
+	const [loadedPublicKey, setLoadedPublicKey] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -42,6 +43,27 @@ function E2Eencryption() {
 				errorHandling(err.message);
 			});
 	};
+
+	const getPublicKey = (uuid: string) => {
+		setLoading(true);
+		Api.GetPublicKey(uuid)
+			.then((response) => {
+				setLoadedPublicKey(response);
+				setPublicKey(response);
+				setLoading(false);
+			})
+			.catch((err) => {
+				errorHandling(err);
+				setLoading(false);
+			});
+	};
+
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		if (searchParams.has("uuid")) {
+			getPublicKey(searchParams.get("uuid") || "");
+		}
+	}, []);
 
 	return (
 		<Container className="bg-white">
