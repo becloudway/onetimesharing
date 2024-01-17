@@ -56,4 +56,53 @@ export default class OpenPGP {
 			throw error;
 		}
 	}
+
+	private static readFileAsync = (file: File): Promise<string> => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.onload = (event) => resolve(event.target?.result as string);
+			reader.onerror = (error) => reject(error);
+			reader.readAsText(file);
+		});
+	};
+
+	private static extractPublicKeyFromGPGFile = async (file: File) => {
+		return new Promise(async (resolve: (value: string) => void, reject) => {
+			try {
+				const fileContent = await this.readFileAsync(file);
+
+				// Parse the GPG file
+				const keys = await openpgp.readKey({ armoredKey: fileContent });
+
+				// Check if keys are present
+				if (keys !== undefined) {
+					// Extract the public key
+					const publicKeyArmored = keys.toPublic().armor();
+					resolve(publicKeyArmored);
+				} else {
+					reject("No keys found in the GPG file.");
+				}
+			} catch (error: any) {
+				reject(`Error reading or parsing the GPG file: ${error.message}`);
+			}
+		});
+	};
+
+	public static handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+		return new Promise(async (resolve: (value: string) => void, reject) => {
+			const file = event.target.files?.[0];
+
+			if (file) {
+				this.extractPublicKeyFromGPGFile(file)
+					.then((publicKey) => {
+						resolve(publicKey);
+					})
+					.catch((error) => {
+						reject(error);
+					});
+			} else {
+				reject("No file selected.");
+			}
+		});
+	};
 }

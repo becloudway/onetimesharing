@@ -20,10 +20,12 @@ function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [privateKey, setPrivateKey] = useState<string>("");
-	const [shareblePublicKey, setSharablePublicKey] = useState<string>("");
 	const [publicKeyID, setPublicKeyID] = useState<string>("");
 	const [showSharePublicKey, setShowSharePublicKey] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
+
+	const [inputPublicKey, setInputPublicKey] = useState<string>("");
+	const [loadedPublicKey, setLoadedPublicKey] = useState<string>("");
 
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -53,7 +55,9 @@ function KeyGenerator() {
 	const sharePublicKey = () => {
 		setLoading(true);
 
-		Api.PostPublicKey(shareblePublicKey)
+		if ((!loadedPublicKey && !inputPublicKey) || (loadedPublicKey === "" && inputPublicKey === "")) return;
+
+		Api.PostPublicKey(loadedPublicKey ? loadedPublicKey : inputPublicKey)
 			.then((response) => {
 				setPublicKeyID(response);
 				setLoading(false);
@@ -61,6 +65,16 @@ function KeyGenerator() {
 			.catch((err) => {
 				errorHandling(err.message);
 				setLoading(false);
+			});
+	};
+
+	const loadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+		OpenPGP.handleFile(event)
+			.then((key: any) => {
+				setLoadedPublicKey(key);
+			})
+			.catch((err) => {
+				errorHandling(err.message);
 			});
 	};
 
@@ -126,6 +140,7 @@ function KeyGenerator() {
 				</WhiteContainer>
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
+					<input type="file" onChange={loadFile} />
 					<div className="border-dashed border-2 border-slate-300 rounded text-slate-300 font-bold flex justify-center py-[20px] my-[20px] cursor-pointer hover:border-slate-500 hover:text-slate-500">
 						Upload your public key file here.
 					</div>
@@ -145,8 +160,8 @@ function KeyGenerator() {
 							<textarea
 								placeholder="Enter public key here"
 								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-								value={shareblePublicKey}
-								onChange={(e) => setSharablePublicKey(e.target.value)}
+								value={inputPublicKey}
+								onChange={(e) => setInputPublicKey(e.target.value)}
 							/>
 						</WhiteContainer>
 					</Dropdown>
