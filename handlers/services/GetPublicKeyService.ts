@@ -20,7 +20,7 @@ const GetPublicKeyService = class {
 	}
 
 	static #handleGetRequest(response: any) {
-		return buildResponseBody(200, response);
+		return buildResponseBody(200, JSON.stringify(response));
 	}
 };
 
