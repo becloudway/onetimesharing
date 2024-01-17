@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
+import { Api } from "./classes/api";
 
 function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -24,30 +25,15 @@ function SHEEncryption() {
 
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
-		await axios
-			.post(
-				`/api/addSHE`,
-				{
-					cyphertext: encryptedSecret,
-					second_half_key: second_half_key,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
-				}
-			)
-			.then((res) => {
+		Api.PostSHESecret(encryptedSecret, second_half_key)
+			.then((response) =>
 				setSecretURL({
-					uuid: res.data.id,
+					uuid: response,
 					first_half_key: first_half_key,
 					iv: iv,
-				});
-			})
-			.catch((error) => {
-				errorHandling(`Error posting secret: ${error.message}`);
-			});
+				})
+			)
+			.catch((err) => errorHandling(err));
 		setLoading(false);
 	};
 

@@ -22,9 +22,7 @@ function E2Eencryption() {
 	const postSecret = async (encryptedSecret: string) => {
 		setLoading(true);
 		Api.PostE2ESecret(encryptedSecret)
-			.then((response) => {
-				setSecretURL(response);
-			})
+			.then((response) => setSecretURL(response))
 			.catch((err) => errorHandling(err));
 		setLoading(false);
 	};

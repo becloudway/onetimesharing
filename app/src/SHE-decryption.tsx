@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
+import { Api } from "./classes/api";
 
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -20,19 +21,9 @@ function SHEDecryption() {
 	const getSecret = async (uuid: string, first_half_key: string, iv: string) => {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
-			await axios
-				.get(`/api/getSHE/${uuid}`, {
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
-				})
-				.then((res: { data: { cyphertext: string; second_half_key: string; iv: string } }) => {
-					decryptSecret(res.data.cyphertext, `${first_half_key}${res.data.second_half_key}`, iv);
-				})
-				.catch((error) => {
-					errorHandling("Error getting secret: " + error.message);
-				});
+			Api.GetSHESecret(uuid)
+				.then((response) => decryptSecret(response.data.cyphertext, `${first_half_key}${response.data.second_half_key}`, iv))
+				.catch((err) => errorHandling(err));
 			setLoading(false);
 		}
 	};
