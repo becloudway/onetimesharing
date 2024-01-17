@@ -141,9 +141,6 @@ function KeyGenerator() {
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
 					<input type="file" onChange={loadFile} />
-					<div className="border-dashed border-2 border-slate-300 rounded text-slate-300 font-bold flex justify-center py-[20px] my-[20px] cursor-pointer hover:border-slate-500 hover:text-slate-500">
-						Upload your public key file here.
-					</div>
 					<Dropdown
 						disableMargin
 						innerDropdown
