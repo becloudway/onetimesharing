@@ -96,7 +96,7 @@ export class Api {
 				.post(
 					`${dev && apiURL}/api/postpublickey`,
 					{
-						public_key: publicKey,
+						public_key: publicKey.replace(/\r?\n+$/, "").replace(/\r?\n(?!\r?\n)/g, "\\n"),
 					},
 					{
 						headers: {

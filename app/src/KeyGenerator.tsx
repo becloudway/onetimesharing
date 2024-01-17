@@ -21,6 +21,7 @@ function KeyGenerator() {
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [privateKey, setPrivateKey] = useState<string>("");
 	const [shareblePublicKey, setSharablePublicKey] = useState<string>("");
+	const [publicKeyID, setPublicKeyID] = useState<string>("");
 	const [showSharePublicKey, setShowSharePublicKey] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
 
@@ -51,12 +52,10 @@ function KeyGenerator() {
 
 	const sharePublicKey = () => {
 		setLoading(true);
-		const formattedKey = shareblePublicKey.replace(/\r?\n+$/, "").replace(/\r?\n(?!\r?\n)/g, "\\n");
-		alert(formattedKey);
 
-		Api.PostPublicKey(formattedKey)
+		Api.PostPublicKey(shareblePublicKey)
 			.then((response) => {
-				alert(response);
+				setPublicKeyID(response);
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -151,6 +150,7 @@ function KeyGenerator() {
 							/>
 						</WhiteContainer>
 					</Dropdown>
+					<div>{publicKeyID}</div>
 					<button
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						onClick={sharePublicKey}
