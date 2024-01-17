@@ -8,10 +8,11 @@ interface DropdownProps {
 	title: string;
 	show: boolean;
 	innerDropdown?: boolean;
+	disableMargin?: boolean;
 	toggle: () => void;
 }
 
-const Dropdown = ({ children, title, toggle, show, innerDropdown }: DropdownProps) => {
+const Dropdown = ({ children, title, toggle, show, innerDropdown, disableMargin }: DropdownProps) => {
 	const [delayedProperties, setDelayedProperties] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -21,9 +22,9 @@ const Dropdown = ({ children, title, toggle, show, innerDropdown }: DropdownProp
 	}, [show]);
 
 	return (
-		<Wrapper>
+		<Wrapper className={`${!disableMargin && "mt-[34px]"}`}>
 			<TitleBox
-				className={`${innerDropdown ? "bg-slate-200" : "bg-white"}`}
+				className={`${innerDropdown ? "bg-slate-100" : "bg-white"}`}
 				onClick={() => {
 					if (show === delayedProperties) toggle();
 				}}
@@ -33,7 +34,7 @@ const Dropdown = ({ children, title, toggle, show, innerDropdown }: DropdownProp
 				<Title>{title}</Title>
 				<StyledArrowDownIcon show={show} />
 			</TitleBox>
-			<Container show={show} delayedProperties={delayedProperties} className={`${innerDropdown ? "bg-slate-200" : "bg-white"}`}>
+			<Container show={show} delayedProperties={delayedProperties} className={`${innerDropdown ? "bg-slate-100" : "bg-white"}`}>
 				{children}
 			</Container>
 		</Wrapper>
@@ -48,8 +49,6 @@ const Wrapper = styled.div`
 
 	width: 100%;
 	max-width: 1400px;
-
-	margin-top: 34px;
 `;
 
 const TitleBox = styled.div<{ show: boolean; delayedProperties: boolean }>`

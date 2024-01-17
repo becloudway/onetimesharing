@@ -106,9 +106,13 @@ function KeyGenerator() {
 				</WhiteContainer>
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
+					<div className="border-dashed border-2 border-slate-300 rounded text-slate-300 font-bold flex justify-center py-[20px] my-[20px] cursor-pointer hover:border-slate-500 hover:text-slate-500">
+						Upload your public key file here.
+					</div>
 					<Dropdown
+						disableMargin
 						innerDropdown
-						title="Share your public key (Paste key)"
+						title="Paste public key"
 						show={showSharePublicKey}
 						toggle={() => {
 							setShowSharePublicKey(!showSharePublicKey);
@@ -124,11 +128,11 @@ function KeyGenerator() {
 								value={publicKey}
 								onChange={(e) => setPublicKey(e.target.value)}
 							/>
-							<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
-								Share your secret.
-							</button>
 						</WhiteContainer>
 					</Dropdown>
+					<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
+						Share your secret.
+					</button>
 				</WhiteContainer>
 				<Dropdown
 					title="Browser-based generation"
