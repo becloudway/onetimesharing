@@ -55,7 +55,11 @@ function KeyGenerator() {
 	const sharePublicKey = () => {
 		setLoading(true);
 
-		if ((!loadedPublicKey && !inputPublicKey) || (loadedPublicKey === "" && inputPublicKey === "")) return;
+		if ((!loadedPublicKey && !inputPublicKey) || (loadedPublicKey === "" && inputPublicKey === "")) {
+			errorHandling("Please enter a public key");
+			setLoading(false);
+			return;
+		}
 
 		Api.PostPublicKey(loadedPublicKey ? loadedPublicKey : inputPublicKey)
 			.then((response) => {
