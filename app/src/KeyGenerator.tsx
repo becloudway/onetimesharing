@@ -109,7 +109,7 @@ function KeyGenerator() {
 						setShowBrowserBased(!showBrowserBased);
 					}}
 				>
-					<WhiteContainer>
+					<WhiteContainer dropdown>
 						<InfoBox
 							text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a
 			password manager for example. This keypair can be reused for sharing secrets indefinitely. Meaning the private key can be reused

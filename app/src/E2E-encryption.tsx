@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 import styled from "styled-components";
 
@@ -12,6 +11,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
+import { Api } from "./classes/api";
 
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -21,24 +21,12 @@ function E2Eencryption() {
 
 	const postSecret = async (encryptedSecret: string) => {
 		setLoading(true);
-		await axios
-			.post(
-				`/api/addE2E`,
-				{
-					cyphertext: encryptedSecret,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
-				}
-			)
-			.then((res) => {
-				setSecretURL(res.data.id);
+		Api.PostE2ESecret(encryptedSecret)
+			.then((response) => {
+				setSecretURL(response as string);
 			})
-			.catch((error) => {
-				errorHandling(`Error posting secret: ${error.message}`);
+			.catch((err) => {
+				errorHandling(err);
 			});
 		setLoading(false);
 	};

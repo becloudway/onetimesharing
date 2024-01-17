@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { ReactComponent as ArrowDownIcon } from "./assets/dropdown-arrow.svg";
+import { ReactComponent as ArrowDownIcon } from "../assets/dropdown-arrow.svg";
 
 interface DropdownProps {
 	children: any;

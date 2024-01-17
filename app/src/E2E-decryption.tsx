@@ -14,6 +14,7 @@ import CopyToClipBoard from "./components/CopyToClipBoard";
 import DownloadFile from "./components/DownloadFile";
 import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
+import WhiteContainer from "./components/WhiteContainer";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -120,7 +121,7 @@ function E2Edecryption() {
 						setShowBrowserBased(!showBrowserBased);
 					}}
 				>
-					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lr-[12px] bg-white">
+					<WhiteContainer dropdown>
 						<div className="text-[#EC0000] text-[18px] font-bold">Enter your passphrase</div>
 						<input
 							type="text"
@@ -142,7 +143,7 @@ function E2Edecryption() {
 						>
 							Decrypt the secret
 						</button>
-					</div>
+					</WhiteContainer>
 				</Dropdown>
 			</div>
 		</Container>
