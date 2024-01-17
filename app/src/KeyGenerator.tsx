@@ -13,6 +13,8 @@ import CopyToClipBoard from "./components/CopyToClipBoard";
 import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 import WhiteContainer from "./components/WhiteContainer";
+import LoadingScreen from "./components/LoadingScreen";
+import { Api } from "./classes/api";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
@@ -21,6 +23,8 @@ function KeyGenerator() {
 	const [shareblePublicKey, setSharablePublicKey] = useState<string>("");
 	const [showSharePublicKey, setShowSharePublicKey] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
+
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const generateKeyPair = () => {
 		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) {
@@ -45,8 +49,25 @@ function KeyGenerator() {
 			});
 	};
 
+	const sharePublicKey = () => {
+		setLoading(true);
+		const formattedKey = shareblePublicKey.replace(/\r?\n+$/, "").replace(/\r?\n(?!\r?\n)/g, "\\n");
+		alert(formattedKey);
+
+		Api.PostPublicKey(formattedKey)
+			.then((response) => {
+				alert(response);
+				setLoading(false);
+			})
+			.catch((err) => {
+				errorHandling(err.message);
+				setLoading(false);
+			});
+	};
+
 	return (
 		<Container className="bg-white">
+			<LoadingScreen show={loading} />
 			<ToastContainer
 				position="bottom-right"
 				autoClose={false}
@@ -125,13 +146,16 @@ function KeyGenerator() {
 							<textarea
 								placeholder="Enter public key here"
 								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-								value={publicKey}
-								onChange={(e) => setPublicKey(e.target.value)}
+								value={shareblePublicKey}
+								onChange={(e) => setSharablePublicKey(e.target.value)}
 							/>
 						</WhiteContainer>
 					</Dropdown>
-					<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
-						Share your secret.
+					<button
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+						onClick={sharePublicKey}
+					>
+						Share your secret
 					</button>
 				</WhiteContainer>
 				<Dropdown

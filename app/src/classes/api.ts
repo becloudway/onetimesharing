@@ -89,4 +89,28 @@ export class Api {
 				});
 		});
 	};
+
+	public static PostPublicKey = async (publicKey: string) => {
+		return new Promise(async (resolve: (value: string) => void, reject) => {
+			await axios
+				.post(
+					`${dev && apiURL}/api/postpublickey`,
+					{
+						public_key: publicKey,
+					},
+					{
+						headers: {
+							"Content-Type": "application/json",
+							"Access-Control-Allow-Origin": "*",
+						},
+					}
+				)
+				.then((res) => {
+					resolve(res.data.id);
+				})
+				.catch((error) => {
+					reject(`Error posting secret: ${error.message}`);
+				});
+		});
+	};
 }
