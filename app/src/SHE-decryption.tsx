@@ -22,9 +22,14 @@ function SHEDecryption() {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
 			Api.GetSHESecret(uuid)
-				.then((response) => decryptSecret(response.data.cyphertext, `${first_half_key}${response.data.second_half_key}`, iv))
-				.catch((err) => errorHandling(err));
-			setLoading(false);
+				.then((response) => {
+					decryptSecret(response.data.cyphertext, `${first_half_key}${response.data.second_half_key}`, iv);
+					setLoading(false);
+				})
+				.catch((err) => {
+					errorHandling(err);
+					setLoading(false);
+				});
 		}
 	};
 

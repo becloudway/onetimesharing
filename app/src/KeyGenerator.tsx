@@ -18,6 +18,8 @@ function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [privateKey, setPrivateKey] = useState<string>("");
+	const [shareblePublicKey, setSharablePublicKey] = useState<string>("");
+	const [showSharePublicKey, setShowSharePublicKey] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
 
 	const generateKeyPair = () => {
@@ -101,6 +103,32 @@ function KeyGenerator() {
 							The key is defined in the output file <code>public.pgp</code> that was generated above.
 						</li>
 					</ul>
+				</WhiteContainer>
+				<WhiteContainer>
+					<div className="text-[20px] font-bold">Share your public key</div>
+					<Dropdown
+						innerDropdown
+						title="Share your public key (Paste key)"
+						show={showSharePublicKey}
+						toggle={() => {
+							setShowSharePublicKey(!showSharePublicKey);
+						}}
+					>
+						<WhiteContainer dropdown disableBackground>
+							<div className="text-[#007BEC] text-[18px] font-bold">
+								You can alternatively paste your secret here to generate a sharable link.
+							</div>
+							<textarea
+								placeholder="Enter public key here"
+								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+								value={publicKey}
+								onChange={(e) => setPublicKey(e.target.value)}
+							/>
+							<button className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white">
+								Share your secret.
+							</button>
+						</WhiteContainer>
+					</Dropdown>
 				</WhiteContainer>
 				<Dropdown
 					title="Browser-based generation"

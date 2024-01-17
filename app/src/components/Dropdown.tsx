@@ -7,10 +7,11 @@ interface DropdownProps {
 	children: any;
 	title: string;
 	show: boolean;
+	innerDropdown?: boolean;
 	toggle: () => void;
 }
 
-const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
+const Dropdown = ({ children, title, toggle, show, innerDropdown }: DropdownProps) => {
 	const [delayedProperties, setDelayedProperties] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -22,6 +23,7 @@ const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
 	return (
 		<Wrapper>
 			<TitleBox
+				className={`${innerDropdown ? "bg-slate-200" : "bg-white"}`}
 				onClick={() => {
 					if (show === delayedProperties) toggle();
 				}}
@@ -31,7 +33,7 @@ const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
 				<Title>{title}</Title>
 				<StyledArrowDownIcon show={show} />
 			</TitleBox>
-			<Container show={show} delayedProperties={delayedProperties}>
+			<Container show={show} delayedProperties={delayedProperties} className={`${innerDropdown ? "bg-slate-200" : "bg-white"}`}>
 				{children}
 			</Container>
 		</Wrapper>
@@ -59,8 +61,6 @@ const TitleBox = styled.div<{ show: boolean; delayedProperties: boolean }>`
 	justify-content: space-between;
 
 	padding-inline: 30px;
-
-	background: white;
 
 	${({ show, delayedProperties }) =>
 		show ? "border-radius: 8px 8px 0 0;" : delayedProperties ? "border-radius: 8px 8px 0 0;" : "border-radius: 8px"}

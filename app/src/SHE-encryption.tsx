@@ -26,15 +26,18 @@ function SHEEncryption() {
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
 		Api.PostSHESecret(encryptedSecret, second_half_key)
-			.then((response) =>
+			.then((response) => {
 				setSecretURL({
 					uuid: response,
 					first_half_key: first_half_key,
 					iv: iv,
-				})
-			)
-			.catch((err) => errorHandling(err));
-		setLoading(false);
+				});
+				setLoading(false);
+			})
+			.catch((err) => {
+				errorHandling(err);
+				setLoading(false);
+			});
 	};
 
 	const encryptSecret = async () => {

@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const dev = process.env.NODE_ENV === "dev";
-const apiURL: string = "";
+const apiURL: string = "https://d1na5vlrxp418x.cloudfront.net";
 
 export class Api {
 	public static GetSHESecret = async (uuid: string) => {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`/api/getSHE/${uuid}`, {
+				.get(`${dev && apiURL}/api/getSHE/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",

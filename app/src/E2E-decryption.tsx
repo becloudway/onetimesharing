@@ -29,9 +29,14 @@ function E2Edecryption() {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
 			Api.GetE2ESecret(uuid)
-				.then((response) => setSecret(response))
-				.catch((err) => errorHandling(err));
-			setLoading(false);
+				.then((response) => {
+					setSecret(response);
+					setLoading(false);
+				})
+				.catch((err) => {
+					errorHandling(err);
+					setLoading(false);
+				});
 		}
 	};
 
