@@ -3,7 +3,7 @@ import axios from "axios";
 
 import styled from "styled-components";
 
-import AES256 from "./aes-256";
+import AES256 from "./classes/aes-256";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";

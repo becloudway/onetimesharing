@@ -3,7 +3,7 @@ import axios from "axios";
 
 import styled from "styled-components";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import DownloadFile from "./components/DownloadFile";
-import Dropdown from "./Dropdown";
+import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 
 function E2Edecryption() {

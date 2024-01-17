@@ -3,14 +3,14 @@ import styled from "styled-components";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
 import InfoBox from "./components/InfoBox";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import CopyToClipBoard from "./components/CopyToClipBoard";
-import Dropdown from "./Dropdown";
+import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 import WhiteContainer from "./components/WhiteContainer";
 

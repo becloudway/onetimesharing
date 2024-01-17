@@ -3,7 +3,7 @@ import axios from "axios";
 
 import styled from "styled-components";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
