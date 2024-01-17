@@ -4,7 +4,7 @@
 	"description": "A boilerplate that uses React, Typescript and Vite to build desktop applications.",
 	"main": "./dist/main.js",
 	"scripts": {
-		"dev": "npm run react:dev",
+		"dev": "NODE_ENV=dev npm run react:dev",
 		"react:dev": "vite",
 		"react:build": "vite build",
 		"react:start": "vite preview",

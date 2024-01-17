@@ -15,6 +15,7 @@ import DownloadFile from "./components/DownloadFile";
 import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 import WhiteContainer from "./components/WhiteContainer";
+import { Api } from "./classes/api";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -27,19 +28,11 @@ function E2Edecryption() {
 		//Get the secret
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
-			await axios
-				.get(`/api/getE2E/${uuid}`, {
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
+			Api.GetE2ESecret(uuid)
+				.then((response) => {
+					setSecret(response);
 				})
-				.then((res) => {
-					setSecret(res.data.cyphertext);
-				})
-				.catch((error) => {
-					errorHandling("Error getting secret: " + error.message);
-				});
+				.catch((err) => errorHandling(err));
 			setLoading(false);
 		}
 	};

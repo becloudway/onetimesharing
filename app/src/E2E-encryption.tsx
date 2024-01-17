@@ -23,11 +23,9 @@ function E2Eencryption() {
 		setLoading(true);
 		Api.PostE2ESecret(encryptedSecret)
 			.then((response) => {
-				setSecretURL(response as string);
+				setSecretURL(response);
 			})
-			.catch((err) => {
-				errorHandling(err);
-			});
+			.catch((err) => errorHandling(err));
 		setLoading(false);
 	};
 
