@@ -166,7 +166,7 @@ function KeyGenerator() {
 							/>
 						</WhiteContainer>
 					</Dropdown>
-					<div>{publicKeyID}</div>
+					<div>{publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`}</div>
 					<button
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						onClick={sharePublicKey}
