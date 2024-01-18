@@ -171,7 +171,7 @@ function KeyGenerator() {
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						onClick={sharePublicKey}
 					>
-						Share your secret
+						Share your public key
 					</button>
 				</WhiteContainer>
 				<Dropdown
