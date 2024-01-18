@@ -4,7 +4,7 @@ import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
 
-import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -93,6 +93,24 @@ const SecretsRepository = class {
 			};
 		} catch (err) {
 			console.log(err);
+		}
+	}
+
+	static async RemovePublicKey(uuid: string) {
+		const fileName = `${uuid}.gpg`;
+
+		const client = new S3Client({});
+		const command = new DeleteObjectCommand({
+			Bucket: process.env.bucketName,
+			Key: fileName,
+		});
+
+		try {
+			await client.send(command);
+			return true;
+		} catch (err) {
+			console.log(err);
+			return false;
 		}
 	}
 };
