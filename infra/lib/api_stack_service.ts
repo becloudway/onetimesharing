@@ -104,6 +104,7 @@ export class ApiStackService extends Construct {
 			handler: "invalidatePublicKey.handler",
 			environment: {
 				bucketName: S3Storage.bucketName,
+				tableName: DynamoDBStorage.tableName,
 			},
 		});
 
@@ -165,6 +166,7 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
+		DynamoDBStorage.grantReadWriteData(invalidatePublicKey);
 
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);

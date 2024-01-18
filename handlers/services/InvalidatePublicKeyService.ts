@@ -11,7 +11,13 @@ const InvalidatePublicKeyService = class {
 
 			if (!response) buildResponseBody(400, `No public key was found for the id: ${uuid}`);
 
-			return this.#handleDeleteRequest(`The public key with ID "${uuid}" has successfully been deleted.`);
+			const deletedCount: number = await SecretsRepository.InvalidateSecret(uuid);
+
+			if (!deletedCount) buildResponseBody(400, `No secrets were found for the public key with id: ${uuid}`);
+
+			return this.#handleDeleteRequest(
+				`The public key with ID "${uuid}" has successfully been deleted. Along with ${deletedCount} secrets.`
+			);
 		}
 
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
