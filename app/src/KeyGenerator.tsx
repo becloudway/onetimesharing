@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
 import InfoBox from "./components/InfoBox";
@@ -26,6 +26,9 @@ function KeyGenerator() {
 
 	const [inputPublicKey, setInputPublicKey] = useState<string>("");
 	const [loadedPublicKey, setLoadedPublicKey] = useState<string>("");
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [fileName, setFileName] = useState<string>("");
 
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -72,7 +75,16 @@ function KeyGenerator() {
 			});
 	};
 
-	const loadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!fileInputRef.current) return;
+		if (!fileInputRef.current.files) return;
+
+		const fileName = fileInputRef.current.files[0].name;
+		if (!fileName) return;
+		alert(fileName);
+
+		setFileName(fileName);
+
 		OpenPGP.handleFile(event)
 			.then((key: any) => {
 				setLoadedPublicKey(key);
@@ -80,6 +92,12 @@ function KeyGenerator() {
 			.catch((err) => {
 				errorHandling(err.message);
 			});
+	};
+
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
 	};
 
 	return (
@@ -144,7 +162,15 @@ function KeyGenerator() {
 				</WhiteContainer>
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
-					<input type="file" onChange={loadFile} />
+					<div className="relative w-full h-[100px] my-[16px]">
+						<div
+							className="w-full h-full flex items-center justify-center text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
+							onClick={handleButtonClick}
+						>
+							{fileName ? fileName : "Click here to select a public key"}
+						</div>
+						<input className="absolute" type="file" ref={fileInputRef} onChange={handleFileSelect} />
+					</div>
 					<Dropdown
 						disableMargin
 						innerDropdown
@@ -255,5 +281,22 @@ const Container = styled.div`
 		border: 1px solid #ccc; /* Add a border for better separation */
 		border-radius: 4px; /* Add rounded corners */
 		color: #333; /* Set the text color */
+	}
+
+	/* Style the custom upload button */
+	input[type="file"]::file-selector-button {
+		width: 0;
+		height: 0;
+		max-height: 0;
+		max-width: 0;
+		outline: none;
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	input[type="file"] {
+		opacity: 0;
 	}
 `;
