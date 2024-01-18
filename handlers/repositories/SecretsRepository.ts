@@ -6,6 +6,16 @@ import { SecretsStructure } from "../types/types";
 
 import { PutObjectCommand, S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
+type DynamoDBSecretsStructure = {
+	uuid: string;
+	encryption_type: string;
+	cyphertext: string;
+	retrievedCount: number;
+	second_half_key: string;
+	ttl: number;
+	public_key_uuid?: string;
+};
+
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
 	static dynamo = DynamoDBDocumentClient.from(this.client);
@@ -15,7 +25,7 @@ const SecretsRepository = class {
 		const generatedUuid = uuidv4();
 		const time_to_live = generateTTL();
 
-		const item = {
+		let item: DynamoDBSecretsStructure = {
 			uuid: generatedUuid,
 			encryption_type: data.Item.encryption_type || "SHE",
 			cyphertext: data.Item.cyphertext || "",
@@ -23,6 +33,13 @@ const SecretsRepository = class {
 			second_half_key: data.Item.second_half_key || "",
 			ttl: time_to_live,
 		};
+
+		if (data.Item.encryption_type === "E2E") {
+			item = {
+				...item,
+				public_key_uuid: data.Item.public_key_uuid,
+			};
+		}
 
 		await this.dynamo.send(
 			new PutCommand({
@@ -112,6 +129,19 @@ const SecretsRepository = class {
 			console.log(err);
 			return false;
 		}
+	}
+
+	static async InvalidateSecret(public_key_uuid: string) {
+		const response = await this.dynamo.send(
+			new DeleteCommand({
+				TableName: process.env.tableName,
+				Key: {
+					uuid: public_key_uuid,
+				},
+			})
+		);
+
+		return response;
 	}
 };
 
