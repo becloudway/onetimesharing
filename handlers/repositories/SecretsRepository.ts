@@ -34,7 +34,7 @@ const SecretsRepository = class {
 			ttl: time_to_live,
 		};
 
-		if (data.Item.encryption_type === "E2E") {
+		if (data.Item.public_key_uuid) {
 			item = {
 				...item,
 				public_key_uuid: data.Item.public_key_uuid,

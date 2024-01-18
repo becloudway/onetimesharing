@@ -37,7 +37,7 @@ const PostSecretsService = class {
 			data.Item = {
 				...data.Item,
 				encryption_type: route === "/addSHE" ? "SHE" : "E2E",
-				public_key_uuid: route === "/addE2E" ? (data.Item.public_key_uuid ? data.Item.public_key_uuid : "not-defined") : undefined,
+				public_key_uuid: route === "/addE2E" ? (data.Item.public_key_uuid ? data.Item.public_key_uuid : undefined) : undefined,
 			};
 
 			const uuid = await SecretsRepository.PostItem(data as SecretsStructure);
