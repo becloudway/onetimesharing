@@ -37,6 +37,7 @@ const PostSecretsService = class {
 			data.Item = {
 				...data.Item,
 				encryption_type: route === "/addSHE" ? "SHE" : "E2E",
+				public_key_uuid: route === "/addE2E" ? (data.Item.public_key_uuid ? data.Item.public_key_uuid : undefined) : undefined,
 			};
 
 			const uuid = await SecretsRepository.PostItem(data as SecretsStructure);
@@ -81,11 +82,31 @@ const PostSecretsService = class {
 	}
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
-		if (Object.keys(data.Item).length !== 1) {
-			if (!Object.keys(data.Item).includes("cyphertext")) {
-				return buildResponseBody(400, "Missing cyphertext field.");
+		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
+
+		if (publicKeyIsIncluded) {
+			if (Object.keys(data.Item).length !== 2) {
+				if (!Object.keys(data.Item).includes("cyphertext")) {
+					return buildResponseBody(400, "Missing cyphertext field.");
+				}
+
+				if (!Object.keys(data.Item).includes("public_key_uuid")) {
+					return buildResponseBody(400, "Missing public_key_uuid field.");
+				}
+
+				return buildResponseBody(400, "The request body must only contain the following fields: cyphertext, public_key_uuid.");
 			}
-			return buildResponseBody(400, "The request body must only contain the following field: cyphertext.");
+		} else {
+			if (Object.keys(data.Item).length !== 1) {
+				if (!Object.keys(data.Item).includes("cyphertext")) {
+					return buildResponseBody(400, "Missing cyphertext field.");
+				}
+
+				return buildResponseBody(
+					400,
+					"The request body must only contain the following fields: cyphertext and optionally the public_key_uuid field."
+				);
+			}
 		}
 
 		if (data.Item.cyphertext === "") {
@@ -94,6 +115,14 @@ const PostSecretsService = class {
 
 		if (data.Item.cyphertext.length > 20032) {
 			return buildResponseBody(400, "The cyphertext field must be set to a size of 20032 characters or less.");
+		}
+
+		if (publicKeyIsIncluded && data.Item.public_key_uuid === "") {
+			return buildResponseBody(400, "The public_key_uuid field cannot be empty.");
+		}
+
+		if (publicKeyIsIncluded && data.Item.public_key_uuid?.length !== 36) {
+			return buildResponseBody(400, "The public_key_uuid field must be set to a string of 36 characters.");
 		}
 
 		return true;

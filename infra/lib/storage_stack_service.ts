@@ -15,6 +15,13 @@ export class StorageStackService extends Construct {
 			timeToLiveAttribute: "ttl",
 			removalPolicy: RemovalPolicy.DESTROY,
 			tableName: `bolleje-${environmentName}-dynamodb`,
+			globalSecondaryIndexes: [
+				{
+					indexName: "public_key_index",
+					partitionKey: { name: "public_key_uuid", type: dynamodb.AttributeType.STRING },
+					projectionType: dynamodb.ProjectionType.KEYS_ONLY,
+				},
+			],
 		});
 
 		const bucket = new Bucket(this, `bolleje-${environmentName}-s3-codestorage`, {

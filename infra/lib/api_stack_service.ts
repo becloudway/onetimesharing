@@ -97,6 +97,17 @@ export class ApiStackService extends Construct {
 			},
 		});
 
+		const invalidatePublicKey = new lambda.Function(this, "InvalidatePublicKeyHandler", {
+			functionName: `bolleje-${environmentName}-invalidatePublicKeylambda`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-invalidatePublicKey.zip`),
+			handler: "invalidatePublicKey.handler",
+			environment: {
+				bucketName: S3Storage.bucketName,
+				tableName: DynamoDBStorage.tableName,
+			},
+		});
+
 		/*
             API Gateway Lambda Integrations
         */
@@ -126,6 +137,10 @@ export class ApiStackService extends Construct {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
+		const invalidatePublicKeyIntegration = new apigateway.LambdaIntegration(invalidatePublicKey, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
 		/*
             Defining of the routes from the Gateway to the Lambda functions
         */
@@ -141,6 +156,8 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.POST_PUBLIC_KEY).addMethod("POST", postPublicKeyIntegration); // GET /
 		apiRoute.addResource(eMethods.GET_PUBLIC_KEY).addResource("{uuid}").addMethod("GET", getPublicKeyIntegration); // POST /
 
+		apiRoute.addResource(eMethods.INVALIDATE_PUBLIC_KEY).addResource("{uuid}").addMethod("DELETE", invalidatePublicKeyIntegration); // POST /
+
 		/*
             Give the Lambda functions permissions to access the database.
         */
@@ -149,9 +166,11 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(postSHESecretHandler);
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
+		DynamoDBStorage.grantReadWriteData(invalidatePublicKey);
 
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);
+		S3Storage.grantDelete(invalidatePublicKey);
 
 		this.ApiGateway = apiGateway;
 	}

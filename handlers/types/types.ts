@@ -5,6 +5,7 @@ export type SecretsStructure = {
 		second_half_key?: string;
 		retrievedCount?: number;
 		ttl?: number;
+		public_key_uuid?: string;
 	};
 };
 
