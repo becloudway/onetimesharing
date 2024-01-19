@@ -3,7 +3,7 @@ import axios from "axios";
 
 import styled from "styled-components";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
@@ -12,8 +12,10 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import DownloadFile from "./components/DownloadFile";
-import Dropdown from "./Dropdown";
+import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
+import WhiteContainer from "./components/WhiteContainer";
+import { Api } from "./classes/api";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -26,20 +28,15 @@ function E2Edecryption() {
 		//Get the secret
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
-			await axios
-				.get(`/api/getE2E/${uuid}`, {
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
+			Api.GetE2ESecret(uuid)
+				.then((response) => {
+					setSecret(response);
+					setLoading(false);
 				})
-				.then((res) => {
-					setSecret(res.data.cyphertext);
-				})
-				.catch((error) => {
-					errorHandling("Error getting secret: " + error.message);
+				.catch((err) => {
+					errorHandling(err);
+					setLoading(false);
 				});
-			setLoading(false);
 		}
 	};
 
@@ -120,7 +117,7 @@ function E2Edecryption() {
 						setShowBrowserBased(!showBrowserBased);
 					}}
 				>
-					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lr-[12px] bg-white">
+					<WhiteContainer dropdown>
 						<div className="text-[#EC0000] text-[18px] font-bold">Enter your passphrase</div>
 						<input
 							type="text"
@@ -142,7 +139,7 @@ function E2Edecryption() {
 						>
 							Decrypt the secret
 						</button>
-					</div>
+					</WhiteContainer>
 				</Dropdown>
 			</div>
 		</Container>
