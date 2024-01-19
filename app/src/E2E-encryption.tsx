@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 import styled from "styled-components";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
@@ -12,35 +11,26 @@ import "react-toastify/dist/ReactToastify.min.css";
 import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
+import { Api } from "./classes/api";
 
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
+	const [loadedPublicKey, setLoadedPublicKey] = useState<string>("");
 	const [secretURL, setSecretURL] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const postSecret = async (encryptedSecret: string) => {
 		setLoading(true);
-		await axios
-			.post(
-				`/api/addE2E`,
-				{
-					cyphertext: encryptedSecret,
-				},
-				{
-					headers: {
-						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
-					},
-				}
-			)
-			.then((res) => {
-				setSecretURL(res.data.id);
+		Api.PostE2ESecret(encryptedSecret)
+			.then((response) => {
+				setSecretURL(response);
+				setLoading(false);
 			})
-			.catch((error) => {
-				errorHandling(`Error posting secret: ${error.message}`);
+			.catch((err) => {
+				errorHandling(err);
+				setLoading(false);
 			});
-		setLoading(false);
 	};
 
 	const encryptSecret = () => {
@@ -52,6 +42,27 @@ function E2Eencryption() {
 				errorHandling(err.message);
 			});
 	};
+
+	const getPublicKey = (uuid: string) => {
+		setLoading(true);
+		Api.GetPublicKey(uuid)
+			.then((response) => {
+				setLoadedPublicKey(response);
+				setPublicKey(response);
+				setLoading(false);
+			})
+			.catch((err) => {
+				errorHandling(err);
+				setLoading(false);
+			});
+	};
+
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		if (searchParams.has("uuid")) {
+			getPublicKey(searchParams.get("uuid") || "");
+		}
+	}, []);
 
 	return (
 		<Container className="bg-white">

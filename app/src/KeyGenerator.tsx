@@ -1,23 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
+import { ReactComponent as UploadIcon } from "./assets/upload.svg";
 import InfoBox from "./components/InfoBox";
 
-import OpenPGP from "./openpgp";
+import OpenPGP from "./classes/openpgp";
 
 import { ToastContainer } from "react-toastify";
 import errorHandling from "./components/errorHandling";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import CopyToClipBoard from "./components/CopyToClipBoard";
-import Dropdown from "./Dropdown";
+import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
+import WhiteContainer from "./components/WhiteContainer";
+import LoadingScreen from "./components/LoadingScreen";
+import { Api } from "./classes/api";
 
 function KeyGenerator() {
 	const [passCode, setPassCode] = useState<string>("");
 	const [publicKey, setPublicKey] = useState<string>("");
 	const [privateKey, setPrivateKey] = useState<string>("");
+	const [publicKeyID, setPublicKeyID] = useState<string>("");
+	const [showSharePublicKey, setShowSharePublicKey] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
+
+	const [inputPublicKey, setInputPublicKey] = useState<string>("");
+	const [loadedPublicKey, setLoadedPublicKey] = useState<string>("");
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [fileName, setFileName] = useState<string>("");
+	const [file, setFile] = useState<FileList | null>(null);
+
+	const [loading, setLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		handleFile(file ? file[0] : new File([], ""));
+	}, [file]);
 
 	const generateKeyPair = () => {
 		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) {
@@ -42,8 +61,74 @@ function KeyGenerator() {
 			});
 	};
 
+	const sharePublicKey = () => {
+		setLoading(true);
+
+		if ((!loadedPublicKey && !inputPublicKey) || (loadedPublicKey === "" && inputPublicKey === "")) {
+			errorHandling("Please enter a public key");
+			setLoading(false);
+			return;
+		}
+
+		Api.PostPublicKey(loadedPublicKey ? loadedPublicKey : inputPublicKey)
+			.then((response) => {
+				setPublicKeyID(response);
+				setLoading(false);
+			})
+			.catch((err) => {
+				errorHandling(err.message);
+				setLoading(false);
+			});
+	};
+
+	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!fileInputRef.current) return;
+		if (!fileInputRef.current.files) return;
+
+		const fileName = fileInputRef.current.files[0].name;
+		if (!fileName) return;
+
+		setFile(event.target.files);
+		setFileName(fileName);
+	};
+
+	const handleFile = (file: File) => {
+		OpenPGP.handleFile(file)
+			.then((key: any) => {
+				setLoadedPublicKey(key);
+			})
+			.catch((err) => {
+				errorHandling(err.message);
+				setLoadedPublicKey("");
+				setInputPublicKey("");
+			});
+	};
+
+	const handleButtonClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
+	const handleDragOver = (e: React.DragEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+	};
+
+	const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		const retrievedFile = e.dataTransfer.files[0];
+		if (retrievedFile) {
+			setFile(e.dataTransfer.files);
+			setFileName(retrievedFile.name);
+		}
+	};
+
 	return (
 		<Container className="bg-white">
+			<LoadingScreen show={loading} />
 			<ToastContainer
 				position="bottom-right"
 				autoClose={false}
@@ -56,7 +141,7 @@ function KeyGenerator() {
 			/>
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<ClickableLogo />
-				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
+				<WhiteContainer>
 					<div className="text-[20px] font-bold">1. Install GPG</div>
 					<br />
 					<ul>
@@ -100,7 +185,61 @@ function KeyGenerator() {
 							The key is defined in the output file <code>public.pgp</code> that was generated above.
 						</li>
 					</ul>
-				</div>
+				</WhiteContainer>
+				<WhiteContainer>
+					<div className="text-[20px] font-bold">Share your public key</div>
+					<div className="relative w-full my-[16px]">
+						<UploadContainer
+							className="w-full flex flex-col items-center justify-center gap-[16px] py-[20px] text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
+							onClick={handleButtonClick}
+							onDragOver={handleDragOver}
+							onDrop={handleDrop}
+						>
+							<UploadIcon className="w-[40px] h-[40px]" />
+							<div className="text-[18px]">
+								{fileName ? `Uploaded file: ${fileName}` : "Click here to select a public key file or drop a file here"}
+							</div>
+						</UploadContainer>
+						<input className="absolute" type="file" ref={fileInputRef} onChange={handleFileSelect} />
+					</div>
+					<Dropdown
+						disableMargin
+						innerDropdown
+						title="Paste public key"
+						show={showSharePublicKey}
+						toggle={() => {
+							setShowSharePublicKey(!showSharePublicKey);
+						}}
+					>
+						<WhiteContainer dropdown disableBackground>
+							<div className="text-[#007BEC] text-[18px] font-bold">
+								You can alternatively paste your secret here to generate a sharable link.
+							</div>
+							<textarea
+								placeholder="Enter public key here"
+								className="w-full h-[240px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+								value={inputPublicKey}
+								onChange={(e) => setInputPublicKey(e.target.value)}
+							/>
+						</WhiteContainer>
+					</Dropdown>
+					<button
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+						onClick={sharePublicKey}
+					>
+						Share your public key
+					</button>
+					<div className="relative mt-[10px]">
+						<CopyToClipBoard text={publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`} />
+						<input
+							readOnly
+							type="text"
+							placeholder="Your public key link will be generated here"
+							className="text-center w-full h-[52px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+							value={publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`}
+						/>
+					</div>
+				</WhiteContainer>
 				<Dropdown
 					title="Browser-based generation"
 					show={showBrowserBased}
@@ -108,7 +247,7 @@ function KeyGenerator() {
 						setShowBrowserBased(!showBrowserBased);
 					}}
 				>
-					<div className="py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-b-lg-[12px] bg-white">
+					<WhiteContainer dropdown>
 						<InfoBox
 							text="The private key that is shown below is not to be shared under any circumstances and is only shown once. So please keep it safe in a
 			password manager for example. This keypair can be reused for sharing secrets indefinitely. Meaning the private key can be reused
@@ -152,7 +291,7 @@ function KeyGenerator() {
 						>
 							Generate a new PGP keypair
 						</button>
-					</div>
+					</WhiteContainer>
 				</Dropdown>
 			</div>
 		</Container>
@@ -182,5 +321,29 @@ const Container = styled.div`
 		border: 1px solid #ccc; /* Add a border for better separation */
 		border-radius: 4px; /* Add rounded corners */
 		color: #333; /* Set the text color */
+	}
+
+	/* Style the custom upload button */
+	input[type="file"]::file-selector-button {
+		width: 0;
+		height: 0;
+		max-height: 0;
+		max-width: 0;
+		outline: none;
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	input[type="file"] {
+		opacity: 0;
+	}
+`;
+
+const UploadContainer = styled.div`
+	&:hover svg path {
+		transition: fill 0.2s ease-in-out;
+		fill: #1e293b;
 	}
 `;

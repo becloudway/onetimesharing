@@ -5,4 +5,5 @@ export enum eMethods {
 	POST_E2E_SECRET = "addE2E",
 	POST_PUBLIC_KEY = "postpublickey",
 	GET_PUBLIC_KEY = "getpublickey",
+	INVALIDATE_PUBLIC_KEY = "invalidatepublickey"
 }

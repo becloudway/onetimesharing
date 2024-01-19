@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { ReactComponent as ArrowDownIcon } from "./assets/dropdown-arrow.svg";
+import { ReactComponent as ArrowDownIcon } from "../assets/dropdown-arrow.svg";
 
 interface DropdownProps {
 	children: any;
 	title: string;
 	show: boolean;
+	innerDropdown?: boolean;
+	disableMargin?: boolean;
 	toggle: () => void;
 }
 
-const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
+const Dropdown = ({ children, title, toggle, show, innerDropdown, disableMargin }: DropdownProps) => {
 	const [delayedProperties, setDelayedProperties] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -20,8 +22,9 @@ const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
 	}, [show]);
 
 	return (
-		<Wrapper>
+		<Wrapper className={`${!disableMargin && "mt-[34px]"}`}>
 			<TitleBox
+				className={`${innerDropdown ? "bg-slate-100" : "bg-white"}`}
 				onClick={() => {
 					if (show === delayedProperties) toggle();
 				}}
@@ -31,7 +34,7 @@ const Dropdown = ({ children, title, toggle, show }: DropdownProps) => {
 				<Title>{title}</Title>
 				<StyledArrowDownIcon show={show} />
 			</TitleBox>
-			<Container show={show} delayedProperties={delayedProperties}>
+			<Container show={show} delayedProperties={delayedProperties} className={`${innerDropdown ? "bg-slate-100" : "bg-white"}`}>
 				{children}
 			</Container>
 		</Wrapper>
@@ -46,8 +49,6 @@ const Wrapper = styled.div`
 
 	width: 100%;
 	max-width: 1400px;
-
-	margin-top: 34px;
 `;
 
 const TitleBox = styled.div<{ show: boolean; delayedProperties: boolean }>`
@@ -59,8 +60,6 @@ const TitleBox = styled.div<{ show: boolean; delayedProperties: boolean }>`
 	justify-content: space-between;
 
 	padding-inline: 30px;
-
-	background: white;
 
 	${({ show, delayedProperties }) =>
 		show ? "border-radius: 8px 8px 0 0;" : delayedProperties ? "border-radius: 8px 8px 0 0;" : "border-radius: 8px"}

@@ -1,10 +1,22 @@
 import generateTTL from "../helper_functions/timeToLive";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
 
-import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { DynamoDB } from "aws-sdk";
+import buildResponseBody from "../helper_functions/buildresponsebody";
+
+type DynamoDBSecretsStructure = {
+	uuid: string;
+	encryption_type: string;
+	cyphertext: string;
+	retrievedCount: number;
+	second_half_key: string;
+	ttl: number;
+	public_key_uuid?: string;
+};
 
 const SecretsRepository = class {
 	static client = new DynamoDBClient({});
@@ -15,7 +27,7 @@ const SecretsRepository = class {
 		const generatedUuid = uuidv4();
 		const time_to_live = generateTTL();
 
-		const item = {
+		let item: DynamoDBSecretsStructure = {
 			uuid: generatedUuid,
 			encryption_type: data.Item.encryption_type || "SHE",
 			cyphertext: data.Item.cyphertext || "",
@@ -23,6 +35,13 @@ const SecretsRepository = class {
 			second_half_key: data.Item.second_half_key || "",
 			ttl: time_to_live,
 		};
+
+		if (data.Item.public_key_uuid) {
+			item = {
+				...item,
+				public_key_uuid: data.Item.public_key_uuid,
+			};
+		}
 
 		await this.dynamo.send(
 			new PutCommand({
@@ -88,10 +107,63 @@ const SecretsRepository = class {
 		try {
 			const response = await client.send(command);
 			const str = await response.Body?.transformToString();
-			return str;
+			return {
+				public_key: str,
+			};
 		} catch (err) {
 			console.log(err);
 		}
+	}
+
+	static async RemovePublicKey(uuid: string) {
+		const fileName = `${uuid}.gpg`;
+
+		const client = new S3Client({});
+		const command = new DeleteObjectCommand({
+			Bucket: process.env.bucketName,
+			Key: fileName,
+		});
+
+		try {
+			await client.send(command);
+			return true;
+		} catch (err) {
+			console.log(err);
+			return false;
+		}
+	}
+
+	static async InvalidateSecret(public_key_uuid: string) {
+		const gsiResponse = await this.dynamo.send(
+			new QueryCommand({
+				TableName: process.env.tableName,
+				IndexName: "public_key_index", // Replace with your GSI name
+				KeyConditionExpression: "public_key_uuid = :public_key_uuid", // Include GSI partition key
+				ExpressionAttributeValues: {
+					":public_key_uuid": public_key_uuid,
+				},
+			})
+		);
+
+		console.log(gsiResponse);
+
+		const itemsToDelete = gsiResponse.Items as DynamoDB.DocumentClient.AttributeMap[];
+
+		const deletePromises = itemsToDelete.map((item) =>
+			this.dynamo.send(
+				new DeleteCommand({
+					TableName: process.env.tableName,
+					Key: {
+						uuid: item.uuid,
+					},
+				})
+			)
+		);
+
+		// Wait for all delete operations to complete
+		await Promise.all(deletePromises);
+
+		return itemsToDelete.length; // Return the number of items deleted
 	}
 };
 
