@@ -196,7 +196,9 @@ function KeyGenerator() {
 							onDrop={handleDrop}
 						>
 							<UploadIcon className="w-[40px] h-[40px]" />
-							<div className="text-[18px]">{fileName ? `Uploaded file: ${fileName}` : "Click here to select a public key"}</div>
+							<div className="text-[18px]">
+								{fileName ? `Uploaded file: ${fileName}` : "Click here to select a public key file or drop a file here"}
+							</div>
 						</UploadContainer>
 						<input className="absolute" type="file" ref={fileInputRef} onChange={handleFileSelect} />
 					</div>
