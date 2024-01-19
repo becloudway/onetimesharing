@@ -189,7 +189,7 @@ function KeyGenerator() {
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
 					<div className="relative w-full my-[16px]">
-						<div
+						<UploadContainer
 							className="w-full flex flex-col items-center justify-center gap-[16px] py-[20px] text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
 							onClick={handleButtonClick}
 							onDragOver={handleDragOver}
@@ -197,7 +197,7 @@ function KeyGenerator() {
 						>
 							<UploadIcon className="w-[40px] h-[40px]" />
 							<div className="text-[18px]">{fileName ? `Uploaded file: ${fileName}` : "Click here to select a public key"}</div>
-						</div>
+						</UploadContainer>
 						<input className="absolute" type="file" ref={fileInputRef} onChange={handleFileSelect} />
 					</div>
 					<Dropdown
@@ -221,13 +221,22 @@ function KeyGenerator() {
 							/>
 						</WhiteContainer>
 					</Dropdown>
-					<div>{publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`}</div>
 					<button
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						onClick={sharePublicKey}
 					>
 						Share your public key
 					</button>
+					<div className="relative mt-[10px]">
+						<CopyToClipBoard text={publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`} />
+						<input
+							readOnly
+							type="text"
+							placeholder="Your public key link will be generated here"
+							className="text-center w-full h-[52px] px-[14px] py-[10px] mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+							value={publicKeyID && `${window.location.origin}/encrypt?uuid=${publicKeyID}`}
+						/>
+					</div>
 				</WhiteContainer>
 				<Dropdown
 					title="Browser-based generation"
@@ -327,5 +336,12 @@ const Container = styled.div`
 
 	input[type="file"] {
 		opacity: 0;
+	}
+`;
+
+const UploadContainer = styled.div`
+	&:hover svg path {
+		transition: fill 0.2s ease-in-out;
+		fill: #1e293b;
 	}
 `;

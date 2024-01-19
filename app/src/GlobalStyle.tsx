@@ -19,7 +19,7 @@ html, body{
   
     -webkit-user-drag: none;
   
-    transition: background ease 0.3s, background-color ease 0.3s, color ease 0.3s, border ease 0.3s, transform ease 0.3s, fill ease 0.3s, stroke ease 0.3s;
+    transition: background ease 0.3s, background-color ease 0.3s, color ease 0.1s, border ease 0.3s, transform ease 0.3s, fill ease 0.3s, stroke ease 0.3s;
   }
 `;
 
