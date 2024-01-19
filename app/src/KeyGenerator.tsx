@@ -81,11 +81,13 @@ function KeyGenerator() {
 
 		const fileName = fileInputRef.current.files[0].name;
 		if (!fileName) return;
-		alert(fileName);
 
 		setFileName(fileName);
+		handleFile(event, fileInputRef.current.files[0]);
+	};
 
-		OpenPGP.handleFile(event)
+	const handleFile = (event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLInputElement>, file: any) => {
+		OpenPGP.handleFile(file)
 			.then((key: any) => {
 				setLoadedPublicKey(key);
 			})
@@ -97,6 +99,22 @@ function KeyGenerator() {
 	const handleButtonClick = () => {
 		if (fileInputRef.current) {
 			fileInputRef.current.click();
+		}
+	};
+
+	const handleDragOver = (e: React.DragEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+	};
+
+	const handleDrop = (e: React.DragEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		const file = e.dataTransfer.files[0];
+		if (file) {
+			setFileName(file.name);
+			handleFile(e, file);
 		}
 	};
 
@@ -166,6 +184,8 @@ function KeyGenerator() {
 						<div
 							className="w-full h-full flex items-center justify-center text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
 							onClick={handleButtonClick}
+							onDragOver={handleDragOver}
+							onDrop={handleDrop}
 						>
 							{fileName ? fileName : "Click here to select a public key"}
 						</div>

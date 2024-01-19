@@ -88,10 +88,8 @@ export default class OpenPGP {
 		});
 	};
 
-	public static handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+	public static handleFile = (file: any) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
-			const file = event.target.files?.[0];
-
 			if (file) {
 				this.extractPublicKeyFromGPGFile(file)
 					.then((publicKey) => {
