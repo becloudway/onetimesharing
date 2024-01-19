@@ -68,13 +68,12 @@ function SHEEncryption() {
 				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
 					<div className="text-[#007BEC] text-[18px] font-bold">Enter the secret</div>
-					<input
-						type="text"
+					<textarea
 						placeholder="Enter your secret"
-						className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
+						className="w-full h-[240px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
 						value={secret}
 						onChange={(e) => setSecret(e.target.value)}
-					/>
+					></textarea>
 					<button
 						onClick={encryptSecret}
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
