@@ -88,7 +88,7 @@ export default class OpenPGP {
 		});
 	};
 
-	public static handleFile = (file: any) => {
+	public static handleFile = (file: File) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			if (file) {
 				this.extractPublicKeyFromGPGFile(file)

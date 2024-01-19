@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
+import { ReactComponent as UploadIcon } from "./assets/upload.svg";
 import InfoBox from "./components/InfoBox";
 
 import OpenPGP from "./classes/openpgp";
@@ -29,8 +30,13 @@ function KeyGenerator() {
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [fileName, setFileName] = useState<string>("");
+	const [file, setFile] = useState<FileList | null>(null);
 
 	const [loading, setLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		handleFile(file ? file[0] : new File([], ""));
+	}, [file]);
 
 	const generateKeyPair = () => {
 		if (!passCode || passCode.length === 0 || passCode === "" || passCode === undefined) {
@@ -82,17 +88,19 @@ function KeyGenerator() {
 		const fileName = fileInputRef.current.files[0].name;
 		if (!fileName) return;
 
+		setFile(event.target.files);
 		setFileName(fileName);
-		handleFile(event, fileInputRef.current.files[0]);
 	};
 
-	const handleFile = (event: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLInputElement>, file: any) => {
+	const handleFile = (file: File) => {
 		OpenPGP.handleFile(file)
 			.then((key: any) => {
 				setLoadedPublicKey(key);
 			})
 			.catch((err) => {
 				errorHandling(err.message);
+				setLoadedPublicKey("");
+				setInputPublicKey("");
 			});
 	};
 
@@ -111,10 +119,10 @@ function KeyGenerator() {
 		e.preventDefault();
 		e.stopPropagation();
 
-		const file = e.dataTransfer.files[0];
-		if (file) {
-			setFileName(file.name);
-			handleFile(e, file);
+		const retrievedFile = e.dataTransfer.files[0];
+		if (retrievedFile) {
+			setFile(e.dataTransfer.files);
+			setFileName(retrievedFile.name);
 		}
 	};
 
@@ -180,14 +188,15 @@ function KeyGenerator() {
 				</WhiteContainer>
 				<WhiteContainer>
 					<div className="text-[20px] font-bold">Share your public key</div>
-					<div className="relative w-full h-[100px] my-[16px]">
+					<div className="relative w-full my-[16px]">
 						<div
-							className="w-full h-full flex items-center justify-center text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
+							className="w-full flex flex-col items-center justify-center gap-[16px] py-[20px] text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
 							onClick={handleButtonClick}
 							onDragOver={handleDragOver}
 							onDrop={handleDrop}
 						>
-							{fileName ? fileName : "Click here to select a public key"}
+							<UploadIcon className="w-[40px] h-[40px]" />
+							<div className="text-[18px]">{fileName ? `Uploaded file: ${fileName}` : "Click here to select a public key"}</div>
 						</div>
 						<input className="absolute" type="file" ref={fileInputRef} onChange={handleFileSelect} />
 					</div>
