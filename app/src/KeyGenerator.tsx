@@ -98,7 +98,7 @@ function KeyGenerator() {
 				setLoadedPublicKey(key);
 			})
 			.catch((err) => {
-				errorHandling(err.message);
+				errorHandling(err);
 				setLoadedPublicKey("");
 				setInputPublicKey("");
 			});
@@ -187,7 +187,7 @@ function KeyGenerator() {
 					</ul>
 				</WhiteContainer>
 				<WhiteContainer>
-					<div className="text-[20px] font-bold">Share your public key</div>
+					<div className="text-[20px] font-bold">2. Share your public key</div>
 					<div className="relative w-full my-[16px]">
 						<UploadContainer
 							className="w-full flex flex-col items-center justify-center gap-[16px] py-[20px] text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
@@ -205,7 +205,7 @@ function KeyGenerator() {
 					<Dropdown
 						disableMargin
 						innerDropdown
-						title="Paste public key"
+						title="Alternatively, Paste public key"
 						show={showSharePublicKey}
 						toggle={() => {
 							setShowSharePublicKey(!showSharePublicKey);
