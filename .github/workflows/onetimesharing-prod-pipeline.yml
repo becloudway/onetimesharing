@@ -1,13 +1,13 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Temporary Secret CI
+name: OneTimeSharing Production Deployment
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["main"]
   pull_request:
+    branches: ["main"]
+  push:
     branches: ["main"]
 
 jobs:
@@ -26,21 +26,20 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: ./infra/package-lock.json
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
-      - name: Install deps
-        working-directory: ./resources
-        run: npm i
-      - name: Install deps (CDK)
-        run: npm i
-      - name: Install Client-DynamoDB
-        working-directory: ./resources
-        run: npm i @aws-sdk/client-dynamodb
-      - name: Install Lib-DynamoDB
-        working-directory: ./resources
-        run: npm i @aws-sdk/lib-dynamodb
+      - name: Install deps (Frontend)
+        working-directory: ./app
+        run: npm ci
+      - name: Install deps (Backend)
+        working-directory: ./handlers
+        run: npm ci
+      - name: Install deps (Infra)
+        working-directory: ./infra
+        run: npm ci
       - name: Run tests
-        working-directory: ./resources
+        working-directory: ./handlers
         run: npm run test
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -48,5 +47,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1 # or your preferred AWS region
-      - name: Deploy the CDK
-        run: npm run deploy
+      - name: Deploy the CDK (Prod)
+        working-directory: ./infra
+        run: npm run deploy-prod
