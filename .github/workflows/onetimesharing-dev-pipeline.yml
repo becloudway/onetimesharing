@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        working-directory: [./app, ./handlers, ./infra]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -29,13 +28,13 @@ jobs:
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
       - name: Install deps (Frontend)
         working-directory: ./app
-        run: npm i
+        run: npm ci
       - name: Install deps (Backend)
         working-directory: ./handlers
-        run: npm i
+        run: npm ci
       - name: Install deps (Infra)
         working-directory: ./infra
-        run: npm i
+        run: npm ci
       - name: Run tests
         working-directory: ./resources
         run: npm run test
