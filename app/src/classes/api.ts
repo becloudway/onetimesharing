@@ -8,7 +8,7 @@ export class Api {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`${dev && apiURL}/api/getSHE/${uuid}`, {
+				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
@@ -27,7 +27,7 @@ export class Api {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
-					`${dev && apiURL}/api/addSHE`,
+					`${dev ? apiURL : ""}/api/addSHE`,
 					{
 						cyphertext: encryptedSecret,
 						second_half_key: second_half_key,
@@ -51,7 +51,7 @@ export class Api {
 	public static GetE2ESecret = async (uuid: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.get(`${dev && apiURL}/api/getE2E/${uuid}`, {
+				.get(`${dev ? apiURL : ""}/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
@@ -70,7 +70,7 @@ export class Api {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
-					`${dev && apiURL}/api/addE2E`,
+					`${dev ? apiURL : ""}/api/addE2E`,
 					{
 						cyphertext: encryptedSecret,
 					},
@@ -93,7 +93,7 @@ export class Api {
 	public static GetPublicKey = async (uuid: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.get(`${dev && apiURL}/api/getpublickey/${uuid}`, {
+				.get(`${dev ? apiURL : ""}/api/getpublickey/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
@@ -117,7 +117,7 @@ export class Api {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
-					`${dev && apiURL}/api/postpublickey`,
+					`${dev ? apiURL : ""}/api/postpublickey`,
 					{
 						public_key: publicKey.replace(/\r?\n+$/, "").replace(/\r?\n(?!\r?\n)/g, "\\n"),
 					},
