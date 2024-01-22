@@ -40,7 +40,7 @@ export class ApiStackService extends Construct {
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `bolleje-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getSHEsecret.zip`),
 			handler: "getSHEsecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -50,7 +50,7 @@ export class ApiStackService extends Construct {
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
 			functionName: `bolleje-${environmentName}-postSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecret.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postSHEsecret.zip`),
 			handler: "postSHEsecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -60,7 +60,7 @@ export class ApiStackService extends Construct {
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
 			functionName: `bolleje-${environmentName}-getE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecret.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getE2Esecret.zip`),
 			handler: "getE2Esecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -70,7 +70,7 @@ export class ApiStackService extends Construct {
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
 			functionName: `bolleje-${environmentName}-postE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecret.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-postE2Esecret.zip`),
 			handler: "postE2Esecret.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
@@ -90,7 +90,7 @@ export class ApiStackService extends Construct {
 		const getPublicKeyHandler = new lambda.Function(this, "GetPublicKeyHandler", {
 			functionName: `bolleje-${environmentName}-getPublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getPublicKey.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-getPublicKey.zip`),
 			handler: "getPublicKey.handler",
 			environment: {
 				bucketName: S3Storage.bucketName,
@@ -100,7 +100,7 @@ export class ApiStackService extends Construct {
 		const invalidatePublicKey = new lambda.Function(this, "InvalidatePublicKeyHandler", {
 			functionName: `bolleje-${environmentName}-invalidatePublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-invalidatePublicKey.zip`),
+			code: lambda.Code.fromBucket(CodeBucket, `${process.env.SHORT_SHA}-invalidatePublicKey.zip`),
 			handler: "invalidatePublicKey.handler",
 			environment: {
 				bucketName: S3Storage.bucketName,
