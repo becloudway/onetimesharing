@@ -98,7 +98,7 @@ function KeyGenerator() {
 				setLoadedPublicKey(key);
 			})
 			.catch((err) => {
-				errorHandling(err.message);
+				errorHandling(err);
 				setLoadedPublicKey("");
 				setInputPublicKey("");
 			});
@@ -142,43 +142,44 @@ function KeyGenerator() {
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<ClickableLogo />
 				<WhiteContainer>
-					<div className="text-[20px] font-bold">1. Install GPG</div>
+					<h1 className="text-[22px] font-bold mb-6">1. Generate a keypair</h1>
+					<div className="text-[20px]">1. Install GPG</div>
 					<br />
 					<ul>
 						<li>
-							<b>1. Debian based systems:</b> <code>sudo apt-get install gnupg</code>
+							1. Debian based systems: <code>sudo apt-get install gnupg</code>
 						</li>
 						<li>
-							<b>2. OS X (Mac) systems:</b> <code>brew install gnupg</code>
+							2. OS X (Mac) systems: <code>brew install gnupg</code>
 						</li>
 						<li>
-							<b>3. Windows based systems:</b> Download and install the Gpg4win application{" "}
+							3. Windows based systems: Download and install the Gpg4win application{" "}
 							<a className="text-blue-500 hover:underline" target="_blank" href="https://www.gpg4win.org/get-gpg4win.html">
 								here
 							</a>
 						</li>
 					</ul>
 					<br />
-					<div className="text-[20px] font-bold mt-[12px]">2. Generate a keypair</div>
+					<div className="text-[20px] mt-[12px]">2. Generate a keypair</div>
 					<br />
 					<ul>
 						<li>
-							<b>To generate a keypair enter the following command:</b> <code>gpg --generate-key</code> and follow the prompts (Make sure
+							To generate a keypair enter the following command: <code>gpg --generate-key</code> and follow the prompts (Make sure
 							that the email entered is unique!).
 						</li>
 					</ul>
 					<br />
-					<div className="text-[20px] font-bold mt-[12px]">3. Fetch the public key.</div>
+					<div className="text-[20px] mt-[12px]">3. Fetch the public key.</div>
 					<br />
 					<ul>
 						<li>
-							<b>Retrieve the public key: </b>
+							Retrieve the public key:{" "}
 							<code>gpg --output public.pgp --armor --export test@test.com</code> and replace test@test.com to the email address that you
 							used to generate the key.
 						</li>
 					</ul>
 					<br />
-					<div className="text-[20px] font-bold mt-[12px]">4. Send the public key to the sender of the secret</div>
+					<div className="text-[20px] mt-[12px]">4. Send the public key to the sender of the secret</div>
 					<br />
 					<ul>
 						<li>
@@ -187,7 +188,7 @@ function KeyGenerator() {
 					</ul>
 				</WhiteContainer>
 				<WhiteContainer>
-					<div className="text-[20px] font-bold">Share your public key</div>
+				<h1 className="text-[22px] font-bold mb-6">2. Share your public key</h1>
 					<div className="relative w-full my-[16px]">
 						<UploadContainer
 							className="w-full flex flex-col items-center justify-center gap-[16px] py-[20px] text-slate-400 border-1 border-slate-400 outline-dashed hover:text-slate-800 hover:border-slate-800 cursor-pointer rounded font-bold"
@@ -205,7 +206,7 @@ function KeyGenerator() {
 					<Dropdown
 						disableMargin
 						innerDropdown
-						title="Paste public key"
+						title="Alternatively, Paste public key"
 						show={showSharePublicKey}
 						toggle={() => {
 							setShowSharePublicKey(!showSharePublicKey);

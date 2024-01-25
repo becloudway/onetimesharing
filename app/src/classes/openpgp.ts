@@ -69,10 +69,17 @@ export default class OpenPGP {
 	private static extractPublicKeyFromGPGFile = async (file: File) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			try {
+				if (file.size === 0) {
+					resolve(""); // Return an empty string or another default value as needed
+					return;
+				}
+
 				const fileContent = await this.readFileAsync(file);
 
 				// Parse the GPG file
 				const keys = await openpgp.readKey({ armoredKey: fileContent });
+
+				if(keys.isPrivate()) throw new Error("Uploading a private key is not allowed.");
 
 				// Check if keys are present
 				if (keys !== undefined) {
