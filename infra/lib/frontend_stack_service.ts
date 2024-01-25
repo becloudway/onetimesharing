@@ -36,6 +36,7 @@ export class FrontendStackService extends Construct {
 			defaultRootObject: "index.html",
 			defaultBehavior: {
 				origin: new S3Origin(bucket, { originAccessIdentity }),
+				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
 			},
 			errorResponses: [
 				{
