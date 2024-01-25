@@ -15,6 +15,15 @@ const Navigation = () => {
 			<div className="flex flex-col items-center justify-center gap-[40px] pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={OneTimeSharingLogo} />
 				<div className="flex flex-col gap-[20px] max-w-[600px] w-full px-[10px]">
+					<button
+						className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
+						onClick={() => {
+							window.location.href =
+								"https://bolleje-test-cog.auth.eu-west-1.amazoncognito.com/oauth2/authorize?client_id=6em5dl9o2eak3d7mb0k9d7ajma&response_type=code&scope=email+openid&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Flogin";
+						}}
+					>
+						Login
+					</button>
 					<div className="flex flex-wrap gap-[20px]">
 						<button
 							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
