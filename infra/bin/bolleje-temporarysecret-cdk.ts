@@ -5,6 +5,7 @@ import { BolleJeApiStack } from "../lib/bolleje-api-stack";
 import { BolleJeStorageStack } from "../lib/bolleje-storage-stack";
 import { BolleJeCiCdStack } from "../lib/bolleje-cicd-stack";
 import { BolleJeFrontendStack } from "../lib/bolleje-frontend-stack";
+import { BolleJeCognitoStack } from "../lib/bolleje-cognito-stack";
 
 const app = new cdk.App();
 
@@ -60,3 +61,5 @@ const DevFrontendStack = new BolleJeFrontendStack(app, "BolleJeDevFrontendStack"
 	environmentName: "dev",
 	apiGateway: DevApiStack.ApiGateway,
 });
+
+const CognitoUserPool = new BolleJeCognitoStack(app, "BolleJeTestCognitoStack");
