@@ -24,7 +24,7 @@ export class StorageStackService extends Construct {
 			],
 		});
 
-		const bucket = new Bucket(this, `bolleje-${environmentName}-s3-codestorage`, {
+		const bucket = new Bucket(this, `bolleje-${environmentName}-publick-key-storage`, {
 			bucketName: `bolleje-${environmentName}-public-key-storage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
