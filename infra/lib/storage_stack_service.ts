@@ -11,6 +11,8 @@ export class StorageStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
+		const stack = cdk.Stack.of(this);
+
 		const table = new dynamodb.TableV2(this, "Secret DynamoDB", {
 			partitionKey: { name: "uuid", type: dynamodb.AttributeType.STRING },
 			timeToLiveAttribute: "ttl",
@@ -25,8 +27,8 @@ export class StorageStackService extends Construct {
 			],
 		});
 
-		const bucket = new Bucket(this, `${process.env.account}-onetimesharing-${environmentName}-public-key-storage`, {
-			bucketName: `${process.env.account}-onetimesharing-${environmentName}-public-key-storage`,
+		const bucket = new Bucket(this, `${stack.account}-onetimesharing-${environmentName}-public-key-storage`, {
+			bucketName: `${stack.account}-onetimesharing-${environmentName}-public-key-storage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 		});
