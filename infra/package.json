@@ -1,5 +1,5 @@
 {
-	"name": "OneTimeSharing-temporarysecret-cdk",
+	"name": "onetimesharing-temporarysecret-cdk",
 	"version": "0.1.0",
 	"bin": {
 		"OneTimeSharing-temporarysecret-cdk": "bin/OneTimeSharing-temporarysecret-cdk.js"
