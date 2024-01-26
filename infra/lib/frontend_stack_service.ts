@@ -18,8 +18,8 @@ export class FrontendStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any) {
 		super(scope, id);
 
-		const bucket = new s3.Bucket(this, `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-frontend`, {
-			bucketName: `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-frontend`,
+		const bucket = new s3.Bucket(this, `${process.env.account}-onetimesharing-${environmentName}-frontend`, {
+			bucketName: `${process.env.account}-onetimesharing-${environmentName}-frontend`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 			accessControl: s3.BucketAccessControl.PRIVATE,

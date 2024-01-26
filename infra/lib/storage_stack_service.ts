@@ -25,8 +25,8 @@ export class StorageStackService extends Construct {
 			],
 		});
 
-		const bucket = new Bucket(this, `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-public-key-storage`, {
-			bucketName: `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-public-key-storage`,
+		const bucket = new Bucket(this, `${process.env.account}-onetimesharing-${environmentName}-public-key-storage`, {
+			bucketName: `${process.env.account}-onetimesharing-${environmentName}-public-key-storage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 		});

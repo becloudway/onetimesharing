@@ -8,8 +8,8 @@ export class CiCdStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
-		const bucket = new s3.Bucket(this, `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-codestorage`, {
-			bucketName: `${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-codestorage`,
+		const bucket = new s3.Bucket(this, `${process.env.account}-onetimesharing-${environmentName}-codestorage`, {
+			bucketName: `${process.env.account}-onetimesharing-${environmentName}-codestorage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 		});

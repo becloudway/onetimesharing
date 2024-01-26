@@ -36,11 +36,7 @@ export class ApiStackService extends Construct {
             Lambda functions
         */
 
-		const CodeBucket = Bucket.fromBucketName(
-			this,
-			"code-bucket",
-			`${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-codestorage`
-		);
+		const CodeBucket = Bucket.fromBucketName(this, "code-bucket", `${process.env.account}-onetimesharing-${environmentName}-codestorage`);
 
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getSHEsecretlambda`,
