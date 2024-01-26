@@ -19,7 +19,7 @@
 		"deploy-prod-backend": "npm run deploy-prod-codecontainer && cdk deploy -e BolleJeProdStorageStack BolleJeProdApiStack --require-approval='never'",
 		"deploy-dev-frontend": "cdk deploy -e BolleJeDevFrontendStack --require-approval='never'",
 		"deploy-prod-frontend": "cdk deploy -e BolleJeProdFrontendStack --require-approval='never'",
-		"synth": "npm run build-backend && npm run build-frontend && cdk synth --app 'npx ts-node bin/bolleje-temporarysecret-cdk.ts'",
+		"synth": "npm run build-backend && npm run build-frontend && cdk bootstrap && cdk synth --app 'npx ts-node bin/bolleje-temporarysecret-cdk.ts'",
 		"build-backend": "cd ../handlers && npm run build && cd dist && zip -r ../dist.zip *",
 		"build-frontend": "cd ../app && npm run build"
 	},
