@@ -49,4 +49,4 @@ jobs:
           aws-region: eu-west-1 # or your preferred AWS region
       - name: Deploy the CDK (Prod)
         working-directory: ./infra
-        run: npm run deploy-dev
+        run: npm run deploy
