@@ -7,7 +7,7 @@ interface CiCdStackProps extends cdk.StackProps {
 	environmentName: string;
 }
 
-export class BolleJeCiCdStack extends cdk.Stack {
+export class OneTimeSharingCiCdStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props: CiCdStackProps) {
 		super(scope, id, props);
 

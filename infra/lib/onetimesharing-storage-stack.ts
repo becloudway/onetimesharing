@@ -8,7 +8,7 @@ interface StorageStackProps extends cdk.StackProps {
 	environmentName: string;
 }
 
-export class BolleJeStorageStack extends cdk.Stack {
+export class OneTimeSharingStorageStack extends cdk.Stack {
 	public readonly DynamoDBStorage: any;
 	public readonly S3Storage: any;
 

@@ -4,6 +4,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
+import * as cdk from "aws-cdk-lib";
 
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
@@ -16,7 +17,7 @@ export class ApiStackService extends Construct {
         */
 
 		const apiGateway = new apigateway.RestApi(this, "secrets-api", {
-			restApiName: `bolleje-${environmentName}-api-gateway`,
+			restApiName: `onetimesharing-${environmentName}-api-gateway`,
 			description: "This service serves the secrets for the Temporary Secrets API.",
 			endpointConfiguration: {
 				types: [apigateway.EndpointType.REGIONAL],
@@ -35,10 +36,14 @@ export class ApiStackService extends Construct {
             Lambda functions
         */
 
-		const CodeBucket = Bucket.fromBucketName(this, "code-bucket", `bolleje-${environmentName}-s3-codestorage`);
+		const CodeBucket = Bucket.fromBucketName(
+			this,
+			"code-bucket",
+			`${cdk.Stack.of(this).account}-onetimesharing-${environmentName}-codestorage`
+		);
 
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
-			functionName: `bolleje-${environmentName}-getSHEsecretlambda`,
+			functionName: `onetimesharing-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`),
 			handler: "getSHEsecret.handler",
@@ -48,7 +53,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
-			functionName: `bolleje-${environmentName}-postSHEsecretlambda`,
+			functionName: `onetimesharing-${environmentName}-postSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecret.zip`),
 			handler: "postSHEsecret.handler",
@@ -58,7 +63,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
-			functionName: `bolleje-${environmentName}-getE2Esecretlambda`,
+			functionName: `onetimesharing-${environmentName}-getE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecret.zip`),
 			handler: "getE2Esecret.handler",
@@ -68,7 +73,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
-			functionName: `bolleje-${environmentName}-postE2Esecretlambda`,
+			functionName: `onetimesharing-${environmentName}-postE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecret.zip`),
 			handler: "postE2Esecret.handler",
@@ -78,7 +83,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const postPublicKeyHandler = new lambda.Function(this, "PostPublicKeyHandler", {
-			functionName: `bolleje-${environmentName}-postPublicKeylambda`,
+			functionName: `onetimesharing-${environmentName}-postPublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postPublicKey.zip`),
 			handler: "postPublicKey.handler",
@@ -88,7 +93,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const getPublicKeyHandler = new lambda.Function(this, "GetPublicKeyHandler", {
-			functionName: `bolleje-${environmentName}-getPublicKeylambda`,
+			functionName: `onetimesharing-${environmentName}-getPublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getPublicKey.zip`),
 			handler: "getPublicKey.handler",
@@ -98,7 +103,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const invalidatePublicKey = new lambda.Function(this, "InvalidatePublicKeyHandler", {
-			functionName: `bolleje-${environmentName}-invalidatePublicKeylambda`,
+			functionName: `onetimesharing-${environmentName}-invalidatePublicKeylambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-invalidatePublicKey.zip`),
 			handler: "invalidatePublicKey.handler",

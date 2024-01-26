@@ -9,7 +9,7 @@ interface FrontendStackProps extends cdk.StackProps {
 	apiGateway: RestApi;
 }
 
-export class BolleJeFrontendStack extends cdk.Stack {
+export class OneTimeSharingFrontendStack extends cdk.Stack {
 	constructor(scope: Construct, id: string, props: FrontendStackProps) {
 		super(scope, id, props);
 
