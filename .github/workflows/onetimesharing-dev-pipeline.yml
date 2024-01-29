@@ -27,6 +27,8 @@ jobs:
           cache-dependency-path: ./infra/package-lock.json
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Add the environment name as env property
+        run: echo "ENVIRONMENT=dev"
       - name: Install deps (Frontend)
         working-directory: ./app
         run: npm ci
@@ -45,6 +47,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1 # or your preferred AWS region
-      - name: Deploy the CDK (Dev)
+      - name: Deploy the CDK (Prod)
         working-directory: ./infra
-        run: npm run deploy-dev
+        run: npm run deploy

@@ -2,13 +2,16 @@ import { Construct } from "constructs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { RemovalPolicy } from "aws-cdk-lib";
+import * as cdk from "aws-cdk-lib";
 
 export class CiCdStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
-		const bucket = new s3.Bucket(this, `bolleje-${environmentName}-s3-codestorage`, {
-			bucketName: `bolleje-${environmentName}-s3-codestorage`,
+		const stack = cdk.Stack.of(this);
+
+		const bucket = new s3.Bucket(this, `${stack.account}-onetimesharing-${environmentName}-codestorage`, {
+			bucketName: `${stack.account}-onetimesharing-${environmentName}-codestorage`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 		});

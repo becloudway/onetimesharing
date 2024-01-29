@@ -12,13 +12,16 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import { RestApiOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
+import * as cdk from "aws-cdk-lib";
 
 export class FrontendStackService extends Construct {
 	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any) {
 		super(scope, id);
 
-		const bucket = new s3.Bucket(this, `bolleje-${environmentName}-frontend-s3`, {
-			bucketName: `bolleje-${environmentName}-frontend-s3`,
+		const stack = cdk.Stack.of(this);
+
+		const bucket = new s3.Bucket(this, `${stack.account}-onetimesharing-${environmentName}-frontend`, {
+			bucketName: `${stack.account}-onetimesharing-${environmentName}-frontend`,
 			removalPolicy: RemovalPolicy.DESTROY,
 			autoDeleteObjects: true,
 			accessControl: s3.BucketAccessControl.PRIVATE,
@@ -32,11 +35,11 @@ export class FrontendStackService extends Construct {
 		const originAccessIdentity = new OriginAccessIdentity(this, `OriginAccessIdentity`);
 		bucket.grantRead(originAccessIdentity);
 
-		const cloudfrontDistribution = new Distribution(this, `bolleje-${environmentName}-frontend-cloudfront`, {
+		const cloudfrontDistribution = new Distribution(this, `onetimesharing-${environmentName}-cloudfront`, {
 			defaultRootObject: "index.html",
 			defaultBehavior: {
 				origin: new S3Origin(bucket, { originAccessIdentity }),
-				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
+				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 			},
 			errorResponses: [
 				{

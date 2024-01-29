@@ -12,7 +12,7 @@ interface ApiStackProps extends cdk.StackProps {
 	S3Storage: Bucket;
 }
 
-export class BolleJeApiStack extends cdk.Stack {
+export class OneTimeSharingApiStack extends cdk.Stack {
 	public readonly ApiGateway: RestApi;
 	constructor(scope: Construct, id: string, props: ApiStackProps) {
 		super(scope, id, props);
