@@ -35,10 +35,15 @@ const Login = () => {
 			.catch((error) => console.error(error.response.data));
 	}, []);
 
+	const logout = () => {
+		window.location.href = `https://bolleje-test-cog.auth.eu-west-1.amazoncognito.com/logout?client_id=${data.client_id}&logout_uri=http://localhost:9000/`;
+	};
+
 	return (
 		<Container>
 			<h1>{code ? code : "No code has been found."}</h1>
 			<textarea cols={30} rows={10} value={json} style={{ width: "100%", minHeight: "30rem", lineHeight: "1.2" }}></textarea>
+			<button onClick={logout}>Logout</button>
 		</Container>
 	);
 };
