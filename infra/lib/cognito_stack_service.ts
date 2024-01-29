@@ -3,11 +3,11 @@ import * as cognito from "aws-cdk-lib/aws-cognito";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
 export class CognitoStackService extends Construct {
-	constructor(scope: Construct, id: string) {
+	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
 		const userPool = new cognito.UserPool(this, "secretuserpool", {
-			userPoolName: "bolleje-test-cognito",
+			userPoolName: `onetimesharing-${environmentName}-cognito`,
 			signInCaseSensitive: false,
 			selfSignUpEnabled: true,
 			userVerification: {

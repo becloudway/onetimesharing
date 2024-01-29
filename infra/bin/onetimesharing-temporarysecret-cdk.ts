@@ -32,3 +32,7 @@ const ProdFrontendStack = new OneTimeSharingFrontendStack(app, "OneTimeSharingFr
 	apiGateway: ProdApiStack.ApiGateway,
 	env: AWS_ENVIRONMENT,
 });
+const ProdCognitoStack = new OneTimeSharingStorageStack(app, "OneTimeSharingCognitoStack", {
+	environmentName: "prod",
+	env: AWS_ENVIRONMENT,
+});
