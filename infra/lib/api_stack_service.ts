@@ -43,8 +43,8 @@ export class ApiStackService extends Construct {
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecret.zip`),
-			handler: "getSHEsecret.handler",
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecrets.zip`),
+			handler: "getSHEsecrets.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
 			},
@@ -53,8 +53,8 @@ export class ApiStackService extends Construct {
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-postSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecret.zip`),
-			handler: "postSHEsecret.handler",
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecrets.zip`),
+			handler: "postSHEsecrets.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
 			},
@@ -63,8 +63,8 @@ export class ApiStackService extends Construct {
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecret.zip`),
-			handler: "getE2Esecret.handler",
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecrets.zip`),
+			handler: "getE2Esecrets.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
 			},
@@ -73,8 +73,8 @@ export class ApiStackService extends Construct {
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
 			functionName: `onetimesharing-${environmentName}-postE2Esecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
-			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecret.zip`),
-			handler: "postE2Esecret.handler",
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecrets.zip`),
+			handler: "postE2Esecrets.handler",
 			environment: {
 				tableName: DynamoDBStorage.tableName,
 			},
@@ -111,6 +111,26 @@ export class ApiStackService extends Construct {
 			},
 		});
 
+		const login = new lambda.Function(this, "LoginHandler", {
+			functionName: `onetimesharing-${environmentName}-login`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-login.zip`),
+			handler: "login.handler",
+			environment: {
+				clientID: "72oe67u1to65prtngl6ljq0c7h",
+			},
+		});
+
+		const logout = new lambda.Function(this, "LogoutHandler", {
+			functionName: `onetimesharing-${environmentName}-logout`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
+			handler: "login.handler",
+			environment: {
+				clientID: "72oe67u1to65prtngl6ljq0c7h",
+			},
+		});
+
 		/*
             API Gateway Lambda Integrations
         */
@@ -144,6 +164,14 @@ export class ApiStackService extends Construct {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
+		const loginIntegration = new apigateway.LambdaIntegration(login, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
+		const logoutIntegration = new apigateway.LambdaIntegration(logout, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
 		/*
             Defining of the routes from the Gateway to the Lambda functions
         */
@@ -152,6 +180,9 @@ export class ApiStackService extends Construct {
 
 		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
+
+		apiRoute.addResource(eMethods.LOGIN).addMethod("GET", loginIntegration);
+		apiRoute.addResource(eMethods.LOGOUT).addMethod("GET", logoutIntegration);
 
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /

@@ -10,8 +10,8 @@
 		"combined-build": "npm run build-getSHEsecret && npm run build-postSHEsecret && npm run build-getE2Esecret && npm run build-postE2Esecret && npm run build-postPublicKey && npm run build-getPublicKey && npm run build-invalidatePublicKey && npm run build-login && npm run build-logout",
 		"build-getSHEsecret": "export NAME=getSHEsecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-postSHEsecret": "export NAME=postSHEsecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
-		"build-getE2Esecret": "export NAME=getE2Esecret && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
-		"build-postE2Esecret": "export NAME=postE2Esecret && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
+		"build-getE2Esecret": "export NAME=getE2Esecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
+		"build-postE2Esecret": "export NAME=postE2Esecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-postPublicKey": "export NAME=postPublicKey && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-getPublicKey": "export NAME=getPublicKey && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-invalidatePublicKey": "export NAME=invalidatePublicKey && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
@@ -27,6 +27,7 @@
 		"@aws-sdk/s3-request-presigner": "^3.490.0",
 		"@types/aws-lambda": "^8.10.130",
 		"aws-sdk": "^2.1538.0",
+		"axios": "^1.6.7",
 		"esbuild": "^0.19.9",
 		"uuid": "^9.0.1"
 	},
