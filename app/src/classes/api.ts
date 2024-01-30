@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const dev = process.env.NODE_ENV === "dev";
-const apiURL: string = "https://d1na5vlrxp418x.cloudfront.net";
+const apiURL: string = "https://onetimesharing.sandbox.dev.cloudway.be";
 
 export class Api {
 	public static GetSHESecret = async (uuid: string) => {
