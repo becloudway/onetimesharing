@@ -16,6 +16,7 @@ import Dropdown from "./components/Dropdown";
 import ClickableLogo from "./components/ClickableLogo";
 import WhiteContainer from "./components/WhiteContainer";
 import { Api } from "./classes/api";
+import VerifyScreen from "./components/VerifyScreen";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -23,6 +24,7 @@ function E2Edecryption() {
 	const [privateKey, setPrivateKey] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [showBrowserBased, setShowBrowserBased] = useState<boolean>(false);
+	const [verify, setVerify] = useState<boolean>(true);
 
 	const getSecret = async (uuid: string) => {
 		//Get the secret
@@ -50,14 +52,14 @@ function E2Edecryption() {
 			});
 	};
 
-	useEffect(() => {
+	const fetchSecret = () => {
 		const searchParams = new URLSearchParams(window.location.search);
 		if (searchParams.has("uuid")) {
 			getSecret(searchParams.get("uuid") || "");
 		} else {
 			errorHandling("No uuid found, aborting.");
 		}
-	}, []);
+	};
 
 	return (
 		<Container className="bg-white">
@@ -72,6 +74,14 @@ function E2Edecryption() {
 				draggable
 				theme="colored"
 			/>
+			{verify && (
+				<VerifyScreen
+					callback={() => {
+						setVerify(false);
+						fetchSecret();
+					}}
+				/>
+			)}
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">
