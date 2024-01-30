@@ -44,13 +44,15 @@ export class CognitoStackService extends Construct {
 					authorizationCodeGrant: true,
 				},
 				callbackUrls: ["http://localhost:9000/login"],
+				logoutUrls: ["http://localhost:9000/"],
 				scopes: [cognito.OAuthScope.OPENID, cognito.OAuthScope.EMAIL],
 			},
+			userPoolClientName: "OneTimeSharing-userpool",
 		});
 
 		const domain = userPool.addDomain("Domain", {
 			cognitoDomain: {
-				domainPrefix: "bolleje-test-cog",
+				domainPrefix: "onetimesharing-authorize",
 			},
 		});
 	}
