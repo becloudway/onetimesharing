@@ -5,6 +5,7 @@ import { OneTimeSharingApiStack } from "../lib/onetimesharing-api-stack";
 import { OneTimeSharingStorageStack } from "../lib/onetimesharing-storage-stack";
 import { OneTimeSharingCiCdStack } from "../lib/onetimesharing-cicd-stack";
 import { OneTimeSharingFrontendStack } from "../lib/onetimesharing-frontend-stack";
+import { OneTimeSharingCognitoStack } from "../lib/onetimesharing-cognito-stack";
 
 const AWS_ENVIRONMENT = {
 	account: process.env.CDK_DEFAULT_ACCOUNT,
@@ -31,4 +32,7 @@ const ProdFrontendStack = new OneTimeSharingFrontendStack(app, "OneTimeSharingFr
 	environmentName: "prod",
 	apiGateway: ProdApiStack.ApiGateway,
 	env: AWS_ENVIRONMENT,
+});
+const ProdCognitoStack = new OneTimeSharingCognitoStack(app, "OneTimeSharingCognitoStack", {
+	environmentName: "prod",
 });
