@@ -16,7 +16,13 @@ const AuthenticationService = class {
 
 				return CognitoRepository.Login(clientId, redirectURI, code)
 					.then((response) => {
-						if (response === false) return buildResponseBody(302, "Should redirect.");
+						if (response === false)
+							return buildResponseBody(
+								302,
+								JSON.stringify({
+									url: `${process.env.baseURL}/login?client_id=${process.env.clientID}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
+								})
+							);
 					})
 					.catch((error) => {
 						console.log(error);

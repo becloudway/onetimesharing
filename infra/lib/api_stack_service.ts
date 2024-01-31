@@ -111,15 +111,22 @@ export class ApiStackService extends Construct {
 			},
 		});
 
+		const cognitoClientID = cdk.Fn.importValue("CognitoClientID");
+		const hostedUI = cdk.Fn.importValue("CognitoHostedURL");
+
 		const login = new lambda.Function(this, "LoginHandler", {
 			functionName: `onetimesharing-${environmentName}-login`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-login.zip`),
 			handler: "login.handler",
 			environment: {
-				clientID: "72oe67u1to65prtngl6ljq0c7h",
+				baseURL: hostedUI,
+				clientID: cognitoClientID,
 			},
 		});
+
+		//const secret = cdk.aws_secretsmanager.Secret.fromSecretNameV2(this, "CognitoClientSecret", "CognitoClientSecret");
+		//const clientSecret = secret.secretValue;
 
 		const logout = new lambda.Function(this, "LogoutHandler", {
 			functionName: `onetimesharing-${environmentName}-logout`,
@@ -127,7 +134,9 @@ export class ApiStackService extends Construct {
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
 			handler: "login.handler",
 			environment: {
-				clientID: "72oe67u1to65prtngl6ljq0c7h",
+				baseURL: hostedUI,
+				clientID: cognitoClientID,
+				//clientSecret: clientSecret.unsafeUnwrap(),
 			},
 		});
 
