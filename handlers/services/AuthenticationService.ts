@@ -14,15 +14,17 @@ const AuthenticationService = class {
 				if (clientId === "") return buildResponseBody(400, "ClientID was not found.");
 				if (redirectURI === "") return buildResponseBody(400, "The request should contain a redirectURI");
 
+				if (code === "")
+					return buildResponseBody(
+						302,
+						JSON.stringify({
+							url: `${process.env.baseURL}/login?client_id=${process.env.clientID}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
+						})
+					);
+
 				return CognitoRepository.Login(clientId, redirectURI, code)
 					.then((response) => {
-						if (response === false)
-							return buildResponseBody(
-								302,
-								JSON.stringify({
-									url: `${process.env.baseURL}/login?client_id=${process.env.clientID}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
-								})
-							);
+						return this.#handleGetRequest(JSON.stringify(response));
 					})
 					.catch((error) => {
 						console.log(error);

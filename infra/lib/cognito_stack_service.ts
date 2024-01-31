@@ -1,12 +1,12 @@
 import { Construct } from "constructs";
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
-import { Duration, RemovalPolicy, SecretValue } from "aws-cdk-lib";
+import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
 export class CognitoStackService extends Construct {
 	public readonly cognitoClientID: string;
 	public readonly hostedURL: string;
-	public readonly cognitoClientSecret: SecretValue;
+	public readonly secret: secretsmanager.Secret;
 
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
@@ -48,8 +48,12 @@ export class CognitoStackService extends Construct {
 				flows: {
 					authorizationCodeGrant: true,
 				},
-				callbackUrls: ["http://localhost:9000/login"],
-				logoutUrls: ["http://localhost:9000/"],
+				callbackUrls: [
+					"http://localhost:9000/callback",
+					"https://onetimesharing.sandbox.dev.cloudway.be/callback",
+					"https://onetimesharing.com/callback",
+				],
+				logoutUrls: ["http://localhost:9000/", "https://onetimesharing.sandbox.dev.clouwday.be/", "https://onetimesharing.com/"],
 				scopes: [cognito.OAuthScope.OPENID, cognito.OAuthScope.EMAIL],
 			},
 			userPoolClientName: "OneTimeSharing-userpool",
@@ -65,11 +69,12 @@ export class CognitoStackService extends Construct {
 		const secret = new secretsmanager.Secret(this, "CognitoClientSecret", {
 			secretName: "CognitoClientSecret",
 			generateSecretString: {
-				secretStringTemplate: JSON.stringify({}),
+				secretStringTemplate: JSON.stringify({ client_secret: client.userPoolClientSecret }),
 				generateStringKey: "clientSecret",
 			},
 		});
 
+		this.secret = secret;
 		this.cognitoClientID = client.userPoolClientId;
 		this.hostedURL = domain.baseUrl();
 	}

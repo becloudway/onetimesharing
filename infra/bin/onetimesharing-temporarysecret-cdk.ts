@@ -33,6 +33,7 @@ const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
 	S3Storage: ProdStorageStack.S3Storage,
+	Secret: ProdCognitoStack.secret,
 	env: AWS_ENVIRONMENT,
 });
 

@@ -5,11 +5,19 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
 import * as cdk from "aws-cdk-lib";
+import * as sm from "aws-cdk-lib/aws-secretsmanager";
 
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
 
-	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string, S3Storage: Bucket) {
+	constructor(
+		scope: Construct,
+		id: string,
+		DynamoDBStorage: dynamodb.TableV2,
+		environmentName: string,
+		S3Storage: Bucket,
+		Secret: sm.Secret
+	) {
 		super(scope, id);
 
 		/*
@@ -174,7 +182,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const loginIntegration = new apigateway.LambdaIntegration(login, {
-			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+			requestTemplates: { "application/x-www-form-urlencoded": '{ "statusCode": "200" }' },
 		});
 
 		const logoutIntegration = new apigateway.LambdaIntegration(logout, {
@@ -214,6 +222,8 @@ export class ApiStackService extends Construct {
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);
 		S3Storage.grantDelete(invalidatePublicKey);
+
+		Secret.grantRead(login);
 
 		this.ApiGateway = apiGateway;
 	}

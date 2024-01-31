@@ -152,17 +152,20 @@ export class Api {
 					}
 				)
 				.then((response) => {
+					console.log(response);
 					if (response.status === 200) resolve(JSON.parse(response.data).url);
 				})
-				.catch((response) => {
-					console.log(response);
-					const resp = response.response;
-					const body = resp.data;
-
-					if (resp.status === 302) {
-						resolve(body.url);
+				.catch((error) => {
+					const resp = error.response;
+					if (resp) {
+						const body = resp.data;
+						if (resp.status === 302) {
+							resolve(body.url);
+						} else {
+							reject(error);
+						}
 					} else {
-						reject(response);
+						reject(error);
 					}
 				});
 		});
