@@ -68,10 +68,7 @@ export class CognitoStackService extends Construct {
 
 		const secret = new secretsmanager.Secret(this, "CognitoClientSecret", {
 			secretName: "CognitoClientSecret",
-			generateSecretString: {
-				secretStringTemplate: JSON.stringify({ client_secret: client.userPoolClientSecret }),
-				generateStringKey: "clientSecret",
-			},
+			secretStringValue: client.userPoolClientSecret,
 		});
 
 		this.secret = secret;

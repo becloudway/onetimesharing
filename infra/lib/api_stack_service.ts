@@ -6,6 +6,7 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
 import * as cdk from "aws-cdk-lib";
 import * as sm from "aws-cdk-lib/aws-secretsmanager";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
@@ -223,7 +224,13 @@ export class ApiStackService extends Construct {
 		S3Storage.grantRead(getPublicKeyHandler);
 		S3Storage.grantDelete(invalidatePublicKey);
 
-		Secret.grantRead(login);
+		Secret.addToResourcePolicy(
+			new iam.PolicyStatement({
+				principals: [new iam.AnyPrincipal()],
+				actions: ["secretsmanager:GetSecretValue"],
+				resources: ["*"],
+			})
+		);
 
 		this.ApiGateway = apiGateway;
 	}
