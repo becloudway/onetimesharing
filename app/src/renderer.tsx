@@ -9,7 +9,7 @@ import E2Edecryption from "./E2E-decryption";
 import GenerateSHE from "./SHE-encryption";
 import SHEDecryption from "./SHE-decryption";
 import Navigation from "./Navigation";
-import Login from "./Login";
+import Callback from "./Callback";
 
 const rootElement = document.getElementById("root");
 
@@ -25,11 +25,11 @@ if (rootElement) {
 			),
 		},
 		{
-			path: "/login",
+			path: "/callback",
 			element: (
 				<>
 					<GlobalStyle />
-					<Login />
+					<Callback />
 				</>
 			),
 		},

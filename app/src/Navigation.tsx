@@ -18,8 +18,7 @@ const Navigation = () => {
 					<button
 						className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
 						onClick={() => {
-							window.location.href =
-								"https://bolleje-test-cog.auth.eu-west-1.amazoncognito.com/oauth2/authorize?client_id=6em5dl9o2eak3d7mb0k9d7ajma&response_type=code&scope=email+openid&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2Flogin";
+							navigate("/callback");
 						}}
 					>
 						Login
