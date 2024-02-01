@@ -55,7 +55,7 @@ export class FrontendStackService extends Construct {
 			viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
 			allowedMethods: AllowedMethods.ALLOW_ALL,
 			cachePolicy: CachePolicy.CACHING_DISABLED,
-			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
 			compress: true,
 			responseHeadersPolicy: ResponseHeadersPolicy.CORS_ALLOW_ALL_ORIGINS,
 		});

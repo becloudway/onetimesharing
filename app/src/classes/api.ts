@@ -147,8 +147,8 @@ export class Api {
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
 						},
+						withCredentials: true,
 					}
 				)
 				.then((response) => {

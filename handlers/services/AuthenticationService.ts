@@ -24,7 +24,7 @@ const AuthenticationService = class {
 
 				return CognitoRepository.Login(clientId, redirectURI, code)
 					.then((response) => {
-						return this.#handleGetRequest(JSON.stringify(response));
+						return this.#handleGetRequest(response as { id_token: string; access_token: string; refresh_token: string });
 					})
 					.catch((error) => {
 						console.log(error);
@@ -32,13 +32,13 @@ const AuthenticationService = class {
 			}
 
 			//Handle the logout
-			if (lambdaEvent.path.includes("logout")) return this.#handleGetRequest("logout");
+			//if (lambdaEvent.path.includes("logout")) return this.#handleGetRequest();
 		}
 
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
-	static #handleGetRequest(response: any) {
+	static #handleGetRequest(response: { id_token: string; access_token: string; refresh_token: string }) {
 		return buildResponseBody(200, JSON.stringify(response));
 	}
 };
