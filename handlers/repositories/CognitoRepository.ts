@@ -46,7 +46,7 @@ const CognitoRepository = class {
 					}
 				)
 				.then((response) => {
-					console.log(`Then function: ${response}`);
+					console.log(`Then function: ${response.data}`);
 					if (response.status === 200) resolve(response.data);
 				})
 				.catch((error) => {
