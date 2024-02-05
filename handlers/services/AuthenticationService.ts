@@ -40,13 +40,8 @@ const AuthenticationService = class {
 
 	static #handleGetRequest(response: { id_token: string; access_token: string; refresh_token: string }) {
 		console.log(response);
-		return buildResponseBody(200, "test", {
-			"Set-Cookie": [
-				`id_token=${response.id_token}; HttpOnly`,
-				`access_token=${response.access_token}; HttpOnly`,
-				`refresh_token=${response.refresh_token}; HttpOnly`,
-				`test_token=${response.id_token}`, // No HttpOnly here if it's not necessary
-			],
+		return buildResponseBody(200, JSON.stringify(response), {
+			"Set-Cookie": `id_token=${response.id_token}; Secure; HttpOnly;`,
 		});
 	}
 };
