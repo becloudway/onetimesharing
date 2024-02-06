@@ -11,7 +11,6 @@ export class Api {
 				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
 					},
 				})
 				.then((res: ReturnType) => {
@@ -53,7 +52,6 @@ export class Api {
 				.get(`${dev ? apiURL : ""}/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
 					},
 				})
 				.then((res) => {
@@ -76,7 +74,6 @@ export class Api {
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
 						},
 					}
 				)
@@ -95,7 +92,6 @@ export class Api {
 				.get(`${dev ? apiURL : ""}/api/getpublickey/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
-						"Access-Control-Allow-Origin": "*",
 					},
 				})
 				.then((res) => {
@@ -123,7 +119,6 @@ export class Api {
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
 						},
 					}
 				)
@@ -144,6 +139,9 @@ export class Api {
 						code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
+						headers: {
+							"Content-Type": "application/json",
+						},
 						withCredentials: true,
 					}
 				)
