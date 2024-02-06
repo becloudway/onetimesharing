@@ -9,14 +9,25 @@ const AuthenticationService = class {
 			const redirectURI = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "";
 			const code = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "";
 
+			console.log(`Redirect URL: ${redirectURI}`);
+			console.log(`Code: ${code}`);
+
 			//Handle the login
 			if (lambdaEvent.path.includes("login")) {
 				if (clientId === "") return buildResponseBody(400, "ClientID was not found.");
 				if (redirectURI === "") return buildResponseBody(400, "The request should contain a redirectURI");
 
+				if (code === "")
+					return buildResponseBody(
+						302,
+						JSON.stringify({
+							url: `${process.env.baseURL}/login?client_id=${process.env.clientID}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
+						})
+					);
+
 				return CognitoRepository.Login(clientId, redirectURI, code)
 					.then((response) => {
-						if (response === false) return buildResponseBody(302, "Should redirect.");
+						return this.#handleGetRequest(response as { id_token: string; access_token: string; refresh_token: string });
 					})
 					.catch((error) => {
 						console.log(error);
@@ -24,14 +35,26 @@ const AuthenticationService = class {
 			}
 
 			//Handle the logout
-			if (lambdaEvent.path.includes("logout")) return this.#handleGetRequest("logout");
+			//if (lambdaEvent.path.includes("logout")) return this.#handleGetRequest();
 		}
 
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
-	static #handleGetRequest(response: any) {
-		return buildResponseBody(200, JSON.stringify(response));
+	static #handleGetRequest(response: { id_token: string; access_token: string; refresh_token: string }) {
+		console.log(response);
+		return buildResponseBody(
+			200,
+			JSON.stringify(response),
+			{},
+			{
+				"Set-Cookie": [
+					`id_token=${response.id_token}; Secure; HttpOnly;`,
+					`access_token=${response.access_token}; Secure; HttpOnly;`,
+					`refresh_token=${response.refresh_token}; Secure; HttpOnly;`,
+				],
+			}
+		);
 	}
 };
 

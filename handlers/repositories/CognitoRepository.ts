@@ -1,18 +1,37 @@
 import axios from "axios";
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
 const CognitoRepository = class {
 	static Login = async (clientID: string, redirectURI: string, code: string) => {
 		return new Promise(async (resolve, reject) => {
-			const cognitoDomain = "https://onetimesharing-authorize.auth.eu-west-1.amazoncognito.com/oauth2/token";
+			const secret_name = "CognitoClientSecret";
+
+			const client = new SecretsManagerClient({
+				region: "eu-west-1",
+			});
+
+			let response;
+
+			try {
+				response = await client.send(
+					new GetSecretValueCommand({
+						SecretId: secret_name,
+						VersionStage: "AWSCURRENT",
+					})
+				);
+			} catch (error) {
+				throw error;
+			}
+
+			const secret = response.SecretString;
+
+			const cognitoDomain = `${process.env.baseURL}/oauth2/token`;
 			const data = {
 				grant_type: "authorization_code",
-				client_id: clientID,
 				redirect_uri: redirectURI,
 			};
 
-			if (code === "") resolve(false);
-
-			await axios
+			axios
 				.post(
 					cognitoDomain,
 					new URLSearchParams({
@@ -21,12 +40,19 @@ const CognitoRepository = class {
 					}),
 					{
 						headers: {
+							Authorization: `Basic ${btoa(`${clientID}:${secret}`)}`,
 							"Content-Type": "application/x-www-form-urlencoded",
 						},
 					}
 				)
-				.then((response) => resolve(response))
-				.catch((error) => reject(error));
+				.then((response) => {
+					console.log(`Then function: ${response.data}`);
+					if (response.status === 200) resolve(response.data);
+				})
+				.catch((error) => {
+					console.log(`Catch function: ${error}`);
+					reject(error);
+				});
 		});
 	};
 };

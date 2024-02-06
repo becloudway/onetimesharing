@@ -1,8 +1,13 @@
 import { Construct } from "constructs";
 import * as cognito from "aws-cdk-lib/aws-cognito";
+import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
 export class CognitoStackService extends Construct {
+	public readonly cognitoClientID: string;
+	public readonly hostedURL: string;
+	public readonly secret: secretsmanager.Secret;
+
 	constructor(scope: Construct, id: string, environmentName: string) {
 		super(scope, id);
 
@@ -43,11 +48,16 @@ export class CognitoStackService extends Construct {
 				flows: {
 					authorizationCodeGrant: true,
 				},
-				callbackUrls: ["http://localhost:9000/login"],
-				logoutUrls: ["http://localhost:9000/"],
+				callbackUrls: [
+					"http://localhost:9000/callback",
+					"https://onetimesharing.sandbox.dev.cloudway.be/callback",
+					"https://onetimesharing.com/callback",
+				],
+				logoutUrls: ["http://localhost:9000/", "https://onetimesharing.sandbox.dev.clouwday.be/", "https://onetimesharing.com/"],
 				scopes: [cognito.OAuthScope.OPENID, cognito.OAuthScope.EMAIL],
 			},
 			userPoolClientName: "OneTimeSharing-userpool",
+			generateSecret: true,
 		});
 
 		const domain = userPool.addDomain("Domain", {
@@ -55,5 +65,14 @@ export class CognitoStackService extends Construct {
 				domainPrefix: "onetimesharing-authorize",
 			},
 		});
+
+		const secret = new secretsmanager.Secret(this, "CognitoClientSecret", {
+			secretName: "CognitoClientSecret",
+			secretStringValue: client.userPoolClientSecret,
+		});
+
+		this.secret = secret;
+		this.cognitoClientID = client.userPoolClientId;
+		this.hostedURL = domain.baseUrl();
 	}
 }

@@ -5,11 +5,20 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { eMethods } from "../types/enums";
 import * as cdk from "aws-cdk-lib";
+import * as sm from "aws-cdk-lib/aws-secretsmanager";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
 
-	constructor(scope: Construct, id: string, DynamoDBStorage: dynamodb.TableV2, environmentName: string, S3Storage: Bucket) {
+	constructor(
+		scope: Construct,
+		id: string,
+		DynamoDBStorage: dynamodb.TableV2,
+		environmentName: string,
+		S3Storage: Bucket,
+		Secret: sm.Secret
+	) {
 		super(scope, id);
 
 		/*
@@ -24,11 +33,6 @@ export class ApiStackService extends Construct {
 			},
 			deployOptions: {
 				loggingLevel: apigateway.MethodLoggingLevel.OFF,
-			},
-			defaultCorsPreflightOptions: {
-				allowOrigins: apigateway.Cors.ALL_ORIGINS,
-				allowMethods: apigateway.Cors.ALL_METHODS,
-				allowHeaders: ["*"],
 			},
 		});
 
@@ -111,15 +115,22 @@ export class ApiStackService extends Construct {
 			},
 		});
 
+		const cognitoClientID = cdk.Fn.importValue("CognitoClientID");
+		const hostedUI = cdk.Fn.importValue("CognitoHostedURL");
+
 		const login = new lambda.Function(this, "LoginHandler", {
 			functionName: `onetimesharing-${environmentName}-login`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-login.zip`),
 			handler: "login.handler",
 			environment: {
-				clientID: "72oe67u1to65prtngl6ljq0c7h",
+				baseURL: hostedUI,
+				clientID: cognitoClientID,
 			},
 		});
+
+		//const secret = cdk.aws_secretsmanager.Secret.fromSecretNameV2(this, "CognitoClientSecret", "CognitoClientSecret");
+		//const clientSecret = secret.secretValue;
 
 		const logout = new lambda.Function(this, "LogoutHandler", {
 			functionName: `onetimesharing-${environmentName}-logout`,
@@ -127,7 +138,9 @@ export class ApiStackService extends Construct {
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
 			handler: "login.handler",
 			environment: {
-				clientID: "72oe67u1to65prtngl6ljq0c7h",
+				baseURL: hostedUI,
+				clientID: cognitoClientID,
+				//clientSecret: clientSecret.unsafeUnwrap(),
 			},
 		});
 
@@ -165,7 +178,7 @@ export class ApiStackService extends Construct {
 		});
 
 		const loginIntegration = new apigateway.LambdaIntegration(login, {
-			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+			requestTemplates: { "application/x-www-form-urlencoded": '{ "statusCode": "200" }' },
 		});
 
 		const logoutIntegration = new apigateway.LambdaIntegration(logout, {
@@ -205,6 +218,14 @@ export class ApiStackService extends Construct {
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);
 		S3Storage.grantDelete(invalidatePublicKey);
+
+		Secret.addToResourcePolicy(
+			new iam.PolicyStatement({
+				principals: [new iam.AnyPrincipal()],
+				actions: ["secretsmanager:GetSecretValue"],
+				resources: ["*"],
+			})
+		);
 
 		this.ApiGateway = apiGateway;
 	}

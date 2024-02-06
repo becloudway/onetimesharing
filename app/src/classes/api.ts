@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const dev = process.env.NODE_ENV === "dev";
-const apiURL: string = "https://onetimesharing.sandbox.dev.cloudway.be";
+const apiURL: string = import.meta.env.VITE_DEV_URL;
 
 export class Api {
 	public static GetSHESecret = async (uuid: string) => {
@@ -35,7 +35,6 @@ export class Api {
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
 						},
 					}
 				)
@@ -133,6 +132,37 @@ export class Api {
 				})
 				.catch((error) => {
 					reject(`Error posting secret: ${error.message}`);
+				});
+		});
+	};
+
+	public static Login = async (code: string | null) => {
+		return new Promise(async (resolve: (code: string) => void, reject) => {
+			axios
+				.get(
+					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
+						code !== "" && code !== null ? `&code=${code}` : ""
+					}`,
+					{
+						withCredentials: true,
+					}
+				)
+				.then((response) => {
+					console.log(response);
+					if (response.status === 200) resolve(JSON.parse(response.data).url);
+				})
+				.catch((error) => {
+					const resp = error.response;
+					if (resp) {
+						const body = resp.data;
+						if (resp.status === 302) {
+							resolve(body.url);
+						} else {
+							reject(error);
+						}
+					} else {
+						reject(error);
+					}
 				});
 		});
 	};

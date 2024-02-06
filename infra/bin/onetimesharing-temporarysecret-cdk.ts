@@ -18,21 +18,27 @@ const ProdStorageStack = new OneTimeSharingStorageStack(app, "OneTimeSharingStor
 	environmentName: "prod",
 	env: AWS_ENVIRONMENT,
 });
+
 const ProdCiCdStack = new OneTimeSharingCiCdStack(app, "OneTimeSharingCiCdStack", {
 	environmentName: "prod",
 	env: AWS_ENVIRONMENT,
 });
+
+const ProdCognitoStack = new OneTimeSharingCognitoStack(app, "OneTimeSharingCognitoStack", {
+	environmentName: "prod",
+	env: AWS_ENVIRONMENT,
+});
+
 const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
 	S3Storage: ProdStorageStack.S3Storage,
+	Secret: ProdCognitoStack.secret,
 	env: AWS_ENVIRONMENT,
 });
+
 const ProdFrontendStack = new OneTimeSharingFrontendStack(app, "OneTimeSharingFrontendStack", {
 	environmentName: "prod",
 	apiGateway: ProdApiStack.ApiGateway,
 	env: AWS_ENVIRONMENT,
-});
-const ProdCognitoStack = new OneTimeSharingCognitoStack(app, "OneTimeSharingCognitoStack", {
-	environmentName: "prod",
 });
