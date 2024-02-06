@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
 import styled from "styled-components";
 
@@ -13,10 +12,12 @@ import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
+import VerifyScreen from "./components/VerifyScreen";
 
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
+	const [verify, setVerify] = useState<boolean>(true);
 
 	const getSecret = async (uuid: string, first_half_key: string, iv: string) => {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
@@ -60,7 +61,7 @@ function SHEDecryption() {
 		});
 	};
 
-	useEffect(() => {
+	const fetchSecret = () => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const hashValue = {
 			first_half_key: window.location.hash.split("&")[0].split("=")[1],
@@ -81,7 +82,7 @@ function SHEDecryption() {
 			.catch((error) => {
 				errorHandling("Error checking params: " + error);
 			});
-	}, []);
+	};
 
 	return (
 		<Container className="bg-white">
@@ -96,6 +97,14 @@ function SHEDecryption() {
 				draggable
 				theme="colored"
 			/>
+			{verify && (
+				<VerifyScreen
+					callback={() => {
+						setVerify(false);
+						fetchSecret();
+					}}
+				/>
+			)}
 			<div className="flex flex-col items-center justify-start pt-[34px] px-[12px] w-full h-full overflow-auto pb-[20px] bg-[rgba(0,123,236,0.1)]">
 				<ClickableLogo />
 				<div className="mt-[34px] py-[22px] px-[36px] h-[calc(100%-75px)] w-full h-auto max-w-[1400px] rounded-[12px] bg-white">

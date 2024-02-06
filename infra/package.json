@@ -1,5 +1,5 @@
 {
-	"name": "OneTimeSharing-temporarysecret-cdk",
+	"name": "onetimesharing-temporarysecret-cdk",
 	"version": "0.1.0",
 	"bin": {
 		"OneTimeSharing-temporarysecret-cdk": "bin/OneTimeSharing-temporarysecret-cdk.js"
@@ -10,15 +10,11 @@
 		"test": "jest",
 		"cdk": "cdk",
 		"integration-test": "npx playwright test --workers=1",
-		"deploy-dev-codecontainer": "cdk deploy -e OneTimeSharingDevCiCdStack --require-approval='never'",
-		"deploy-prod-codecontainer": "cdk deploy -e OneTimeSharingProdCiCdStack --require-approval='never'",
-		"deploy": "npm run deploy-dev && npm run deploy-prod",
-		"deploy-dev": "npm run synth && npm run deploy-dev-backend && npm run deploy-dev-frontend",
-		"deploy-prod": "npm run synth && npm run deploy-prod-backend && npm run deploy-prod-frontend",
-		"deploy-dev-backend": "npm run deploy-dev-codecontainer && cdk deploy -e OneTimeSharingDevStorageStack OneTimeSharingDevApiStack --require-approval='never'",
-		"deploy-prod-backend": "npm run deploy-prod-codecontainer && cdk deploy -e OneTimeSharingProdStorageStack OneTimeSharingProdApiStack --require-approval='never'",
-		"deploy-dev-frontend": "cdk deploy -e OneTimeSharingDevFrontendStack --require-approval='never'",
-		"deploy-prod-frontend": "cdk deploy -e OneTimeSharingProdFrontendStack --require-approval='never'",
+		"deploy-codecontainer": "cdk deploy -e OneTimeSharingCiCdStack --require-approval='never'",
+		"deploy-cognito": "cdk deploy -e OneTimeSharingCognitoStack --require-approval='never'",
+		"deploy": "npm run synth && npm run deploy-codecontainer && npm run deploy-cognito && npm run deploy-backend && npm run deploy-frontend",
+		"deploy-backend": "cdk deploy -e OneTimeSharingStorageStack OneTimeSharingApiStack --require-approval='never'",
+		"deploy-frontend": "cdk deploy -e OneTimeSharingFrontendStack --require-approval='never'",
 		"synth": "npm run build-backend && npm run build-frontend && cdk bootstrap && cdk synth --app 'npx ts-node bin/onetimesharing-temporarysecret-cdk.ts'",
 		"build-backend": "cd ../handlers && npm run build && cd dist && zip -r ../dist.zip *",
 		"build-frontend": "cd ../app && npm run build"

@@ -6,6 +6,10 @@ export default defineConfig({
 	server: {
 		port: 9000,
 	},
+	build: {
+		sourcemap: true,
+		minify: false,
+	},
 	plugins: [
 		// The plugin below is required for hot reloading React application.
 		react(),
