@@ -9,6 +9,9 @@ const AuthenticationService = class {
 			const redirectURI = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "";
 			const code = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "";
 
+			console.log(`Redirect URL: ${redirectURI}`);
+			console.log(`Code: ${code}`);
+
 			//Handle the login
 			if (lambdaEvent.path.includes("login")) {
 				if (clientId === "") return buildResponseBody(400, "ClientID was not found.");

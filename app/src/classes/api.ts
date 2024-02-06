@@ -35,7 +35,6 @@ export class Api {
 					{
 						headers: {
 							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
 						},
 					}
 				)
@@ -141,14 +140,11 @@ export class Api {
 		return new Promise(async (resolve: (code: string) => void, reject) => {
 			axios
 				.get(
-					`${dev ? apiURL : ""}/api/login?redirectURI=${window.location.origin}/callback${
+					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
 						code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
-						headers: {
-							"Content-Type": "application/json",
-							"Access-Control-Allow-Origin": "*",
-						},
+						withCredentials: true,
 					}
 				)
 				.then((response) => {
