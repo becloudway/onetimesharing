@@ -53,6 +53,7 @@ export class FrontendStackService extends Construct {
 
 		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {
 			viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+			originRequestPolicy: OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
 			allowedMethods: AllowedMethods.ALLOW_ALL,
 			cachePolicy: CachePolicy.CACHING_DISABLED,
 			compress: true,
