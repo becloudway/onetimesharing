@@ -36,7 +36,7 @@ function E2Edecryption() {
 					setLoading(false);
 				})
 				.catch((err) => {
-					errorHandling(err);
+					errorHandling("No secret was found in combination with this UUID.");
 					setLoading(false);
 				});
 		}
