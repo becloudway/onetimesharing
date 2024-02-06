@@ -1,6 +1,7 @@
 import { Construct } from "constructs";
 import * as cognito from "aws-cdk-lib/aws-cognito";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
+import * as cdk from "aws-cdk-lib";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 
 export class CognitoStackService extends Construct {
@@ -60,9 +61,11 @@ export class CognitoStackService extends Construct {
 			generateSecret: true,
 		});
 
+		const stack = cdk.Stack.of(this);
+
 		const domain = userPool.addDomain("Domain", {
 			cognitoDomain: {
-				domainPrefix: "onetimesharing-authorize",
+				domainPrefix: `${stack.account}-onetimesharing-authorize`,
 			},
 		});
 
