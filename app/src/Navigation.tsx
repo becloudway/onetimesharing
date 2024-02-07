@@ -19,6 +19,7 @@ const Navigation = () => {
 						className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
 						onClick={() => {
 							navigate("/callback");
+							console.log();
 						}}
 					>
 						Login
