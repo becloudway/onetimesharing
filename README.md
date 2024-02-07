@@ -110,7 +110,7 @@ The application is divided into 3 sections:
 
 ## Second-half encryption
 
-In this method we provide encryption using AES-256, a key and an IV is generated. When the secret is encrypted using this key. It is sent to the backend along with the second half of the encryption key. We do this so that the server does not have knowledge of the whole key and therefore cannot decrypt the secret. The only person that can decrypt it is the person with the generated URL as this stores the first half of the key along with the IV and the id to fetch and decrypt the secret. We provide this encryption type so that the receiver of the client does not need to do any work except receive and open the link.
+In this method we provide encryption using AES-256, a key and an IV is generated. When the secret is encrypted using this key. It is sent to the backend along with the second half of the encryption key. We do this so that the server does not have knowledge of the whole key and therefore cannot decrypt the secret. The only person that can decrypt it is the person with the generated URL as this stores the first half of the key along with the IV and the id to fetch and decrypt the secret. The lather is provided to the frontend using a hash parameter in the url. This parameter ensures that no data of the first half key and the id is sent in any way to any server as a hash parameter is only accessable client-side. This means that there is no way for the server or the admins of the server to decrypt the secrets that are stored. We provide this encryption type so that the receiver of the client does not need to do any work except receive and open the link.
 
 ## Public-Private key encryption
 
