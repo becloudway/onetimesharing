@@ -10,6 +10,7 @@ import GenerateSHE from "./SHE-encryption";
 import SHEDecryption from "./SHE-decryption";
 import Navigation from "./Navigation";
 import Callback from "./Callback";
+import ErrorPage from "./components/ErrorPage";
 
 const rootElement = document.getElementById("root");
 
@@ -83,7 +84,7 @@ if (rootElement) {
 			element: (
 				<>
 					<GlobalStyle />
-					<h1>404</h1>
+					<ErrorPage />
 				</>
 			),
 		},
