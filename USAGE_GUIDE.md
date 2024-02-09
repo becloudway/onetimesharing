@@ -9,9 +9,12 @@
 
 - [Types](#different-types)
 - [Second-half encryption](#second-half-encryption)
+  - [How do we handle your SHE secret?](#how-do-we-handle-your-she-secret)
+  - [Fething a secret](#fetching-a-secret-valid-for-both-encryption-types)
 - [Keypair encryption](#publicprivate-key-encryption)
+  - [How do we handle your E2E secret?](#how-do-we-handle-your-e2e-secret)
+  - [Fething a secret](#fetching-a-secret-valid-for-both-encryption-types-1)
 - [Routes](#routes)
-- [How do we handle your secret](#how-we-handle-the-secrets)
 
 ## Different types
 
@@ -26,7 +29,34 @@ In the encrypt route, you can enter a secret **[1]** and then generate a link. T
 
 ![encryptshe-empty](screenshots/image-10.png)
 ![encryptshe-full](screenshots/image-2.png)
-![encryptshe-decrypted](screenshots/image-3.png)
+![Alt text](<Screenshot 2024-02-09 at 09.29.47.png>)
+![Alt text](<Screenshot 2024-02-09 at 09.29.55.png>)
+
+### How do we handle your SHE secret?
+
+1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead in a SHE request the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. So the payload of the request to the server will look somthing like this.
+
+```json
+{
+	"cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
+	"second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
+}
+```
+
+2. Based on this response a couple of checks need to be executed, mainly about the length of the secret as well as the length of the key. The checks of the ciphertext are identical to the ones above, but we also include checks if there is a key included, the key is not empty and the key is exactly 32 bits long. As the full encryption key is 64 bits.
+3. If these checks pass, the cyphertext and second_half_key is stored in the database and the ID of these values is returned.
+4. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the IV of the encryption.
+
+![Post SHE secret](screenshots/image-11.png)
+
+### Fetching a secret (Valid for both encryption types)
+
+1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included.
+2. The backend will then check if the value exists and will otherwise return a 400 error.
+3. The second_half_key and the cyphertext is retrieved from the server and sent back to the frontend.
+4. The cyphertext will be decrypted using the second_half_key and the first_half_key client-side.
+
+![Get Secrets](screenshots/image-12.png)
 
 ## Public/Private key encryption
 
@@ -36,24 +66,11 @@ In the root route, a keypair generation tool is provided that generates a keypai
 ![encrypte2e-keypair-generated](screenshots/image-5.png)
 ![encrypte2e-encrypt-empty](screenshots/image-6.png)
 ![encrypte2e-encrypt-full](screenshots/image-9.png)
-![encrypte2e-decrypt-empty](screenshots/image-7.png)
-![encrypte2e-decrypt-](screenshots/image-8.png)
+![Alt text](<Screenshot 2024-02-09 at 09.29.47 2.png>)
+![Alt text](<Screenshot 2024-02-09 at 09.32.56.png>)
+![Alt text](<Screenshot 2024-02-09 at 09.35.22.png>)
 
-## Routes
-
-| Routes          | Type                                     | Description                                                       |
-| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
-| **/**           | [**E2E**](#publicprivate-key-encryption) | OpenPGP Keypair generator                                         |
-| **/encrypt**    | [**E2E**](#publicprivate-key-encryption) | Encrypt a secret using an OpenPGP public key.                     |
-| **/decrypt**    | [**E2E**](#publicprivate-key-encryption) | Decrypt an OpenPGP encryped message using an OpenPGP private key. |
-| **/encryptshe** | [**SHE**](#second-half-encryption)       | Encrypt a secret with the AES-256 encryption algorithm.           |
-| **/decryptshe** | [**SHE**](#second-half-encryption)       | Decrypt a secret with the AES-256 encryption algorighm.           |
-
-## How we handle the secrets
-
-To provide some more transparency for non-developers, we decided to provide these flowcharts with some explanation on how we handle your secrets. We will start with how a E2E is stored in the database.
-
-### Posting an E2E secret
+### How do we handle your E2E secret?
 
 1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side only the ciphertext needs to be sent to the backend. So the payload of the request to the server will look somthing like this.
 
@@ -67,34 +84,27 @@ yPEPkvELWrrPDReAQ+CsLA==
 }
 ```
 
-2. Based on this response a couple of checks need to be executed, mainly about the length of the secret. We want to make sure we don't store any empty data in the database so we check if the object includes a ciphertext and also if this text is not empty. We also decided on a maximum length of 10MB so a check is used to confirm the encrypted version of this text does not exceed 20MB.
-3. If these checks pass, the data is stored in the database and the ID of the data is returned.
+2. Based on this response a couple of checks need to be executed, mainly about the length of the secret. We want to make sure we don't store any empty data in the database so we check if the object includes a cyphertext and also if this text is not empty. We also decided on a maximum length of 10MB so a check is used to confirm the encrypted version of this text does not exceed 20MB.
+3. If these checks pass, the cyphertext is stored in the database and the ID of this record is returned.
 4. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters.
 
 ![Post E2E secrets](screenshots/image-13.png)
-
-### Posting an SHE secret
-
-1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead in a SHE request the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. So the payload of the request to the server will look somthing like this.
-
-```json
-{
-	"cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
-	"second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
-}
-```
-
-2. Based on this response a couple of checks need to be executed, mainly about the length of the secret as well as the length of the key. The checks of the ciphertext are identical to the ones above, but we also include checks if there is a key included, the key is not empty and the key is exactly 32 bits long. As the full encryption key is 64 bits.
-3. If these checks pass, the data is stored in the database and the ID of the data is returned.
-4. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the IV of the encryption.
-
-![Post SHE secret](screenshots/image-11.png)
 
 ### Fetching a secret (Valid for both encryption types)
 
 1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included.
 2. The backend will then check if the value exists and will otherwise return a 400 error.
-3. The data is retrieved from the server and sent back to the frontend.
-4. The data will be decrypted client-side.
+3. The cyphertext is retrieved from the server and sent back to the frontend.
+4. The cyphertext will be decrypted client-side.
 
 ![Get Secrets](screenshots/image-12.png)
+
+## Routes
+
+| Routes          | Type                                     | Description                                                       |
+| --------------- | ---------------------------------------- | ----------------------------------------------------------------- |
+| **/**           | [**E2E**](#publicprivate-key-encryption) | OpenPGP Keypair generator                                         |
+| **/encrypt**    | [**E2E**](#publicprivate-key-encryption) | Encrypt a secret using an OpenPGP public key.                     |
+| **/decrypt**    | [**E2E**](#publicprivate-key-encryption) | Decrypt an OpenPGP encryped message using an OpenPGP private key. |
+| **/encryptshe** | [**SHE**](#second-half-encryption)       | Encrypt a secret with the AES-256 encryption algorithm.           |
+| **/decryptshe** | [**SHE**](#second-half-encryption)       | Decrypt a secret with the AES-256 encryption algorighm.           |
