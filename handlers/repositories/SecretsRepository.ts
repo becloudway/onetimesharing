@@ -75,6 +75,19 @@ const SecretsRepository = class {
 		return response as unknown as SecretsStructure;
 	}
 
+	static async StatusSecret(uuid: string): Promise<any> {
+		const response = await this.dynamo.send(
+			new GetCommand({
+				TableName: process.env.tableName,
+				Key: {
+					uuid: uuid,
+				},
+			})
+		);
+
+		return response as unknown as SecretsStructure;
+	}
+
 	static async PostPublicKey(public_key: string) {
 		const id = uuidv4();
 		const fileName = `${id}.gpg`;

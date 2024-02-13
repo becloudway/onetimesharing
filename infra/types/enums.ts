@@ -1,4 +1,5 @@
 export enum eMethods {
+	STATUS = "status",
 	GET_SHE_SECRET = "getSHE",
 	POST_SHE_SECRET = "addSHE",
 	GET_E2E_SECRET = "getE2E",
