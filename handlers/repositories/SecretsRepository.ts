@@ -15,6 +15,7 @@ type DynamoDBSecretsStructure = {
 	retrievedCount: number;
 	second_half_key: string;
 	ttl: number;
+	password?: string;
 	public_key_uuid?: string;
 };
 
@@ -33,6 +34,7 @@ const SecretsRepository = class {
 			cyphertext: data.Item.cyphertext || "",
 			retrievedCount: 1,
 			second_half_key: data.Item.second_half_key || "",
+			password: data.Item.password || "",
 			ttl: time_to_live,
 		};
 

@@ -50,16 +50,18 @@ const PostSecretsService = class {
 	}
 
 	static #verifyPostSHErequest(data: SecretsStructure) {
-		if (Object.keys(data.Item).length !== 2) {
-			if (!Object.keys(data.Item).includes("cyphertext")) {
-				return buildResponseBody(400, "Missing cyphertext field.");
-			}
+		const passwordIncluded = Object.keys(data.Item).includes("password");
 
-			if (!Object.keys(data.Item).includes("second_half_key")) {
-				return buildResponseBody(400, "Missing second_half_key field.");
-			}
+		if (!Object.keys(data.Item).includes("cyphertext")) {
+			return buildResponseBody(400, "Missing cyphertext field.");
+		}
 
-			return buildResponseBody(400, "The request body must only contain the following fields 2: cyphertext, second_half_key.");
+		if (!Object.keys(data.Item).includes("second_half_key")) {
+			return buildResponseBody(400, "Missing second_half_key field.");
+		}
+
+		if (passwordIncluded && data.Item.password === "") {
+			return buildResponseBody(400, "The password field cannot be empty!");
 		}
 
 		if (data.Item.second_half_key === "") {
@@ -83,6 +85,7 @@ const PostSecretsService = class {
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
 		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
+		const passwordIncluded = Object.keys(data.Item).includes("password");
 
 		if (publicKeyIsIncluded) {
 			if (Object.keys(data.Item).length !== 2) {
@@ -97,15 +100,12 @@ const PostSecretsService = class {
 				return buildResponseBody(400, "The request body must only contain the following fields: cyphertext, public_key_uuid.");
 			}
 		} else {
-			if (Object.keys(data.Item).length !== 1) {
-				if (!Object.keys(data.Item).includes("cyphertext")) {
-					return buildResponseBody(400, "Missing cyphertext field.");
-				}
+			if (!Object.keys(data.Item).includes("cyphertext")) {
+				return buildResponseBody(400, "Missing cyphertext field.");
+			}
 
-				return buildResponseBody(
-					400,
-					"The request body must only contain the following fields: cyphertext and optionally the public_key_uuid field."
-				);
+			if (data.Item.password === "") {
+				return buildResponseBody(400, "The password field cannot be empty!");
 			}
 		}
 
