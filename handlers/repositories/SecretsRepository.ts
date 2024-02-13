@@ -77,7 +77,7 @@ const SecretsRepository = class {
 		return response as unknown as SecretsStructure;
 	}
 
-	static async StatusSecret(uuid: string): Promise<any> {
+	static async StatusSecret(uuid: string): Promise<SecretsStructure> {
 		const response = await this.dynamo.send(
 			new GetCommand({
 				TableName: process.env.tableName,

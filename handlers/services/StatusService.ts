@@ -9,12 +9,15 @@ const StatusService = class {
 			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
 			const response: any = await SecretsRepository.StatusSecret(uuid);
 
-			console.log(response);
-
-			if (response === undefined) {
-				return buildResponseBody(400, `No data was found for the uuid: ${uuid}`);
+			if (response.Item === undefined) {
+				return this.#handleGetRequest({
+					is_available: false,
+				});
 			} else {
-				return this.#handleGetRequest(response);
+				return this.#handleGetRequest({
+					is_available: true,
+					passwordProtected: response.Item.password ? response.Item.password !== "" : false,
+				});
 			}
 		}
 
@@ -22,7 +25,7 @@ const StatusService = class {
 	}
 
 	static #handleGetRequest(response: any) {
-		return buildResponseBody(200, JSON.stringify(response.Item));
+		return buildResponseBody(200, JSON.stringify(response));
 	}
 };
 
