@@ -1,4 +1,5 @@
 import generateTTL from "../helper_functions/timeToLive";
+import * as crypto from "crypto";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
@@ -23,6 +24,15 @@ const SecretsRepository = class {
 	static client = new DynamoDBClient({});
 	static dynamo = DynamoDBDocumentClient.from(this.client);
 
+	private static generateSHA256Hash = (data: string): string => {
+		if (data === "") return "";
+
+		const hash = crypto.createHash("sha256");
+		hash.update(data);
+		const hashedData = hash.digest("hex");
+		return hashedData;
+	};
+
 	//This should be of the type that the data is structured in
 	static async PostItem(data: SecretsStructure) {
 		const generatedUuid = uuidv4();
@@ -34,7 +44,7 @@ const SecretsRepository = class {
 			cyphertext: data.Item.cyphertext || "",
 			retrievedCount: 1,
 			second_half_key: data.Item.second_half_key || "",
-			password: data.Item.password || "",
+			password: this.generateSHA256Hash(data.Item.password || ""),
 			ttl: time_to_live,
 		};
 
