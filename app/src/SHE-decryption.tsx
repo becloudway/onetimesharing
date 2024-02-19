@@ -19,16 +19,17 @@ function SHEDecryption() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [verify, setVerify] = useState<boolean>(true);
 
-	const getSecret = async (uuid: string, first_half_key: string, iv: string) => {
+	const getSecret = async (uuid: string, first_half_key: string, iv: string, password: string) => {
 		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
 			setLoading(true);
-			Api.GetSHESecret(uuid)
+			Api.GetSHESecret(uuid, password)
 				.then((response) => {
 					decryptSecret(response.data.cyphertext, `${first_half_key}${response.data.second_half_key}`, iv);
 					setLoading(false);
 				})
 				.catch((err) => {
-					errorHandling("No secret was found in combination with this UUID.");
+					errorHandling(err);
+					setVerify(true);
 					setLoading(false);
 				});
 		}
@@ -61,7 +62,7 @@ function SHEDecryption() {
 		});
 	};
 
-	const fetchSecret = () => {
+	const fetchSecret = (password: string) => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const hashValue = {
 			first_half_key: window.location.hash.split("&")[0].split("=")[1],
@@ -76,7 +77,7 @@ function SHEDecryption() {
 		handleParamsCheck(params)
 			.then((check) => {
 				if (check) {
-					getSecret(params.uuid, params.first_half_key, params.iv);
+					getSecret(params.uuid, params.first_half_key, params.iv, password);
 				}
 			})
 			.catch((error) => {
@@ -99,9 +100,9 @@ function SHEDecryption() {
 			/>
 			{verify && (
 				<VerifyScreen
-					callback={() => {
+					callback={(password: string) => {
 						setVerify(false);
-						fetchSecret();
+						fetchSecret(password);
 					}}
 				/>
 			)}

@@ -13,7 +13,7 @@ const GetSecretsService = class {
 			const response: any = await SecretsRepository.GetSecret(uuid);
 
 			if (response.Item === undefined) {
-				return buildResponseBody(400, `No data was found for the uuid: ${uuid}`);
+				return buildResponseBody(400, `No secret was found in combination with this UUID.`);
 			} else {
 				if (response.Item.password && response.Item.password) {
 					return await this.passwordValidation(uuid, response, password);
