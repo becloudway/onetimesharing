@@ -4,11 +4,11 @@ const dev = process.env.NODE_ENV === "dev";
 const apiURL: string = import.meta.env.VITE_DEV_URL;
 
 export class Api {
-	public static GetSHESecret = async (uuid: string) => {
+	public static GetSHESecret = async (uuid: string, password: string) => {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}`, {
+				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${password}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -17,26 +17,19 @@ export class Api {
 					resolve(res);
 				})
 				.catch((error) => {
-					reject("Error getting secret: " + error.message);
+					reject(error.response.data);
 				});
 		});
 	};
 
-	public static PostSHESecret = async (encryptedSecret: string, second_half_key: string) => {
+	public static PostSHESecret = async (valuesObject: { cyphertext: string; second_half_key: string; password?: string }) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.post(
-					`${dev ? apiURL : ""}/api/addSHE`,
-					{
-						cyphertext: encryptedSecret,
-						second_half_key: second_half_key,
+				.post(`${dev ? apiURL : ""}/api/addSHE`, valuesObject, {
+					headers: {
+						"Content-Type": "application/json",
 					},
-					{
-						headers: {
-							"Content-Type": "application/json",
-						},
-					}
-				)
+				})
 				.then((res) => {
 					resolve(res.data.id);
 				})
@@ -82,6 +75,23 @@ export class Api {
 				})
 				.catch((error) => {
 					reject(`Error posting secret: ${error.message}`);
+				});
+		});
+	};
+
+	public static GetStatus = async (uuid: string) => {
+		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean }) => void, reject) => {
+			await axios
+				.get(`${dev ? apiURL : ""}/api/status/${uuid}`, {
+					headers: {
+						"Content-Type": "application/json",
+					},
+				})
+				.then((res) => {
+					resolve(res.data);
+				})
+				.catch((error) => {
+					reject(`Error getting status: ${error.message}`);
 				});
 		});
 	};

@@ -44,6 +44,16 @@ export class ApiStackService extends Construct {
 
 		const CodeBucket = Bucket.fromBucketName(this, "code-bucket", `${stack.account}-onetimesharing-${environmentName}-codestorage`);
 
+		const statusHandler = new lambda.Function(this, "StatusHandler", {
+			functionName: `onetimesharing-${environmentName}-statushandler`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-status.zip`),
+			handler: "status.handler",
+			environment: {
+				tableName: DynamoDBStorage.tableName,
+			},
+		});
+
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getSHEsecretlambda`,
 			runtime: lambda.Runtime.NODEJS_18_X,
@@ -148,6 +158,10 @@ export class ApiStackService extends Construct {
             API Gateway Lambda Integrations
         */
 
+		const statusIntegration = new apigateway.LambdaIntegration(statusHandler, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
 		const getSHESecretsIntegration = new apigateway.LambdaIntegration(getSHESecretHandler, {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
@@ -191,6 +205,8 @@ export class ApiStackService extends Construct {
 
 		const apiRoute = apiGateway.root.addResource("api"); // /api
 
+		apiRoute.addResource(eMethods.STATUS).addResource("{uuid}").addMethod("GET", statusIntegration); // GET /
+
 		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
 
@@ -214,6 +230,7 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage.grantReadWriteData(getE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(postE2ESecretHandler);
 		DynamoDBStorage.grantReadWriteData(invalidatePublicKey);
+		DynamoDBStorage.grantReadWriteData(statusHandler);
 
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);

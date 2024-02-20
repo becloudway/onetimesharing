@@ -6,7 +6,7 @@ import { SecretsStructure } from "../types/types";
 
 import { PutObjectCommand, S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { DynamoDB } from "aws-sdk";
-import buildResponseBody from "../helper_functions/buildresponsebody";
+import { generateSHA256Hash } from "../helper_functions/generateSHA256Hash";
 
 type DynamoDBSecretsStructure = {
 	uuid: string;
@@ -15,6 +15,7 @@ type DynamoDBSecretsStructure = {
 	retrievedCount: number;
 	second_half_key: string;
 	ttl: number;
+	password?: string;
 	public_key_uuid?: string;
 };
 
@@ -33,6 +34,7 @@ const SecretsRepository = class {
 			cyphertext: data.Item.cyphertext || "",
 			retrievedCount: 1,
 			second_half_key: data.Item.second_half_key || "",
+			password: generateSHA256Hash(data.Item.password || ""),
 			ttl: time_to_live,
 		};
 
@@ -63,8 +65,29 @@ const SecretsRepository = class {
 			})
 		);
 
-		await this.dynamo.send(
-			new DeleteCommand({
+		return response as unknown as SecretsStructure;
+	}
+
+	static async DeleteSecret(uuid: string): Promise<boolean> {
+		try {
+			await this.dynamo.send(
+				new DeleteCommand({
+					TableName: process.env.tableName,
+					Key: {
+						uuid: uuid,
+					},
+				})
+			);
+
+			return true;
+		} catch {
+			return false;
+		}
+	}
+
+	static async StatusSecret(uuid: string): Promise<SecretsStructure> {
+		const response = await this.dynamo.send(
+			new GetCommand({
 				TableName: process.env.tableName,
 				Key: {
 					uuid: uuid,
