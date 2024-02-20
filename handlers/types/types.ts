@@ -6,6 +6,7 @@ export type SecretsStructure = {
 		retrievedCount?: number;
 		ttl?: number;
 		public_key_uuid?: string;
+		password?: string;
 	};
 };
 

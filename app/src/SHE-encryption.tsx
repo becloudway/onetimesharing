@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 
 import styled from "styled-components";
 
@@ -22,10 +21,22 @@ function SHEEncryption() {
 		iv: "",
 	});
 	const [loading, setLoading] = useState<boolean>(false);
+	const [password, setPassword] = useState<string>("");
 
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
-		Api.PostSHESecret(encryptedSecret, second_half_key)
+		Api.PostSHESecret(
+			password
+				? {
+						cyphertext: encryptedSecret,
+						second_half_key: second_half_key,
+						password: password,
+				  }
+				: {
+						cyphertext: encryptedSecret,
+						second_half_key: second_half_key,
+				  }
+		)
 			.then((response) => {
 				setSecretURL({
 					uuid: response,
@@ -74,6 +85,14 @@ function SHEEncryption() {
 						value={secret}
 						onChange={(e) => setSecret(e.target.value)}
 					></textarea>
+					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Add a password to your secret</div>
+					<input
+						type="password"
+						placeholder="Enter your password here"
+						className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC]"
+						onChange={(e) => setPassword(e.target.value)}
+						value={password}
+					/>
 					<button
 						onClick={encryptSecret}
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"

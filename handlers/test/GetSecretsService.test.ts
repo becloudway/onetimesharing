@@ -31,6 +31,7 @@ describe('GetSecretsService', () => {
     };
 
     (SecretsRepository.GetSecret as jest.Mock).mockResolvedValueOnce(response);
+    (SecretsRepository.DeleteSecret as jest.Mock).mockResolvedValueOnce(true);
 
     await GetSecretsService.routeRequest(lambdaEvent, '/secrets');
 
