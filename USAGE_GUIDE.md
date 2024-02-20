@@ -29,8 +29,8 @@ In the encrypt route, you can enter a secret **[1]** and then generate a link. T
 
 ![encryptshe-empty](screenshots/image-10.png)
 ![encryptshe-full](screenshots/image-2.png)
-![Alt text](<Screenshot 2024-02-09 at 09.29.47.png>)
-![Alt text](<Screenshot 2024-02-09 at 09.29.55.png>)
+![Alt text](<screenshots/Screenshot 2024-02-09 at 09.29.47.png>)
+![Alt text](<screenshots/Screenshot 2024-02-09 at 09.29.55.png>)
 
 ### How do we handle your SHE secret?
 
@@ -66,9 +66,9 @@ In the root route, a keypair generation tool is provided that generates a keypai
 ![encrypte2e-keypair-generated](screenshots/image-5.png)
 ![encrypte2e-encrypt-empty](screenshots/image-6.png)
 ![encrypte2e-encrypt-full](screenshots/image-9.png)
-![Alt text](<Screenshot 2024-02-09 at 09.29.47 2.png>)
-![Alt text](<Screenshot 2024-02-09 at 09.32.56.png>)
-![Alt text](<Screenshot 2024-02-09 at 09.35.22.png>)
+![Alt text](<screenshots/Screenshot 2024-02-09 at 09.29.47 2.png>)
+![Alt text](<screenshots/Screenshot 2024-02-09 at 09.32.56.png>)
+![Alt text](<screenshots/Screenshot 2024-02-09 at 09.35.22.png>)
 
 ### How do we handle your E2E secret?
 
