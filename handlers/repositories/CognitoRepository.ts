@@ -2,7 +2,7 @@ import axios from "axios";
 import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
 const CognitoRepository = class {
-	static Login = async (clientID: string, redirectURI: string, code: string) => {
+	private static GetSecret = async () => {
 		return new Promise(async (resolve, reject) => {
 			const secret_name = "CognitoClientSecret";
 
@@ -10,20 +10,23 @@ const CognitoRepository = class {
 				region: "eu-west-1",
 			});
 
-			let response;
-
 			try {
-				response = await client.send(
+				resolve(await client.send(
 					new GetSecretValueCommand({
 						SecretId: secret_name,
 						VersionStage: "AWSCURRENT",
 					})
-				);
+				));
 			} catch (error) {
-				throw error;
+				reject(error);
 			}
+		});
+	};
 
-			const secret = response.SecretString;
+	static Login = async (clientID: string, redirectURI: string, code: string) => {
+		return new Promise(async (resolve, reject) => {
+
+			const secret = this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
 
 			const cognitoDomain = `${process.env.baseURL}/oauth2/token`;
 			const data = {
@@ -45,6 +48,30 @@ const CognitoRepository = class {
 						},
 					}
 				)
+				.then((response) => {
+					console.log(`Then function: ${response.data}`);
+					if (response.status === 200) resolve(response.data);
+				})
+				.catch((error) => {
+					console.log(`Catch function: ${error}`);
+					reject(error);
+				});
+		});
+	};
+
+	static Logout = async (clientID: string, refresh_token: string) => {
+		return new Promise(async (resolve, reject) => {
+			const secret = this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
+
+			const cognitoDomain = `${process.env.baseURL}/oauth2/revoke`;
+
+			axios
+				.post(cognitoDomain, `token=${encodeURIComponent(refresh_token)}&client_id=${encodeURIComponent(clientID)}`, {
+					headers: {
+						Authorization: `Basic ${btoa(`${clientID}:${secret}`)}`,
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+				})
 				.then((response) => {
 					console.log(`Then function: ${response.data}`);
 					if (response.status === 200) resolve(response.data);

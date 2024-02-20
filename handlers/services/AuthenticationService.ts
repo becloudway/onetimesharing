@@ -8,9 +8,11 @@ const AuthenticationService = class {
 			const clientId = process.env.clientID || "";
 			const redirectURI = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "";
 			const code = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "";
+			const refresh_token = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.refresh_token) || "";
 
 			console.log(`Redirect URL: ${redirectURI}`);
 			console.log(`Code: ${code}`);
+			console.log(lambdaEvent);
 
 			//Handle the login
 			if (lambdaEvent.path.includes("login")) {
@@ -35,17 +37,26 @@ const AuthenticationService = class {
 			}
 
 			//Handle the logout
-			//if (lambdaEvent.path.includes("logout")) return this.#handleGetRequest();
+			if (lambdaEvent.path.includes("logout")){
+				return CognitoRepository.Logout(clientId, refresh_token)
+					.then((response) => {
+						return this.#handleGetRequest(response as { id_token: string; access_token: string; refresh_token: string });
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+			};
 		}
 
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
 	static #handleGetRequest(response: { id_token: string; access_token: string; refresh_token: string }) {
-		console.log(response);
 		return buildResponseBody(
 			200,
-			JSON.stringify(response),
+			JSON.stringify({
+				loggedIn: true
+			}),
 			{},
 			{
 				"Set-Cookie": [

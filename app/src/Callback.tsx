@@ -13,7 +13,8 @@ const Callback = () => {
 
 		Api.Login(code)
 			.then((response) => {
-				window.location.href = response;
+				if(response.status === 302) window.location.href = response.data;
+				if(response.status === 200) {window.localStorage.setItem("isLoggedIn", response.data.loggedIn); navigate("/")};
 			})
 			.catch((error) => {
 				navigate("/");

@@ -136,7 +136,7 @@ export class ApiStackService extends Construct {
 			functionName: `onetimesharing-${environmentName}-logout`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
-			handler: "login.handler",
+			handler: "logout.handler",
 			environment: {
 				baseURL: hostedUI,
 				clientID: cognitoClientID,
