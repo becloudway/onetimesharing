@@ -6,6 +6,7 @@ import { OneTimeSharingStorageStack } from "../lib/onetimesharing-storage-stack"
 import { OneTimeSharingCiCdStack } from "../lib/onetimesharing-cicd-stack";
 import { OneTimeSharingFrontendStack } from "../lib/onetimesharing-frontend-stack";
 import { OneTimeSharingCognitoStack } from "../lib/onetimesharing-cognito-stack";
+import { OneTimeSharingAsyncDeleteStackService } from "../lib/onetimesharing-stepfunctions-stack";
 
 const AWS_ENVIRONMENT = {
 	account: process.env.CDK_DEFAULT_ACCOUNT,
@@ -34,6 +35,12 @@ const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 	environmentName: "prod",
 	S3Storage: ProdStorageStack.S3Storage,
 	Secret: ProdCognitoStack.secret,
+	env: AWS_ENVIRONMENT,
+});
+
+const ProdAsyncDeleteStack = new OneTimeSharingAsyncDeleteStackService(app, "OneTimeSharingAsyncDeleteStack", {
+	environmentName: "prod",
+	apiGateway: ProdApiStack.ApiGateway,
 	env: AWS_ENVIRONMENT,
 });
 
