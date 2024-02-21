@@ -9,7 +9,6 @@ const AuthenticationService = class {
 			const clientId = process.env.clientID || "";
 			const redirectURI = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "";
 			const code = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "";
-			const refresh_token = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.refresh_token) || "";
 
 			//Handle the login
 			if (lambdaEvent.path.includes("login")) {

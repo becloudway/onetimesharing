@@ -37,11 +37,11 @@ const Navigation = () => {
 					)}
 					{loggedIn && (
 						<button
-						className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] font-bold"
-						onClick={logout}
-					>
-						Click here to logout
-					</button>
+							className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] font-bold"
+							onClick={logout}
+						>
+							Click here to logout
+						</button>
 					)}
 					<div className="flex flex-wrap gap-[20px]">
 						<button
