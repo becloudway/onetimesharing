@@ -7,7 +7,7 @@
 		"test": "jest",
 		"build": "npm run prebuild && npm run combined-build",
 		"prebuild": "rm -rf dist",
-		"combined-build": "npm run build-status && npm run build-getSHEsecret && npm run build-postSHEsecret && npm run build-getE2Esecret && npm run build-postE2Esecret && npm run build-postPublicKey && npm run build-getPublicKey && npm run build-invalidatePublicKey && npm run build-login && npm run build-logout",
+		"combined-build": "npm run build-status && npm run build-getSHEsecret && npm run build-postSHEsecret && npm run build-getE2Esecret && npm run build-postE2Esecret && npm run build-postPublicKey && npm run build-getPublicKey && npm run build-invalidatePublicKey && npm run build-login && npm run build-logout && npm run build-refresh",
 		"build-status": "export NAME=status && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-getSHEsecret": "export NAME=getSHEsecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-postSHEsecret": "export NAME=postSHEsecrets && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
@@ -17,7 +17,8 @@
 		"build-getPublicKey": "export NAME=getPublicKey && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-invalidatePublicKey": "export NAME=invalidatePublicKey && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
 		"build-login": "export NAME=login && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
-		"build-logout": "export NAME=logout && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*"
+		"build-logout": "export NAME=logout && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*",
+		"build-refresh": "export NAME=refreshToken && esbuild $NAME.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/$NAME.js && cd dist && zip -r $SHORT_SHA-$NAME.zip $NAME.js* && rm -rf *.js*"
 	},
 	"author": "Cloudway",
 	"license": "MIT",

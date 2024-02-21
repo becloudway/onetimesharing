@@ -142,7 +142,7 @@ export class Api {
 	};
 
 	public static Login = async (code: string | null) => {
-		return new Promise(async (resolve: (code: string) => void, reject) => {
+		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
 					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
@@ -156,15 +156,20 @@ export class Api {
 					}
 				)
 				.then((response) => {
-					console.log(response);
-					if (response.status === 200) resolve(JSON.parse(response.data).url);
+					resolve({
+						data: response.data,
+						status: 200
+					});
 				})
 				.catch((error) => {
 					const resp = error.response;
 					if (resp) {
 						const body = resp.data;
 						if (resp.status === 302) {
-							resolve(body.url);
+							resolve({
+								data: body.url,
+								status: 302
+							});
 						} else {
 							reject(error);
 						}
@@ -173,5 +178,26 @@ export class Api {
 					}
 				});
 		});
+	};
+
+	public static Logout = async () => {
+		return new Promise(async (resolve, reject) => {
+			axios
+				.get(
+					`${dev ? apiURL : ""}/api/logout`,
+					{
+						withCredentials: true,
+					}
+				)
+				.then((response) => {
+					resolve({
+						data: response.data,
+						status: 200
+					});
+				})
+				.catch((error) => {
+					reject(error);
+				});
+		})
 	};
 }
