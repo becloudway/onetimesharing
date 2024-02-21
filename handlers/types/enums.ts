@@ -9,4 +9,5 @@ export enum eMethods {
 	INVALIDATE_PUBLIC_KEY = "invalidatepublickey",
 	LOGIN = "login",
 	LOGOUT = "logout",
+	REFRESH = "refreshToken"
 }

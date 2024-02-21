@@ -139,18 +139,25 @@ export class ApiStackService extends Construct {
 			},
 		});
 
-		//const secret = cdk.aws_secretsmanager.Secret.fromSecretNameV2(this, "CognitoClientSecret", "CognitoClientSecret");
-		//const clientSecret = secret.secretValue;
-
 		const logout = new lambda.Function(this, "LogoutHandler", {
 			functionName: `onetimesharing-${environmentName}-logout`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
-			handler: "login.handler",
+			handler: "logout.handler",
 			environment: {
 				baseURL: hostedUI,
 				clientID: cognitoClientID,
-				//clientSecret: clientSecret.unsafeUnwrap(),
+			},
+		});
+
+		const refreshToken = new lambda.Function(this, "refreshTokenHandler", {
+			functionName: `onetimesharing-${environmentName}-refreshToken`,
+			runtime: lambda.Runtime.NODEJS_18_X,
+			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-refreshToken.zip`),
+			handler: "refreshToken.handler",
+			environment: {
+				baseURL: hostedUI,
+				clientID: cognitoClientID,
 			},
 		});
 
@@ -199,6 +206,10 @@ export class ApiStackService extends Construct {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		});
 
+		const refreshTokenIntegration = new apigateway.LambdaIntegration(refreshToken, {
+			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
+		});
+
 		/*
             Defining of the routes from the Gateway to the Lambda functions
         */
@@ -212,6 +223,7 @@ export class ApiStackService extends Construct {
 
 		apiRoute.addResource(eMethods.LOGIN).addMethod("GET", loginIntegration);
 		apiRoute.addResource(eMethods.LOGOUT).addMethod("GET", logoutIntegration);
+		apiRoute.addResource(eMethods.REFRESH).addMethod("GET", refreshTokenIntegration);
 
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
