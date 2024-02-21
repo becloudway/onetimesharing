@@ -26,7 +26,7 @@ const CognitoRepository = class {
 	static Login = async (clientID: string, redirectURI: string, code: string) => {
 		return new Promise(async (resolve, reject) => {
 
-			const secret = this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
+			const secret = await this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
 
 			const cognitoDomain = `${process.env.baseURL}/oauth2/token`;
 			const data = {
@@ -61,7 +61,7 @@ const CognitoRepository = class {
 
 	static Logout = async (clientID: string, refresh_token: string) => {
 		return new Promise(async (resolve, reject) => {
-			const secret = this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
+			const secret = await this.GetSecret().then((response: any) => response.SecretString).catch((err) => console.log(err));
 
 			const cognitoDomain = `${process.env.baseURL}/oauth2/revoke`;
 
