@@ -6,7 +6,6 @@ import OneTimeSharingLogo from "./assets/logo.png";
 import { ReactComponent as OneClickIcon } from "./assets/oneclickicon.svg";
 import { ReactComponent as PKIIcon } from "./assets/pkiicon.svg";
 import { ReactComponent as KeyIcon } from "./assets/keypairicon.svg";
-import { Api } from "./classes/api";
 
 const Navigation = () => {
 	const navigate = useNavigate();
@@ -14,9 +13,12 @@ const Navigation = () => {
 
 	useEffect(() => {
 		const cookie = window.localStorage.getItem("isLoggedIn") || false;
-		console.log(cookie);
-		setLoggedIn(cookie !== false ? true : false);
+		setLoggedIn(cookie !== "false" && cookie !== false ? true : false);
 	}, []);
+
+	const logout = () => {
+		navigate("/callback?logout=true");
+	};
 
 	return (
 		<Container>
@@ -33,10 +35,14 @@ const Navigation = () => {
 							Login
 						</button>
 					)}
-					{loggedIn && <div onClick={() => {
-						window.localStorage.removeItem("isLoggedIn");
-						window.location.reload();
-					}} className="text-center font-bold text-[18px]">You are logged in</div>}
+					{loggedIn && (
+						<button
+						className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] font-bold"
+						onClick={logout}
+					>
+						Click here to logout
+					</button>
+					)}
 					<div className="flex flex-wrap gap-[20px]">
 						<button
 							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"

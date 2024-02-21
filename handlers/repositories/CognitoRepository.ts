@@ -66,7 +66,9 @@ const CognitoRepository = class {
 			const cognitoDomain = `${process.env.baseURL}/oauth2/revoke`;
 
 			axios
-				.post(cognitoDomain, `token=${encodeURIComponent(refresh_token)}&client_id=${encodeURIComponent(clientID)}`, {
+				.post(cognitoDomain, new URLSearchParams({
+					token: refresh_token,
+				}), {
 					headers: {
 						Authorization: `Basic ${btoa(`${clientID}:${secret}`)}`,
 						"Content-Type": "application/x-www-form-urlencoded",

@@ -179,4 +179,25 @@ export class Api {
 				});
 		});
 	};
+
+	public static Logout = async () => {
+		return new Promise(async (resolve, reject) => {
+			axios
+				.get(
+					`${dev ? apiURL : ""}/api/logout`,
+					{
+						withCredentials: true,
+					}
+				)
+				.then((response) => {
+					resolve({
+						data: response.data,
+						status: 200
+					});
+				})
+				.catch((error) => {
+					reject(error);
+				});
+		})
+	};
 }
