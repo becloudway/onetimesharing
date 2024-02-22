@@ -27,7 +27,7 @@ export class AsyncDeleteStackService extends Construct {
 			integrationPattern: sfn.IntegrationPattern.WAIT_FOR_TASK_TOKEN,
 			headers: sfn.TaskInput.fromObject({
 				TaskToken: sfn.JsonPath.array(sfn.JsonPath.taskToken),
-			})
+			}),
 		});
 
 		const getSecrets = new tasks.LambdaInvoke(this, "Fetch all the secrets related to this public key.", {
@@ -55,6 +55,7 @@ export class AsyncDeleteStackService extends Construct {
 			);
 
 		new sfn.StateMachine(this, "AsyncDeleteStateMachine", {
+			stateMachineName: `onetimesharing-${environmentName}-asyncdelete-state-machine`,
 			definition,
 			timeout: Duration.minutes(5),
 		});
