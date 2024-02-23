@@ -22,7 +22,7 @@ function E2Eencryption() {
 
 	const postSecret = async (encryptedSecret: string) => {
 		setLoading(true);
-		Api.PostE2ESecret(encryptedSecret)
+		Api.PostE2ESecret(encryptedSecret, loadedPublicKey)
 			.then((response) => {
 				setSecretURL(response);
 				setLoading(false);
@@ -47,7 +47,7 @@ function E2Eencryption() {
 		setLoading(true);
 		Api.GetPublicKey(uuid)
 			.then((response) => {
-				setLoadedPublicKey(response);
+				setLoadedPublicKey(uuid);
 				setPublicKey(response);
 				setLoading(false);
 			})

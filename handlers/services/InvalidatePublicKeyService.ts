@@ -26,6 +26,19 @@ const InvalidatePublicKeyService = class {
 	static #handleDeleteRequest(response: string) {
 		return buildResponseBody(200, response);
 	}
+
+	static stepFunctionRequest = async (event: any, context: any, handler: any) => {
+		const uuid = event.PublicKeyID || "";
+		return { uuid };
+
+		const deletedPublicKey: boolean = await SecretsRepository.RemovePublicKey(uuid);
+
+		const deletedCount: number = await SecretsRepository.InvalidateSecret(uuid);
+
+		if (!deletedCount) return { PublicKeyDeleted: deletedPublicKey, SecretsDeleted: false };
+
+		return { PublicKeyDeleted: deletedPublicKey, SecretsDeleted: true };
+	};
 };
 
 export default InvalidatePublicKeyService;

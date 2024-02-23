@@ -41,6 +41,7 @@ const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 const ProdAsyncDeleteStack = new OneTimeSharingAsyncDeleteStackService(app, "OneTimeSharingAsyncDeleteStack", {
 	environmentName: "prod",
 	S3Storage: ProdStorageStack.S3Storage,
+	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	env: AWS_ENVIRONMENT,
 });
 
