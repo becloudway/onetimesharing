@@ -29,7 +29,6 @@ const InvalidatePublicKeyService = class {
 
 	static stepFunctionRequest = async (event: any, context: any, handler: any) => {
 		const uuid = event.PublicKeyID || "";
-		return { uuid };
 
 		const deletedPublicKey: boolean = await SecretsRepository.RemovePublicKey(uuid);
 

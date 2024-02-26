@@ -50,7 +50,9 @@ export class AsyncDeleteStackService extends Construct {
 		});
 
 		const definition = getPublicKey.next(
-			new sfn.Choice(this, "Public key found?")
+			new sfn.Choice(this, "Public key found?", {
+				outputPath: "$.Payload",
+			})
 				.when(sfn.Condition.booleanEquals("$.Payload.Found", false), jobFailed)
 				.when(sfn.Condition.booleanEquals("$.Payload.Found", true), invalidatePublicKey)
 		);
