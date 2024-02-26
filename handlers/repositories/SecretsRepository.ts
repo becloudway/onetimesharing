@@ -1,5 +1,5 @@
 import generateTTL from "../helper_functions/timeToLive";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
@@ -82,6 +82,27 @@ const SecretsRepository = class {
 			return true;
 		} catch {
 			return false;
+		}
+	}
+
+	static async ExecuteStatement(uuid: string, NextToken: string) {
+		try {
+			const results = await this.dynamo.send(
+				new ExecuteStatementCommand({
+					Statement: `SELECT * FROM "${process.env.tableName}"`,
+					Limit: 10,
+					NextToken: NextToken || undefined,
+				})
+			);
+
+			return {
+				NextToken: results.NextToken,
+			};
+		} catch (err) {
+			return {
+				error: true,
+				message: err,
+			};
 		}
 	}
 

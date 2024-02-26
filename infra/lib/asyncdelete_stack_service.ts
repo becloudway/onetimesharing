@@ -31,7 +31,7 @@ export class AsyncDeleteStackService extends Construct {
 			},
 		});
 
-		DynamoDBStorage.grantReadWriteData(invalidatePublicKeyLambda);
+		DynamoDBStorage.grantFullAccess(invalidatePublicKeyLambda);
 
 		S3Storage.grantRead(getPublicKeyLambda);
 		S3Storage.grantReadWrite(invalidatePublicKeyLambda);
@@ -42,6 +42,7 @@ export class AsyncDeleteStackService extends Construct {
 
 		const invalidatePublicKey = new tasks.LambdaInvoke(this, "Delete all the secrets related to this public key.", {
 			lambdaFunction: invalidatePublicKeyLambda,
+			outputPath: "$.Payload",
 		});
 
 		const jobFailed = new sfn.Fail(this, "Public Key has not been found", {
