@@ -50,12 +50,21 @@ export class AsyncDeleteStackService extends Construct {
 			error: "GetPublicKey returned failed.",
 		});
 
+		const jobSucceed = new sfn.Succeed(this, "All secrets have been deleted!");
+
 		const definition = getPublicKey.next(
 			new sfn.Choice(this, "Public key found?", {
 				outputPath: "$.Payload",
 			})
 				.when(sfn.Condition.booleanEquals("$.Payload.Found", false), jobFailed)
-				.when(sfn.Condition.booleanEquals("$.Payload.Found", true), invalidatePublicKey)
+				.when(
+					sfn.Condition.booleanEquals("$.Payload.Found", true),
+					invalidatePublicKey.next(
+						new sfn.Choice(this, "Check if there are more pages.")
+							.when(sfn.Condition.isNotPresent("$.NextToken"), jobSucceed)
+							.when(sfn.Condition.isPresent("$.NextToken"), invalidatePublicKey)
+					)
+				)
 		);
 
 		new sfn.StateMachine(this, "AsyncDeleteStateMachine", {
