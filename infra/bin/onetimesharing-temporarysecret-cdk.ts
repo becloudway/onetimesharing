@@ -30,18 +30,19 @@ const ProdCognitoStack = new OneTimeSharingCognitoStack(app, "OneTimeSharingCogn
 	env: AWS_ENVIRONMENT,
 });
 
+const ProdAsyncDeleteStack = new OneTimeSharingAsyncDeleteStackService(app, "OneTimeSharingAsyncDeleteStack", {
+	environmentName: "prod",
+	S3Storage: ProdStorageStack.S3Storage,
+	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
+	env: AWS_ENVIRONMENT,
+});
+
 const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
 	environmentName: "prod",
 	S3Storage: ProdStorageStack.S3Storage,
 	Secret: ProdCognitoStack.secret,
-	env: AWS_ENVIRONMENT,
-});
-
-const ProdAsyncDeleteStack = new OneTimeSharingAsyncDeleteStackService(app, "OneTimeSharingAsyncDeleteStack", {
-	environmentName: "prod",
-	S3Storage: ProdStorageStack.S3Storage,
-	DynamoDBStorage: ProdStorageStack.DynamoDBStorage,
+	StateMachine: ProdAsyncDeleteStack.StateMachine,
 	env: AWS_ENVIRONMENT,
 });
 

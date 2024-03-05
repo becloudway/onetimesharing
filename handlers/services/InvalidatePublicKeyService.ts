@@ -1,25 +1,26 @@
 import buildResponseBody from "../helper_functions/buildresponsebody";
 import SecretsRepository from "../repositories/SecretsRepository";
-
+import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import { APIGatewayProxyEvent } from "aws-lambda";
 
 const InvalidatePublicKeyService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
 		if (lambdaEvent.httpMethod === "DELETE" && lambdaEvent.path.includes(route)) {
 			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
-			const response: boolean = await SecretsRepository.RemovePublicKey(uuid);
 
-			if (!response) buildResponseBody(400, `No public key was found for the id: ${uuid}`);
+			if (!process.env.statemachine_arn) return buildResponseBody(400, "Failed to get Arn");
 
-			const deletedCount: number = await SecretsRepository.InvalidateSecret(uuid);
+			const client = new SFNClient();
+			const input = {
+				stateMachineArn: process.env.statemachine_arn,
+				input: `{"PublicKeyID": "${uuid}"}`,
+			};
 
-			if (!deletedCount) buildResponseBody(400, `No secrets were found for the public key with id: ${uuid}`);
+			const command = new StartExecutionCommand(input);
+			const response = await client.send(command);
 
-			return this.#handleDeleteRequest(
-				`The public key with ID "${uuid}" has successfully been deleted. Along with ${deletedCount} secrets.`
-			);
+			return this.#handleDeleteRequest("The secrets and the public key are being deleted.");
 		}
-
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
@@ -27,19 +28,11 @@ const InvalidatePublicKeyService = class {
 		return buildResponseBody(200, response);
 	}
 
-	static stepFunctionRequest = async (event: any, context: any, handler: any) => {
+	static stepFunctionRequest = async (event: any) => {
 		const uuid = event.PublicKeyID || "";
 		const NextToken = event.NextToken || "";
 
 		return await SecretsRepository.ExecuteStatement(uuid, NextToken);
-
-		const deletedPublicKey: boolean = await SecretsRepository.RemovePublicKey(uuid);
-
-		const deletedCount: number = await SecretsRepository.InvalidateSecret(uuid);
-
-		if (!deletedCount) return { PublicKeyDeleted: deletedPublicKey, SecretsDeleted: false };
-
-		return { PublicKeyDeleted: deletedPublicKey, SecretsDeleted: true };
 	};
 };
 

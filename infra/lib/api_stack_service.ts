@@ -7,6 +7,7 @@ import { eMethods } from "../types/enums";
 import * as cdk from "aws-cdk-lib";
 import * as sm from "aws-cdk-lib/aws-secretsmanager";
 import * as iam from "aws-cdk-lib/aws-iam";
+import { State, StateMachine } from "aws-cdk-lib/aws-stepfunctions";
 
 export class ApiStackService extends Construct {
 	public readonly ApiGateway: apigateway.RestApi;
@@ -17,7 +18,8 @@ export class ApiStackService extends Construct {
 		DynamoDBStorage: dynamodb.TableV2,
 		environmentName: string,
 		S3Storage: Bucket,
-		Secret: sm.Secret
+		Secret: sm.Secret,
+		StateMachine: StateMachine
 	) {
 		super(scope, id);
 
@@ -122,6 +124,7 @@ export class ApiStackService extends Construct {
 			environment: {
 				bucketName: S3Storage.bucketName,
 				tableName: DynamoDBStorage.tableName,
+				statemachine_arn: `${StateMachine.stateMachineArn}`,
 			},
 		});
 
@@ -247,6 +250,8 @@ export class ApiStackService extends Construct {
 		S3Storage.grantWrite(postPublicKeyHandler);
 		S3Storage.grantRead(getPublicKeyHandler);
 		S3Storage.grantDelete(invalidatePublicKey);
+
+		StateMachine.grantStartExecution(invalidatePublicKey);
 
 		Secret.addToResourcePolicy(
 			new iam.PolicyStatement({
