@@ -1,6 +1,6 @@
 import generateTTL from "../helper_functions/timeToLive";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient, ExecuteStatementCommand, UpdateItemCommand, UpdateItemCommandInput } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
 
@@ -82,6 +82,69 @@ const SecretsRepository = class {
 			return true;
 		} catch {
 			return false;
+		}
+	}
+
+	static async ExecuteStatement(uuid: string, NextToken: string) {
+		try {
+			const results = await this.dynamo.send(
+				new ExecuteStatementCommand({
+					Statement: `SELECT * FROM "${process.env.tableName}"`,
+					Limit: 10,
+					NextToken: NextToken || undefined,
+				})
+			);
+
+			if (!results.Items)
+				return {
+					NextToken: results.NextToken,
+				};
+
+			const items: UpdateCommandInput | any = results.Items.filter((el) => el.public_key_uuid?.S === uuid).map((element: any) => {
+				if (element.public_key_uuid.S === uuid) {
+					return {
+						ExpressionAttributeNames: {
+							"#TTL": "ttl",
+							"#PK": "public_key_uuid",
+						},
+						ExpressionAttributeValues: {
+							":ttl": {
+								N: Math.floor(new Date(Date.now() - 1).getTime() / 1000).toString(),
+							},
+							":pk": {
+								S: "REMOVED",
+							},
+						},
+						Key: {
+							uuid: {
+								S: element.uuid.S,
+							},
+						},
+						ReturnValues: "NONE",
+						TableName: process.env.tableName || "",
+						UpdateExpression: "SET #TTL = :ttl, #PK = :pk",
+					};
+				}
+			});
+
+			console.log(items);
+
+			await Promise.all(
+				await items.map(async (el: UpdateItemCommandInput | any) => {
+					await this.dynamo.send(new UpdateItemCommand(el));
+				})
+			);
+
+			return {
+				PublicKeyID: uuid,
+				NextToken: results.NextToken,
+			};
+		} catch (err) {
+			console.log(err);
+			return {
+				error: true,
+				message: err,
+			};
 		}
 	}
 

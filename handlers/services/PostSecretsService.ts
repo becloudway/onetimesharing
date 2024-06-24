@@ -85,7 +85,6 @@ const PostSecretsService = class {
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
 		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
-		const passwordIncluded = Object.keys(data.Item).includes("password");
 
 		if (publicKeyIsIncluded) {
 			if (Object.keys(data.Item).length !== 2) {
