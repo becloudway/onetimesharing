@@ -8,7 +8,7 @@ export class Api {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${password}`, {
+				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${encodeURIComponent(password)}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},

@@ -1,10 +1,12 @@
 import { defineConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
 	server: {
 		port: 9000,
+		proxy: {
+			"/api": "https://onetimesharing.sandbox.dev.cloudway.be",
+		},
 	},
 	build: {
 		sourcemap: true,

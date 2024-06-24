@@ -158,6 +158,8 @@ const SecretsRepository = class {
 			})
 		);
 
+		console.log(`Retrieved count: ${response.Item?.retrievedCount} \n Id: ${response.Item?.}`);
+
 		return response as unknown as SecretsStructure;
 	}
 

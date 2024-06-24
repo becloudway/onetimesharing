@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Welcome to the official repository for Vanishly! This open-source project aims to provide end-to-end encryption when sharing secrets over the web. The project was made open-source to provide transparency about how your secrets will be stored/handled in the application.
+Welcome to the official repository for OneTimeSharing! This open-source project aims to provide end-to-end encryption when sharing secrets over the web. The project was made open-source to provide transparency about how your secrets will be stored/handled in the application.
 
 ## Table of Contents
 
