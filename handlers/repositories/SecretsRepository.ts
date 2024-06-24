@@ -1,5 +1,5 @@
 import generateTTL from "../helper_functions/timeToLive";
-import { DynamoDBClient, ExecuteStatementCommand, UpdateItemCommand, UpdateItemCommandInput } from "@aws-sdk/client-dynamodb";
+import { ConditionalCheckFailedException, DynamoDBClient, ExecuteStatementCommand, DeleteItemCommand, UpdateItemCommand, UpdateItemCommandInput, ReturnValue } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
@@ -13,6 +13,7 @@ type DynamoDBSecretsStructure = {
 	encryption_type: string;
 	cyphertext: string;
 	retrievedCount: number;
+	passwordTries: number;
 	second_half_key: string;
 	ttl: number;
 	password?: string;
@@ -33,6 +34,7 @@ const SecretsRepository = class {
 			encryption_type: data.Item.encryption_type || "SHE",
 			cyphertext: data.Item.cyphertext || "",
 			retrievedCount: 1,
+			passwordTries: 0,
 			second_half_key: data.Item.second_half_key || "",
 			password: generateSHA256Hash(data.Item.password || ""),
 			ttl: time_to_live,
@@ -56,6 +58,7 @@ const SecretsRepository = class {
 	}
 
 	static async GetSecret(uuid: string): Promise<SecretsStructure> {
+		console.log("GETTING SECRET")
 		const response = await this.dynamo.send(
 			new GetCommand({
 				TableName: process.env.tableName,
@@ -67,6 +70,63 @@ const SecretsRepository = class {
 
 		return response as unknown as SecretsStructure;
 	}
+
+	static async CheckPassword(uuid: string, password: string): Promise<SecretsStructure | boolean> {
+		try {
+			const input: UpdateItemCommandInput = {
+				ExpressionAttributeNames: {
+					"#PW": "password",
+				},
+				ExpressionAttributeValues: {
+					":pc": {
+						N: "1",
+					},
+					":password": {
+						S: password
+					}
+				},
+				Key: {
+					"uuid": {
+						S: uuid,
+					},
+				},
+				ReturnValues: "NONE",
+				TableName: process.env.tableName || "",
+				UpdateExpression: "SET passwordTries = passwordTries + :pc",
+				ConditionExpression: `attribute_exists(#PW) AND #PW <> :password`,
+			};
+
+			await this.dynamo.send(new UpdateItemCommand(input));
+		} catch (err) {
+			if (err instanceof ConditionalCheckFailedException) {
+				//Return the secret as this means that the password is correct.
+				return await this.GetSecret(uuid);
+			} else {
+				console.log("Updated: " + err);
+			}
+		}
+
+		try {
+			const deleteParams = {
+				TableName: process.env.tableName || "",
+				Key: { uuid },
+				ExpressionAttributeValues: {
+					":maxTries": 3  // directly using the number
+				},
+				ConditionExpression: "passwordTries >= :maxTries",
+				ReturnValues: ReturnValue.ALL_OLD  // corrected to a string
+			};
+
+			console.log(deleteParams);
+
+			await this.dynamo.send(new DeleteCommand(deleteParams));
+			return true;
+		} catch (error) {
+			console.log("Deleted: " + error);
+			return false;
+		}
+
+	};
 
 	static async DeleteSecret(uuid: string): Promise<boolean> {
 		try {
@@ -157,8 +217,6 @@ const SecretsRepository = class {
 				},
 			})
 		);
-
-		console.log(`Retrieved count: ${response.Item?.retrievedCount} \n Id: ${response.Item?.}`);
 
 		return response as unknown as SecretsStructure;
 	}
