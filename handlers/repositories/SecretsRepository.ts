@@ -18,6 +18,7 @@ type DynamoDBSecretsStructure = {
 	ttl: number;
 	password?: string;
 	public_key_uuid?: string;
+	version: number;
 };
 
 const SecretsRepository = class {
@@ -38,6 +39,7 @@ const SecretsRepository = class {
 			second_half_key: data.Item.second_half_key || "",
 			password: generateSHA256Hash(data.Item.password || ""),
 			ttl: time_to_live,
+			version: 2,
 		};
 
 		if (data.Item.public_key_uuid) {
