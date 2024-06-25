@@ -77,7 +77,7 @@ const PostSecretsService = class {
 		}
 
 		if (data.Item.cyphertext.length > 20032) {
-			return buildResponseBody(400, "The cyphertext field must be set to a size of 20032 characters or less.");
+			return buildResponseBody(400, "Secret is too long.");
 		}
 
 		return true;
@@ -85,7 +85,6 @@ const PostSecretsService = class {
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
 		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
-		const passwordIncluded = Object.keys(data.Item).includes("password");
 
 		if (publicKeyIsIncluded) {
 			if (Object.keys(data.Item).length !== 2) {

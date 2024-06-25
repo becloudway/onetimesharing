@@ -19,6 +19,17 @@ const GetPublicKeyService = class {
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
+	static async stepFunctionRequest(event: any, context: any, callback: any) {
+		const uuid = event.PublicKeyID || "";
+		const response: any = await SecretsRepository.GetPublicKey(uuid);
+
+		if (response === undefined) {
+			return { Found: false };
+		} else {
+			return { PublicKeyID: uuid, Found: true };
+		}
+	}
+
 	static #handleGetRequest(response: any) {
 		return buildResponseBody(200, JSON.stringify(response));
 	}

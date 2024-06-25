@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import OneTimeSharingLogo from "./assets/logo.png";
+import CloudwayLogo from "./assets/cloudway-logo.png";
 
 import { ReactComponent as OneClickIcon } from "./assets/oneclickicon.svg";
 import { ReactComponent as PKIIcon } from "./assets/pkiicon.svg";
 import { ReactComponent as KeyIcon } from "./assets/keypairicon.svg";
+import BcryptJS from "./classes/bcrypt";
 
 const Navigation = () => {
 	const navigate = useNavigate();
@@ -72,6 +74,7 @@ const Navigation = () => {
 						<KeyIcon />
 						Key Generator
 					</button>
+				<a className="flex items-center justify-center gap-[10px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
 				</div>
 			</div>
 		</Container>

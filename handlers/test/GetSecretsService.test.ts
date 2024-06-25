@@ -26,7 +26,9 @@ describe('GetSecretsService', () => {
       Item: { 
         encryption_type: "SHE",
         cyphertext: "1234",
-        second_half_key: "2134"
+        second_half_key: "2134",
+        version: 2,
+        passwordTries: 0,
       },
     };
 
@@ -35,7 +37,7 @@ describe('GetSecretsService', () => {
 
     await GetSecretsService.routeRequest(lambdaEvent, '/secrets');
 
-    expect(buildResponseBody).toHaveBeenCalledWith(200, JSON.stringify(response.Item));
+    expect(buildResponseBody).toHaveBeenCalledWith(403, "Wrong password!");
   });
 
   test('should handle unimplemented HTTP method', async () => {

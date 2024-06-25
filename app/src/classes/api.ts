@@ -34,7 +34,7 @@ export class Api {
 					resolve(res.data.id);
 				})
 				.catch((error) => {
-					reject(error.message);
+					reject(error.response.data);
 				});
 		});
 	};
@@ -56,13 +56,14 @@ export class Api {
 		});
 	};
 
-	public static PostE2ESecret = async (encryptedSecret: string) => {
+	public static PostE2ESecret = async (encryptedSecret: string, loadedPublicKey: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
 					`${dev ? apiURL : ""}/api/addE2E`,
 					{
 						cyphertext: encryptedSecret,
+						public_key_uuid: loadedPublicKey,
 					},
 					{
 						headers: {
@@ -80,7 +81,7 @@ export class Api {
 	};
 
 	public static GetStatus = async (uuid: string) => {
-		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean }) => void, reject) => {
+		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
 			await axios
 				.get(`${dev ? apiURL : ""}/api/status/${uuid}`, {
 					headers: {
@@ -145,8 +146,7 @@ export class Api {
 		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
-					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
-						code !== "" && code !== null ? `&code=${code}` : ""
+					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
 						headers: {
@@ -158,7 +158,7 @@ export class Api {
 				.then((response) => {
 					resolve({
 						data: response.data,
-						status: 200
+						status: 200,
 					});
 				})
 				.catch((error) => {
@@ -168,7 +168,7 @@ export class Api {
 						if (resp.status === 302) {
 							resolve({
 								data: body.url,
-								status: 302
+								status: 302,
 							});
 						} else {
 							reject(error);
@@ -183,21 +183,18 @@ export class Api {
 	public static Logout = async () => {
 		return new Promise(async (resolve, reject) => {
 			axios
-				.get(
-					`${dev ? apiURL : ""}/api/logout`,
-					{
-						withCredentials: true,
-					}
-				)
+				.get(`${dev ? apiURL : ""}/api/logout`, {
+					withCredentials: true,
+				})
 				.then((response) => {
 					resolve({
 						data: response.data,
-						status: 200
+						status: 200,
 					});
 				})
 				.catch((error) => {
 					reject(error);
 				});
-		})
+		});
 	};
 }

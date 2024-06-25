@@ -10,38 +10,34 @@ const GetSecretsService = class {
 		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
 			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
 			const password = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.password) || "";
-			const response: any = await SecretsRepository.GetSecret(uuid);
+			const response: SecretsStructure = await SecretsRepository.GetSecret(uuid);
 
 			if (response.Item === undefined) {
 				return buildResponseBody(400, `No secret was found in combination with this UUID.`);
 			} else {
-				if (response.Item.password && response.Item.password) {
-					return await this.passwordValidation(uuid, response, password);
-				} else {
-					const deleted: boolean = await SecretsRepository.DeleteSecret(uuid);
-					if (deleted) {
-						return this.#handleGetRequest(response as SecretsStructure);
-					} else {
-						return buildResponseBody(400, "Failed to delete the cyphertext from the database!");
-					}
-				}
+				return await this.passwordValidation(uuid, password);
 			}
 		}
 
 		return buildResponseBody(400, `Unimplemented HTTP method: ${lambdaEvent.httpMethod}`);
 	}
 
-	private static passwordValidation = async (uuid: string, response: SecretsStructure, password: string) => {
+	private static passwordValidation = async (uuid: string, password: string) => {
 		const hashedPassword = generateSHA256Hash(password);
-		if (hashedPassword === response.Item.password) {
-			const deleted: boolean = await SecretsRepository.DeleteSecret(uuid);
-			if (deleted) {
-				return this.#handleGetRequest(response as SecretsStructure);
-			} else {
-				return buildResponseBody(400, "Failed to delete the cyphertext from the database!");
-			}
-		} else {
+		const response = await SecretsRepository.CheckPassword(uuid, hashedPassword);
+		if (!response || response === true) {
 			return buildResponseBody(403, `Wrong password!`);
+		} else {
+			return this.fetchAndDeleteSecret(uuid, response as SecretsStructure);
+		}
+	};
+
+	private static fetchAndDeleteSecret = async (uuid: string, response: SecretsStructure) => {
+		const deleted: boolean = await SecretsRepository.DeleteSecret(uuid);
+		if (deleted) {
+			return this.#handleGetRequest(response as SecretsStructure);
+		} else {
+			return buildResponseBody(400, "Failed to delete the cyphertext from the database!");
 		}
 	};
 

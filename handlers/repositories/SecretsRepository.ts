@@ -1,6 +1,6 @@
 import generateTTL from "../helper_functions/timeToLive";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { ConditionalCheckFailedException, DynamoDBClient, ExecuteStatementCommand, DeleteItemCommand, UpdateItemCommand, UpdateItemCommandInput, ReturnValue } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { SecretsStructure } from "../types/types";
 
@@ -13,10 +13,12 @@ type DynamoDBSecretsStructure = {
 	encryption_type: string;
 	cyphertext: string;
 	retrievedCount: number;
+	passwordTries: number;
 	second_half_key: string;
 	ttl: number;
 	password?: string;
 	public_key_uuid?: string;
+	version: number;
 };
 
 const SecretsRepository = class {
@@ -33,9 +35,11 @@ const SecretsRepository = class {
 			encryption_type: data.Item.encryption_type || "SHE",
 			cyphertext: data.Item.cyphertext || "",
 			retrievedCount: 1,
+			passwordTries: 0,
 			second_half_key: data.Item.second_half_key || "",
 			password: generateSHA256Hash(data.Item.password || ""),
 			ttl: time_to_live,
+			version: 2,
 		};
 
 		if (data.Item.public_key_uuid) {
@@ -56,6 +60,7 @@ const SecretsRepository = class {
 	}
 
 	static async GetSecret(uuid: string): Promise<SecretsStructure> {
+		console.log("GETTING SECRET")
 		const response = await this.dynamo.send(
 			new GetCommand({
 				TableName: process.env.tableName,
@@ -67,6 +72,63 @@ const SecretsRepository = class {
 
 		return response as unknown as SecretsStructure;
 	}
+
+	static async CheckPassword(uuid: string, password: string): Promise<SecretsStructure | boolean> {
+		try {
+			const input: UpdateItemCommandInput = {
+				ExpressionAttributeNames: {
+					"#PW": "password",
+				},
+				ExpressionAttributeValues: {
+					":pc": {
+						N: "1",
+					},
+					":password": {
+						S: password
+					}
+				},
+				Key: {
+					"uuid": {
+						S: uuid,
+					},
+				},
+				ReturnValues: "NONE",
+				TableName: process.env.tableName || "",
+				UpdateExpression: "SET passwordTries = passwordTries + :pc",
+				ConditionExpression: `attribute_exists(#PW) AND #PW <> :password`,
+			};
+
+			await this.dynamo.send(new UpdateItemCommand(input));
+		} catch (err) {
+			if (err instanceof ConditionalCheckFailedException) {
+				//Return the secret as this means that the password is correct.
+				return await this.GetSecret(uuid);
+			} else {
+				console.log("Updated: " + err);
+			}
+		}
+
+		try {
+			const deleteParams = {
+				TableName: process.env.tableName || "",
+				Key: { uuid },
+				ExpressionAttributeValues: {
+					":maxTries": 3  // directly using the number
+				},
+				ConditionExpression: "passwordTries >= :maxTries",
+				ReturnValues: ReturnValue.ALL_OLD  // corrected to a string
+			};
+
+			console.log(deleteParams);
+
+			await this.dynamo.send(new DeleteCommand(deleteParams));
+			return true;
+		} catch (error) {
+			console.log("Deleted: " + error);
+			return false;
+		}
+
+	};
 
 	static async DeleteSecret(uuid: string): Promise<boolean> {
 		try {
@@ -82,6 +144,69 @@ const SecretsRepository = class {
 			return true;
 		} catch {
 			return false;
+		}
+	}
+
+	static async ExecuteStatement(uuid: string, NextToken: string) {
+		try {
+			const results = await this.dynamo.send(
+				new ExecuteStatementCommand({
+					Statement: `SELECT * FROM "${process.env.tableName}"`,
+					Limit: 10,
+					NextToken: NextToken || undefined,
+				})
+			);
+
+			if (!results.Items)
+				return {
+					NextToken: results.NextToken,
+				};
+
+			const items: UpdateCommandInput | any = results.Items.filter((el) => el.public_key_uuid?.S === uuid).map((element: any) => {
+				if (element.public_key_uuid.S === uuid) {
+					return {
+						ExpressionAttributeNames: {
+							"#TTL": "ttl",
+							"#PK": "public_key_uuid",
+						},
+						ExpressionAttributeValues: {
+							":ttl": {
+								N: Math.floor(new Date(Date.now() - 1).getTime() / 1000).toString(),
+							},
+							":pk": {
+								S: "REMOVED",
+							},
+						},
+						Key: {
+							uuid: {
+								S: element.uuid.S,
+							},
+						},
+						ReturnValues: "NONE",
+						TableName: process.env.tableName || "",
+						UpdateExpression: "SET #TTL = :ttl, #PK = :pk",
+					};
+				}
+			});
+
+			console.log(items);
+
+			await Promise.all(
+				await items.map(async (el: UpdateItemCommandInput | any) => {
+					await this.dynamo.send(new UpdateItemCommand(el));
+				})
+			);
+
+			return {
+				PublicKeyID: uuid,
+				NextToken: results.NextToken,
+			};
+		} catch (err) {
+			console.log(err);
+			return {
+				error: true,
+				message: err,
+			};
 		}
 	}
 

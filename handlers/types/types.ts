@@ -4,9 +4,11 @@ export type SecretsStructure = {
 		cyphertext: string;
 		second_half_key?: string;
 		retrievedCount?: number;
+		passwordTries: number;
 		ttl?: number;
 		public_key_uuid?: string;
 		password?: string;
+		version?: number;
 	};
 };
 

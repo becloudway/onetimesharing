@@ -5,6 +5,7 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
+import { StateMachine } from "aws-cdk-lib/aws-stepfunctions";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 interface ApiStackProps extends cdk.StackProps {
@@ -12,6 +13,7 @@ interface ApiStackProps extends cdk.StackProps {
 	environmentName: string;
 	S3Storage: Bucket;
 	Secret: Secret;
+	StateMachine: StateMachine;
 }
 
 export class OneTimeSharingApiStack extends cdk.Stack {
@@ -26,7 +28,8 @@ export class OneTimeSharingApiStack extends cdk.Stack {
 			props.DynamoDBStorage,
 			props.environmentName,
 			props.S3Storage,
-			props.Secret
+			props.Secret,
+			props.StateMachine
 		);
 		this.ApiGateway = apiStack.ApiGateway;
 	}

@@ -13,6 +13,8 @@ import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
 import VerifyScreen from "./components/VerifyScreen";
+import CloudwayLogo from "./assets/cloudway-logo.png";
+import BcryptJS from "./classes/bcrypt";
 
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -62,7 +64,7 @@ function SHEDecryption() {
 		});
 	};
 
-	const fetchSecret = (password: string) => {
+	const fetchSecret = async (password: string, version: number) => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const hashValue = {
 			first_half_key: window.location.hash.split("&")[0].split("=")[1],
@@ -74,10 +76,12 @@ function SHEDecryption() {
 			iv: hashValue.iv || "",
 		};
 
+		const hashedPassword = await BcryptJS.encryptPassword(password);
+
 		handleParamsCheck(params)
 			.then((check) => {
 				if (check) {
-					getSecret(params.uuid, params.first_half_key, params.iv, password);
+					getSecret(params.uuid, params.first_half_key, params.iv, version === 1 ? password : hashedPassword);
 				}
 			})
 			.catch((error) => {
@@ -100,9 +104,9 @@ function SHEDecryption() {
 			/>
 			{verify && (
 				<VerifyScreen
-					callback={(password: string) => {
+					callback={(password: string, version: number) => {
 						setVerify(false);
-						fetchSecret(password);
+						fetchSecret(password, version);
 					}}
 				/>
 			)}
@@ -120,6 +124,7 @@ function SHEDecryption() {
 						/>
 					</div>
 				</div>
+				<a className="flex items-center justify-center gap-[10px] mt-[20px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
 			</div>
 		</Container>
 	);
