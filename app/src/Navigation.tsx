@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import OneTimeSharingLogo from "./assets/logo.png";
+import CloudwayLogo from "./assets/cloudway-logo.png";
 
 import { ReactComponent as OneClickIcon } from "./assets/oneclickicon.svg";
 import { ReactComponent as PKIIcon } from "./assets/pkiicon.svg";
 import { ReactComponent as KeyIcon } from "./assets/keypairicon.svg";
+import BcryptJS from "./classes/bcrypt";
 
 const Navigation = () => {
 	const navigate = useNavigate();
@@ -25,7 +27,7 @@ const Navigation = () => {
 			<div className="flex flex-col items-center justify-center gap-[40px] pt-[34px] w-full h-full bg-[rgba(0,123,236,0.1)]">
 				<img className="h-[40px]" src={OneTimeSharingLogo} />
 				<div className="flex flex-col gap-[20px] max-w-[600px] w-full px-[10px]">
-					{!loggedIn && (
+					{/* {!loggedIn && (
 						<button
 							className="w-full h-[60px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
 							onClick={() => {
@@ -42,7 +44,7 @@ const Navigation = () => {
 						>
 							Click here to logout
 						</button>
-					)}
+					)} */}
 					<div className="flex flex-wrap gap-[20px]">
 						<button
 							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
@@ -72,6 +74,7 @@ const Navigation = () => {
 						<KeyIcon />
 						Key Generator
 					</button>
+				<a className="flex items-center justify-center gap-[10px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
 				</div>
 			</div>
 		</Container>

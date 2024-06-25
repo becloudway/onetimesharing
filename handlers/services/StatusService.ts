@@ -17,6 +17,7 @@ const StatusService = class {
 				return this.#handleGetRequest({
 					is_available: true,
 					passwordProtected: response.Item.password ? response.Item.password !== "" : false,
+					version: response.Item.version || 1,
 				});
 			}
 		}

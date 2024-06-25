@@ -12,6 +12,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import CopyToClipBoard from "./components/CopyToClipBoard";
 import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
+import CloudwayLogo from "./assets/cloudway-logo.png";
 
 function E2Eencryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -114,6 +115,7 @@ function E2Eencryption() {
 						/>
 					</div>
 				</div>
+				<a className="flex items-center justify-center gap-[10px] mt-[20px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
 			</div>
 		</Container>
 	);

@@ -4,12 +4,13 @@ import { Api } from "../classes/api";
 import styled from "styled-components";
 
 type VerifyScreenProps = {
-	callback: (password: string) => void;
+	callback: (password: string, version: number) => void;
 };
 
 const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 	const route = useNavigate();
 	const [password, setPassword] = useState<string>("");
+	const [version, setVersion] = useState<number>(1);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [secretFound, setSecretFound] = useState<boolean>(false);
 	const [needsPassword, setNeedsPassword] = useState<boolean>(false);
@@ -30,6 +31,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 			.then((res) => {
 				setSecretFound(res.is_available);
 				setNeedsPassword(res.passwordProtected);
+				setVersion(res.version);
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -56,7 +58,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 					</div>
 					{needsPassword && (
 						<div className="flex items-center justify-center gap-[10px] my-[14px]">
-							<div className="text-[16px]">Enter the password:</div>
+							<div className="text-[16px]">Enter the password (max. 3 tries):</div>
 							<input
 								type="password"
 								placeholder="Enter your password here"
@@ -68,7 +70,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 					)}
 					<div className="mx-auto mt-[20px] mb-auto flex gap-[6px]">
 						<button
-							onClick={() => callback(password)}
+							onClick={() => callback(password, version)}
 							className="text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						>
 							Get the secret

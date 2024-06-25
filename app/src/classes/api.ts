@@ -8,7 +8,7 @@ export class Api {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${password}`, {
+				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${encodeURIComponent(password)}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -34,7 +34,7 @@ export class Api {
 					resolve(res.data.id);
 				})
 				.catch((error) => {
-					reject(error.message);
+					reject(error.response.data);
 				});
 		});
 	};
@@ -81,7 +81,7 @@ export class Api {
 	};
 
 	public static GetStatus = async (uuid: string) => {
-		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean }) => void, reject) => {
+		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
 			await axios
 				.get(`${dev ? apiURL : ""}/api/status/${uuid}`, {
 					headers: {
@@ -146,8 +146,7 @@ export class Api {
 		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
-					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
-						code !== "" && code !== null ? `&code=${code}` : ""
+					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
 						headers: {
