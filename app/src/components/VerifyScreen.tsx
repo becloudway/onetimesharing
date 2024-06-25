@@ -56,7 +56,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 					</div>
 					{needsPassword && (
 						<div className="flex items-center justify-center gap-[10px] my-[14px]">
-							<div className="text-[16px]">Enter the password:</div>
+							<div className="text-[16px]">Enter the password (max. 3 tries):</div>
 							<input
 								type="password"
 								placeholder="Enter your password here"

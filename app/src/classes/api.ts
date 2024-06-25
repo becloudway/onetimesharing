@@ -34,7 +34,7 @@ export class Api {
 					resolve(res.data.id);
 				})
 				.catch((error) => {
-					reject(error.message);
+					reject(error.response.data);
 				});
 		});
 	};
@@ -146,8 +146,7 @@ export class Api {
 		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
-					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${
-						code !== "" && code !== null ? `&code=${code}` : ""
+					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
 						headers: {
