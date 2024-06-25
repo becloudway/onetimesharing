@@ -7,6 +7,7 @@ import CloudwayLogo from "./assets/cloudway-logo.png";
 import { ReactComponent as OneClickIcon } from "./assets/oneclickicon.svg";
 import { ReactComponent as PKIIcon } from "./assets/pkiicon.svg";
 import { ReactComponent as KeyIcon } from "./assets/keypairicon.svg";
+import BcryptJS from "./classes/bcrypt";
 
 const Navigation = () => {
 	const navigate = useNavigate();

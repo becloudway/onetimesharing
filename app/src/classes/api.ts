@@ -81,7 +81,7 @@ export class Api {
 	};
 
 	public static GetStatus = async (uuid: string) => {
-		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean }) => void, reject) => {
+		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
 			await axios
 				.get(`${dev ? apiURL : ""}/api/status/${uuid}`, {
 					headers: {
