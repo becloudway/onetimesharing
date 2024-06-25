@@ -17,6 +17,7 @@ import ClickableLogo from "./components/ClickableLogo";
 import WhiteContainer from "./components/WhiteContainer";
 import { Api } from "./classes/api";
 import VerifyScreen from "./components/VerifyScreen";
+import CloudwayLogo from "./assets/cloudway-logo.png";
 
 function E2Edecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -151,6 +152,7 @@ function E2Edecryption() {
 						</button>
 					</WhiteContainer>
 				</Dropdown>
+				<a className="flex items-center justify-center gap-[10px] mt-[20px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
 			</div>
 		</Container>
 	);
