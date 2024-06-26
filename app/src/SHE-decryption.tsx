@@ -64,7 +64,7 @@ function SHEDecryption() {
 		});
 	};
 
-	const fetchSecret = async (password: string, version: number) => {
+	const fetchSecret = async (password: string, version: number, needsPassword: boolean) => {
 		const searchParams = new URLSearchParams(window.location.search);
 		const hashValue = {
 			first_half_key: window.location.hash.split("&")[0].split("=")[1],
@@ -76,7 +76,7 @@ function SHEDecryption() {
 			iv: hashValue.iv || "",
 		};
 
-		const hashedPassword = await BcryptJS.encryptPassword(password);
+		const hashedPassword = needsPassword ? await BcryptJS.encryptPassword(password) : "";
 
 		handleParamsCheck(params)
 			.then((check) => {
@@ -104,9 +104,9 @@ function SHEDecryption() {
 			/>
 			{verify && (
 				<VerifyScreen
-					callback={(password: string, version: number) => {
+					callback={(password: string, version: number, needsPassword: boolean) => {
 						setVerify(false);
-						fetchSecret(password, version);
+						fetchSecret(password, version, needsPassword);
 					}}
 				/>
 			)}
