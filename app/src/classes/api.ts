@@ -8,7 +8,7 @@ export class Api {
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getSHE/${uuid}?password=${encodeURIComponent(password)}`, {
+				.get(`/api/getSHE/${uuid}?password=${encodeURIComponent(password)}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -25,7 +25,7 @@ export class Api {
 	public static PostSHESecret = async (valuesObject: { cyphertext: string; second_half_key: string; password?: string }) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.post(`${dev ? apiURL : ""}/api/addSHE`, valuesObject, {
+				.post(`/api/addSHE`, valuesObject, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -42,7 +42,7 @@ export class Api {
 	public static GetE2ESecret = async (uuid: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getE2E/${uuid}`, {
+				.get(`/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -60,7 +60,7 @@ export class Api {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
-					`${dev ? apiURL : ""}/api/addE2E`,
+					`/api/addE2E`,
 					{
 						cyphertext: encryptedSecret,
 						public_key_uuid: loadedPublicKey,
@@ -83,7 +83,7 @@ export class Api {
 	public static GetStatus = async (uuid: string) => {
 		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/status/${uuid}`, {
+				.get(`/api/status/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -100,7 +100,7 @@ export class Api {
 	public static GetPublicKey = async (uuid: string) => {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.get(`${dev ? apiURL : ""}/api/getpublickey/${uuid}`, {
+				.get(`/api/getpublickey/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -123,7 +123,7 @@ export class Api {
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
-					`${dev ? apiURL : ""}/api/postpublickey`,
+					`/api/postpublickey`,
 					{
 						public_key: publicKey.replace(/\r?\n+$/, "").replace(/\r?\n(?!\r?\n)/g, "\\n"),
 					},
@@ -146,7 +146,7 @@ export class Api {
 		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
-					`${dev ? apiURL : ""}/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${code !== "" && code !== null ? `&code=${code}` : ""
+					`/api/login?redirectURI=${encodeURIComponent(window.location.origin)}/callback${code !== "" && code !== null ? `&code=${code}` : ""
 					}`,
 					{
 						headers: {

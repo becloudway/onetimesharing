@@ -4,7 +4,7 @@ import { Api } from "../classes/api";
 import styled from "styled-components";
 
 type VerifyScreenProps = {
-	callback: (password: string, version: number) => void;
+	callback: (password: string, version: number, needsPassword: boolean) => void;
 };
 
 const VerifyScreen = ({ callback }: VerifyScreenProps) => {
@@ -70,7 +70,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 					)}
 					<div className="mx-auto mt-[20px] mb-auto flex gap-[6px]">
 						<button
-							onClick={() => callback(password, version)}
+							onClick={() => callback(password, version, needsPassword)}
 							className="text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						>
 							Get the secret
