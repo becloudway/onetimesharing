@@ -39,14 +39,8 @@ Receiver:
 
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
 
-<video width="320" height="240" controls>
-  <source src="media/oneclick-sender.mp4" type="video/mp4">
-</video>
-
-<video width="320" height="240" controls>
-  <source src="media/oneclick-receiver.mp4" type="video/mp4">
-</video>
-
+<video src="media/oneclick-sender.mp4" width="300" />
+<video src="media/oneclick-receiver.mp4" width="300" />
 
 ## PGP Encrypted sharing
 
