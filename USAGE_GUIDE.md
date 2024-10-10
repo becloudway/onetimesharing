@@ -39,8 +39,9 @@ Receiver:
 
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
 
-<img src="media/oneclick-sender.gif" align="left"/>
-<img src="media/oneclick-receiver.gif" align="left"/>
+![OneClick Sender](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/oneclick-sender.mp4)
+
+![OneClick Receiver](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/oneclick-receiver.mp4)
 
 ## PGP Encrypted sharing
 
