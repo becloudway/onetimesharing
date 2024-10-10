@@ -40,11 +40,11 @@ Receiver:
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
 
 <video width="320" height="240" controls>
-  <source src="media/oneclick-sender.mov" type="video/mp4">
+  <source src="media/oneclick-sender.mp4" type="video/mp4">
 </video>
 
 <video width="320" height="240" controls>
-  <source src="media/oneclick-receiver.mov" type="video/mp4">
+  <source src="media/oneclick-receiver.mp4" type="video/mp4">
 </video>
 
 
@@ -71,13 +71,13 @@ Receiver:
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
 
 <video width="320" height="240" controls>
-  <source src="media/PGP-receiver1.mov" type="video/mp4">
+  <source src="media/PGP-receiver1.mp4" type="video/mp4">
 </video>
 
 <video width="320" height="240" controls>
-  <source src="media/PGP-sender.mov" type="video/mp4">
+  <source src="media/PGP-sender.mp4" type="video/mp4">
 </video>
 
 <video width="320" height="240" controls>
-  <source src="media/PGP-receiver2.mov" type="video/mp4">
+  <source src="media/PGP-receiver2.mp4" type="video/mp4">
 </video>
