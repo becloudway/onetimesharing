@@ -39,10 +39,6 @@ Receiver:
 
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
 
-[![OneClick Sender](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/OneClick-sender-thumbnail.png)](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/oneclick-sender.mp4)
-
-[![OneClick Receiver](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/OneClick-receiver-thumbnail.png)](https://raw.githubusercontent.com/becloudway/onetimesharing/documentation-update/media/oneclick-receiver.mp4)
-
 ## PGP Encrypted sharing
 
 Following steps let you share a secret through PGP Encrypted sharing
@@ -64,15 +60,3 @@ Receiver:
 1. Decrypt the pgp file on your machine
 
 **Important:** The link can only be used once (hence the name; OneTimeSharing)
-
-<video width="320" height="240" controls>
-  <source src="media/PGP-receiver1.mp4" type="video/mp4">
-</video>
-
-<video width="320" height="240" controls>
-  <source src="media/PGP-sender.mp4" type="video/mp4">
-</video>
-
-<video width="320" height="240" controls>
-  <source src="media/PGP-receiver2.mp4" type="video/mp4">
-</video>

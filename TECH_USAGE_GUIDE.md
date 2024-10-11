@@ -63,7 +63,7 @@ For this reason, we encrypt and decrypt the secrets client side which provides E
 
 Following visual explains how the OneTimesharing client and server communicate when using the OneClick sharing option:
 
-![OneClick sharing communication](media/OneClick-communication.png)
+![OneClick sharing communication](screenshots/OneClick-communication.png)
 
 1. In this part of the flow a request is sent from the client to the server, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead, the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. If a password was given, it is hashed before it is sent to the server. So the payload of the request to the server will look somthing like this:
 
@@ -103,7 +103,7 @@ iv=7e1656a2b9680d73de50cae58ed550df
 
 Following visual explains how the OneTimesharing client and server communicate when using the PGP encrypted sharing option:
 
-![PGP encrypted sharing communication](media/PGP-communication.png)
+![PGP encrypted sharing communication](screenshots/PGP-communication.png)
 
 1. In this part of the flow a request is sent from the frontend to the backend, since the encryption of the secret is always handled client-side only the ciphertext needs to be sent to the backend. So the payload of the request to the server will look somthing like this.
 
@@ -125,7 +125,7 @@ yPEPkvELWrrPDReAQ+CsLA==
 ### Secret retrieval
 Both the OneClick and the PGP encrypted sharing follow the same process to retrieve the encrypted secrets from the server.
 
-![Secret retrieval](media/secret-retrieval.png)
+![Secret retrieval](screenshots/secret-retrieval.png)
 
 1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included.
 2. The backend will then check if the value exists and will otherwise return a 400 error.

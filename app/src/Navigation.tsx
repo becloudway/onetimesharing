@@ -62,7 +62,7 @@ const Navigation = () => {
 							}}
 						>
 							<PKIIcon />
-							PKI encryption
+							PGP encryption
 						</button>
 					</div>
 					<button
