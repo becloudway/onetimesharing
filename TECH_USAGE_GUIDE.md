@@ -14,6 +14,7 @@ This guide is intended to provide more technical information about the OneTimeSh
 - [Technical deep-dive](#technical-deep-dive)
   - [PGP Encrypted sharing deep-dive](#pgp-encrypted-sharing-deep-dive)
   - [OneClick sharing deep-dive](#oneclick-sharing-deep-dive)
+  - [Server-side secret management](#server-side-secret-management)
 - [Routes](#routes)
 
 ## Sharing and encryption types
