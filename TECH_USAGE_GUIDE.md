@@ -9,12 +9,11 @@ This guide is intended to provide more technical information about the OneTimeSh
 ## Table of Contents
 
 - [Sharing and encryption types](#sharing-and-encryption-types)
-- [OneClick sharing](#one-click-sharing)
-  - [How do we handle your SHE secret?](#how-do-we-handle-your-she-secret)
-  - [Fething a secret](#fetching-a-secret-valid-for-both-encryption-types)
-- [PGP Encrypted sharing](#pgp-encrypted-sharing)
-  - [How do we handle your E2E secret?](#how-do-we-handle-your-e2e-secret)
-  - [Fething a secret](#fetching-a-secret-valid-for-both-encryption-types-1)
+  - [PGP Encrypted sharing](#pgp-encrypted-sharing)
+  - [OneClick sharing](#oneclick-sharing)
+- [Technical deep-dive](#technical-deep-dive)
+  - [PGP Encrypted sharing deep-dive](#pgp-encrypted-sharing-deep-dive)
+  - [OneClick sharing deep-dive](#oneclick-sharing-deep-dive)
 - [Routes](#routes)
 
 ## Sharing and encryption types
@@ -59,47 +58,7 @@ For this reason, we encrypt and decrypt the secrets client side which provides E
 
 ## Technical deep-dive
 
-### OneClick sharing
-
-Following visual explains how the OneTimesharing client and server communicate when using the OneClick sharing option:
-
-![OneClick sharing communication](screenshots/OneClick-communication.png)
-
-1. In this part of the flow a request is sent from the client to the server, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead, the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. If a password was given, it is hashed before it is sent to the server. So the payload of the request to the server will look somthing like this:
-
-```
-{
-  "cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
-  "password": 
-"$2a$10$i5FLINuWe.9DDAZ81vx0WO19lJLnMifkG/i/vFJ5m6wjdGVphw7K2",
-  "second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
-}
-```
-
-2. Based on this request, a couple of checks need to be executed. We check the length of the ciphertext and the second half key. The key should be exactly 32 bits long. As the full encryption key is 64 bits.
-2. If these checks pass, the cyphertext and second half key is stored in the database and the ID of these values is returned.
-2. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the initialisation vector (IV) of the encryption:
-
-<div>
-/decryptSHE?
-<span style="color:green">
-uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb
-</span>
-<span style="color:red">
-#
-</span>
-<span style="color:purple">
-first_half_key=a02604a70dafdf7e0b30e493ac7354fc
-</span>
-<span>
-&
-</span>
-<span style="color:pink">
-iv=7e1656a2b9680d73de50cae58ed550df
-</span>
-</div>
-
-### PGP encrypted sharing
+### PGP encrypted sharing deep-dive
 
 Following visual explains how the OneTimesharing client and server communicate when using the PGP encrypted sharing option:
 
@@ -121,6 +80,29 @@ yPEPkvELWrrPDReAQ+CsLA==
 2. If these checks pass, the cyphertext is stored in the database and the ID of this record is returned.
 2. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters.
 
+### OneClick sharing deep-dive
+
+Following visual explains how the OneTimesharing client and server communicate when using the OneClick sharing option:
+
+![OneClick sharing communication](screenshots/OneClick-communication.png)
+
+1. In this part of the flow a request is sent from the client to the server, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead, the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. If a password was given, it is hashed before it is sent to the server. So the payload of the request to the server will look somthing like this:
+
+```
+{
+  "cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
+  "password": 
+"$2a$10$i5FLINuWe.9DDAZ81vx0WO19lJLnMifkG/i/vFJ5m6wjdGVphw7K2",
+  "second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
+}
+```
+
+2. Based on this request, a couple of checks need to be executed. We check the length of the ciphertext and the second half key. The key should be exactly 32 bits long. As the full encryption key is 64 bits.
+2. If these checks pass, the cyphertext and second half key is stored in the database and the ID of these values is returned.
+2. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the initialisation vector (IV) of the encryption:
+
+/decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb#first_half_key=a02604a70dafdf7e0b30e493ac7354fc&iv=7e1656a2b9680d73de50cae58ed550df
+
 
 ### Secret retrieval
 Both the OneClick and the PGP encrypted sharing follow the same process to retrieve the encrypted secrets from the server.
@@ -135,24 +117,7 @@ Both the OneClick and the PGP encrypted sharing follow the same process to retri
 Important to understand, is that in step 1 the request from the client to the server only contains the ID of the secret. 
 As mentioned before, the created link for the OneClick sharing looks like this:
 
-<div>
-/decryptSHE?
-<span style="color:green">
-uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb
-</span>
-<span style="color:red">
-#
-</span>
-<span style="color:purple">
-first_half_key=a02604a70dafdf7e0b30e493ac7354fc&
-</span>
-<span>
-&
-</span>
-<span style="color:pink">
-iv=7e1656a2b9680d73de50cae58ed550df
-</span>
-</div>
+/decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb **#first_half_key=a02604a70dafdf7e0b30e493ac7354fc&iv=7e1656a2b9680d73de50cae58ed550df**
 
 Browsers will not share the information behind the hashtag with any server! This means that also here, the server will not get the first half of the key!
 
