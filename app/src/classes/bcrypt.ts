@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import * as CryptoJS from "crypto-js";
 
 export default class BcryptJS {
 	static async encryptPassword(password: string, first_half_key: string): Promise<string> {
@@ -12,11 +12,11 @@ export default class BcryptJS {
 	}
 
 	private static generateSaltFromKey(key: string): string {
-		// Hash the first_half_key using SHA-256
-		const hash = crypto.createHash("sha256").update(key).digest("hex");
+    // Hash the first_half_key using SHA-256 in CryptoJS
+    const hash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex);
 
-		// Take the first 16 bytes (32 characters in hex) as the salt
-		const salt = hash.substring(0, 32); // 32 hex characters = 16 bytes
-		return salt;
-	}
+    // Take the first 16 bytes (32 characters in hex) as the salt
+    const salt = hash.substring(0, 32); // 32 hex characters = 16 bytes
+    return salt;
+  }
 }
