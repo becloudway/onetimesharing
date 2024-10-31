@@ -221,7 +221,7 @@ export class ApiStackService extends Construct {
 
 		apiRoute.addResource(eMethods.STATUS).addResource("{uuid}").addMethod("GET", statusIntegration); // GET /
 
-		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("GET", getSHESecretsIntegration); // GET /
+		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("POST", getSHESecretsIntegration); // POST /
 		apiRoute.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
 
 		apiRoute.addResource(eMethods.LOGIN).addMethod("GET", loginIntegration);
