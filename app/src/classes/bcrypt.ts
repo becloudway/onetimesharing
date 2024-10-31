@@ -12,11 +12,14 @@ export default class BcryptJS {
 	}
 
 	private static generateSaltFromKey(key: string): string {
-    // Hash the first_half_key using SHA-256 in CryptoJS
-    const hash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Hex);
+		// Hash the first_half_key using SHA-256
+		const hash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Base64);
 
-    // Take the first 16 bytes (32 characters in hex) as the salt
-    const salt = hash.substring(0, 32); // 32 hex characters = 16 bytes
-    return salt;
-  }
+		// Take the first 22 characters for a bcrypt-compatible salt
+		const saltBase = hash.substring(0, 22);
+
+		// Prepend bcrypt's version, cost, and return the valid salt
+		const bcryptSalt = `$2a$10$${saltBase}`;
+		return bcryptSalt;
+	}
 }
