@@ -35,19 +35,19 @@ describe('GetSecretsService', () => {
     (SecretsRepository.GetSecret as jest.Mock).mockResolvedValueOnce(response);
     (SecretsRepository.DeleteSecret as jest.Mock).mockResolvedValueOnce(true);
 
-    await GetSecretsService.routeRequest(lambdaEvent, '/secrets');
+    await GetSecretsService.routeRequest(lambdaEvent, { Item: { password: "fake_password" } }, '/secrets');
 
     expect(buildResponseBody).toHaveBeenCalledWith(403, "Wrong password!");
   });
 
   test('should handle unimplemented HTTP method', async () => {
     const lambdaEvent: any = {
-      httpMethod: 'POST',
+      httpMethod: 'GET',
       path: '/secrets',
     };
 
-    await GetSecretsService.routeRequest(lambdaEvent, '/secrets');
+    await GetSecretsService.routeRequest(lambdaEvent, { Item: { password: "" } }, '/secrets');
 
-    expect(buildResponseBody).toHaveBeenCalledWith(400, 'Unimplemented HTTP method: POST');
+    expect(buildResponseBody).toHaveBeenCalledWith(400, 'Unimplemented HTTP method: GET');
   });
 });
