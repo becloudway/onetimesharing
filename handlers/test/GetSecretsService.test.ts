@@ -17,7 +17,7 @@ describe('GetSecretsService', () => {
 
   test('should handle successful GET request', async () => {
     const lambdaEvent: any = {
-      httpMethod: 'GET',
+      httpMethod: 'POST',
       path: '/secrets',
       pathParameters: { uuid: '123' },
     };
@@ -46,7 +46,7 @@ describe('GetSecretsService', () => {
       path: '/secrets',
     };
 
-    await GetSecretsService.routeRequest(lambdaEvent, { Item: { password: "" } }, '/secrets');
+    await GetSecretsService.routeRequest(lambdaEvent, { Item: { password: "test" } }, '/secrets');
 
     expect(buildResponseBody).toHaveBeenCalledWith(400, 'Unimplemented HTTP method: GET');
   });

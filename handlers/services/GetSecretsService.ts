@@ -13,10 +13,12 @@ type GetSecretData = {
 
 const GetSecretsService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: GetSecretData, route: string) {
-		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
+		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
 			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
 			const password = (data && data.Item.password) || "";
 			const response: SecretsStructure = await SecretsRepository.GetSecret(uuid);
+
+			console.log(`Password: ${password}`);
 
 			if (response.Item === undefined) {
 				return buildResponseBody(400, `No secret was found in combination with this UUID.`);
