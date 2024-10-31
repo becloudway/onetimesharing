@@ -16,7 +16,12 @@ export default class BcryptJS {
 		const hash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Base64);
 
 		// Take the first 22 characters for a bcrypt-compatible salt
-		const saltBase = hash.substring(0, 22);
+		let saltBase = hash.substring(0, 22);
+
+		// If the length is less than 22, pad it with '0' or any character of your choice
+    while (saltBase.length < 22) {
+			saltBase += '0'; // or use any other character for padding
+		}
 
 		// Prepend bcrypt's version, cost, and return the valid salt
 		const bcryptSalt = `$2a$10$${saltBase}`;
