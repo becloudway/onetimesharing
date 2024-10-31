@@ -35,11 +35,28 @@ export class FrontendStackService extends Construct {
 		const originAccessIdentity = new OriginAccessIdentity(this, `OriginAccessIdentity`);
 		bucket.grantRead(originAccessIdentity);
 
+		const responseHeadersPolicy = new ResponseHeadersPolicy(stack, 'ResponseHeadersPolicy', {
+			responseHeadersPolicyName: 'CustomCSPPolicy',
+			securityHeadersBehavior: {
+				contentSecurityPolicy: {
+					override: true,
+					contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'",
+				},
+				// Optionally, add other security headers here
+				strictTransportSecurity: {
+					accessControlMaxAge: cdk.Duration.days(365),
+					includeSubdomains: true,
+					override: true,
+				},
+			},
+		});
+
 		const cloudfrontDistribution = new Distribution(this, `onetimesharing-${environmentName}-cloudfront`, {
 			defaultRootObject: "index.html",
 			defaultBehavior: {
 				origin: new S3Origin(bucket, { originAccessIdentity }),
 				viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+				responseHeadersPolicy: responseHeadersPolicy,
 			},
 			errorResponses: [
 				{
