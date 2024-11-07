@@ -30,7 +30,7 @@ export class Api {
 		valuesObject = {
 			cyphertext: DOMPurify.sanitize(valuesObject.cyphertext),
 			second_half_key: DOMPurify.sanitize(valuesObject.second_half_key),
-			password: DOMPurify.sanitize(valuesObject.password || "")
+			password: encodeURIComponent(DOMPurify.sanitize(valuesObject.password || ""))
 		}
 
 		return new Promise(async (resolve: (value: string) => void, reject) => {
