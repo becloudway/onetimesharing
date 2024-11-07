@@ -1,14 +1,18 @@
 import axios from "axios";
+import DOMPurify from 'dompurify';
 
 const dev = process.env.NODE_ENV === "dev";
 const apiURL: string = import.meta.env.VITE_DEV_URL;
 
 export class Api {
 	public static GetSHESecret = async (uuid: string, password: string) => {
+		uuid = DOMPurify.sanitize(uuid);
+		password = DOMPurify.sanitize(password);
+
 		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
-				.post(`/api/getSHE/${uuid}`, { password }, {
+				.post(`/api/getSHE/${uuid}`, { password: encodeURIComponent(password) }, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -23,6 +27,12 @@ export class Api {
 	};
 
 	public static PostSHESecret = async (valuesObject: { cyphertext: string; second_half_key: string; password?: string }) => {
+		valuesObject = {
+			cyphertext: DOMPurify.sanitize(valuesObject.cyphertext),
+			second_half_key: DOMPurify.sanitize(valuesObject.second_half_key),
+			password: DOMPurify.sanitize(valuesObject.password || "")
+		}
+
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(`/api/addSHE`, valuesObject, {
@@ -40,6 +50,8 @@ export class Api {
 	};
 
 	public static GetE2ESecret = async (uuid: string) => {
+		uuid = DOMPurify.sanitize(uuid);
+
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.get(`/api/getE2E/${uuid}`, {
@@ -57,6 +69,9 @@ export class Api {
 	};
 
 	public static PostE2ESecret = async (encryptedSecret: string, loadedPublicKey: string) => {
+		encryptedSecret = DOMPurify.sanitize(encryptedSecret);
+		loadedPublicKey = DOMPurify.sanitize(loadedPublicKey);
+
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
@@ -81,6 +96,8 @@ export class Api {
 	};
 
 	public static GetStatus = async (uuid: string) => {
+		uuid = DOMPurify.sanitize(uuid);
+
 		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
 			await axios
 				.get(`/api/status/${uuid}`, {
@@ -98,6 +115,8 @@ export class Api {
 	};
 
 	public static GetPublicKey = async (uuid: string) => {
+		uuid = DOMPurify.sanitize(uuid);
+
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.get(`/api/getpublickey/${uuid}`, {
@@ -120,6 +139,8 @@ export class Api {
 	};
 
 	public static PostPublicKey = async (publicKey: string) => {
+		publicKey = DOMPurify.sanitize(publicKey);
+
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
 				.post(
@@ -143,6 +164,9 @@ export class Api {
 	};
 
 	public static Login = async (code: string | null) => {
+		const sanitizedCode = DOMPurify.sanitize(code || "");
+		code = sanitizedCode !== "" ? sanitizedCode : null;
+
 		return new Promise(async (resolve: (code: any) => void, reject) => {
 			axios
 				.get(
