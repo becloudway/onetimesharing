@@ -14,6 +14,7 @@ import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
+import PasswordEncryption from "./classes/password_encryption";
 
 function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -22,6 +23,7 @@ function SHEEncryption() {
 		first_half_key: "",
 		iv: "",
 	});
+	const [encryptedURLPart, setEncryptedURLPart] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>("");
 
@@ -46,6 +48,10 @@ function SHEEncryption() {
 					first_half_key: first_half_key,
 					iv: iv,
 				});
+
+				const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`, password);
+				setEncryptedURLPart(generatedEncryptedURLPart);
+				
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -105,7 +111,7 @@ function SHEEncryption() {
 					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
 					<div className="relative">
 						<CopyToClipBoard
-							text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`}
+							text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#${encryptedURLPart}`}
 						/>
 						<input
 							readOnly
@@ -114,7 +120,7 @@ function SHEEncryption() {
 							className="text-center w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
 							value={
 								secretURL.uuid &&
-								`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
+								`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#${encryptedURLPart}`
 							}
 						/>
 					</div>
