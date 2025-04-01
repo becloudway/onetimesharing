@@ -29,7 +29,7 @@ function SHEEncryption() {
 
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
-		const hashedPassword = await BcryptJS.encryptPassword(password || "");
+		const hashedPassword = await BcryptJS.encryptPassword(password || "", first_half_key);
 		Api.PostSHESecret(
 			password
 				? {

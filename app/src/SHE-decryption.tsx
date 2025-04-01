@@ -67,11 +67,8 @@ function SHEDecryption() {
 
 	const fetchSecret = async (password: string, version: number, needsPassword: boolean) => {
 		const searchParams = new URLSearchParams(window.location.search);
-<<<<<<< Updated upstream
-=======
 		const decryptedURLPart = PasswordEncryption.decrypt(window.location.hash, password);
 		const first_half_key = decryptedURLPart.split("&")[0].split("=")[1];
->>>>>>> Stashed changes
 		const hashValue = {
 			first_half_key: decryptedURLPart.split("&")[0].split("=")[1],
 			iv: decryptedURLPart.split("&")[1].split("=")[1],
@@ -82,7 +79,7 @@ function SHEDecryption() {
 			iv: hashValue.iv || "",
 		};
 
-		const hashedPassword = needsPassword ? await BcryptJS.encryptPassword(password) : "";
+		const hashedPassword = needsPassword ? await BcryptJS.encryptPassword(password, first_half_key) : "";
 
 		handleParamsCheck(params)
 			.then((check) => {

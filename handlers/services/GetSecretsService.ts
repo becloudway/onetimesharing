@@ -5,12 +5,20 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { SecretsStructure } from "../types/types";
 import { generateSHA256Hash } from "../helper_functions/generateSHA256Hash";
 
+type GetSecretData = {
+	Item: {
+		password: string;
+	}
+}
+
 const GetSecretsService = class {
-	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
-		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
+	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: GetSecretData, route: string) {
+		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
 			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
-			const password = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.password) || "";
+			const password = (data && data.Item.password) || "";
 			const response: SecretsStructure = await SecretsRepository.GetSecret(uuid);
+
+			console.log(`Password: ${password}`);
 
 			if (response.Item === undefined) {
 				return buildResponseBody(400, `No secret was found in combination with this UUID.`);
