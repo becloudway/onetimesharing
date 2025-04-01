@@ -26,8 +26,10 @@ export default class PasswordEncryption {
             padding: CryptoJS.pad.Pkcs7
         });
 
-        const hmac = CryptoJS.HmacSHA256(encrypted.ciphertext.toString(), key).toString(CryptoJS.enc.Hex);
-
+        const hmac = CryptoJS.HmacSHA256(
+            CryptoJS.enc.Hex.parse(encrypted.ciphertext.toString()), key
+        ).toString(CryptoJS.enc.Hex);
+        
         return `${salt}:${iv}:${encrypted.ciphertext.toString(CryptoJS.enc.Hex)}:${hmac}`;
     }
 
@@ -36,7 +38,9 @@ export default class PasswordEncryption {
         const key = this.deriveKey(password, salt);
 
         // Verify HMAC for authentication
-        const calculatedHmac = CryptoJS.HmacSHA256(ciphertext, key).toString(CryptoJS.enc.Hex);
+        const calculatedHmac = CryptoJS.HmacSHA256(
+            CryptoJS.enc.Hex.parse(ciphertext), key
+        ).toString(CryptoJS.enc.Hex);        
         if (calculatedHmac !== hmac) {
             throw new Error("Decryption failed: Authentication error (HMAC mismatch).");
         }
