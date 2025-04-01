@@ -49,7 +49,7 @@ function SHEEncryption() {
 					iv: iv,
 				});
 
-				const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`, password);
+				const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, password);
 				setEncryptedURLPart(generatedEncryptedURLPart);
 				
 				setLoading(false);
@@ -111,7 +111,7 @@ function SHEEncryption() {
 					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
 					<div className="relative">
 						<CopyToClipBoard
-							text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#${encryptedURLPart}`}
+							text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#${encryptedURLPart}`}
 						/>
 						<input
 							readOnly
@@ -120,7 +120,7 @@ function SHEEncryption() {
 							className="text-center w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
 							value={
 								secretURL.uuid &&
-								`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#${encryptedURLPart}`
+								`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#${encryptedURLPart}`
 							}
 						/>
 					</div>
