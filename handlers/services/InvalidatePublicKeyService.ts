@@ -3,10 +3,12 @@ import SecretsRepository from "../repositories/SecretsRepository";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import { APIGatewayProxyEvent } from "aws-lambda";
 
+import validator from "validator";
+
 const InvalidatePublicKeyService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
 		if (lambdaEvent.httpMethod === "DELETE" && lambdaEvent.path.includes(route)) {
-			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
+			const uuid = validator.escape((lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "");
 
 			if (!process.env.statemachine_arn) return buildResponseBody(400, "Failed to get Arn");
 
