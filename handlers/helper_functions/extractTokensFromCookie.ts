@@ -1,6 +1,5 @@
-const extractTokensFromCookie = (cookie: string, tokenName: string) => {
-    const tokenRegex = new RegExp(`${tokenName}=([^;]+)`);
-    const tokenMatch = cookie.match(tokenRegex);
+const extractTokensFromCookie = (cookie: string) => {
+    const tokenMatch = cookie.match(/auth_token=([^;]+)/);
     return tokenMatch ? tokenMatch[1] : null;
 };
 
