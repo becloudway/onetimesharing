@@ -9,12 +9,12 @@
 
 Welcome to the official repository for OneTimeSharing! This open-source project aims to provide end-to-end encryption when sharing secrets over the web. The project was made open-source to provide transparency about how your secrets will be stored/handled in the application.
 
+For more information on how to use OneTimeSharing, take a look at the [Usage Guide](USAGE_GUIDE.md)
+
 ## Table of Contents
 
 - [Installation](#installation)
-- [Methods](#methods)
-  - [Second-half encryption](#second-half-encryption)
-  - [Keypair encryption](#public-private-key-encryption)
+- [Methods and Encryption](#methods-and-encryption)
 - [Hosting](#hosting)
 - [How it works](#how-it-works)
 - [Contribution guide](#contribution-guide)
@@ -103,18 +103,8 @@ The application is divided into 3 sections:
 <b>Infra</b>  
  In this section the infrastructure is defined as code. For this the Amazon CDK is used to define all services necessary and deploy them.
 
-## Methods
-
-- **SHE encryption (Second half encryption)**
-- **PKI encryption (Keypair encryption)**
-
-## Second-half encryption
-
-In this method we provide encryption using AES-256, a key and an IV is generated. When the secret is encrypted using this key. It is sent to the backend along with the second half of the encryption key. We do this so that the server does not have knowledge of the whole key and therefore cannot decrypt the secret. The only person that can decrypt it is the person with the generated URL as this stores the first half of the key along with the IV and the id to fetch and decrypt the secret. The lather is provided to the frontend using a hash parameter in the url. This parameter ensures that no data of the first half key and the id is sent in any way to any server as a hash parameter is only accessable client-side. This means that there is no way for the server or the admins of the server to decrypt the secrets that are stored. We provide this encryption type so that the receiver of the client does not need to do any work except receive and open the link.
-
-## Public-Private key encryption
-
-This method of encryption is a little bit more involved for the receiver of the secret. Because first of the receiver needs to go to the root directory of the application and generate a PGP keypair with a passphrase. The public key is then sent to the sender of the secret and he can use this to encrypt the secret. This generates a link with only a uuid to retrieve the secret. But this also ensures that the only person that is able to decrypt the secret is the receiver and the owner of the correct private key/passphrase combination.
+## Methods and Encryption
+More technical information can be found in the [Technical Usage Guide](TECH_USAGE_GUIDE.md)
 
 ## We Develop with Github
 
