@@ -5,6 +5,8 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { SecretsStructure } from "../types/types";
 import { generateSHA256Hash } from "../helper_functions/generateSHA256Hash";
 
+import validator from "validator";
+
 type GetSecretData = {
 	Item: {
 		password: string;
@@ -14,8 +16,8 @@ type GetSecretData = {
 const GetSecretsService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: GetSecretData, route: string) {
 		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
-			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
-			const password = (data && data.Item.password) || "";
+			const uuid = validator.escape((lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "");
+			const password = validator.escape((data && data.Item.password) || "");
 			const response: SecretsStructure = await SecretsRepository.GetSecret(uuid);
 
 			console.log(`Password: ${password}`);

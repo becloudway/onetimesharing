@@ -3,12 +3,14 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import CognitoRepository from "../repositories/CognitoRepository";
 import { extractTokensFromCookie } from "../helper_functions/extractTokensFromCookie";
 
+import validator from "validator";
+
 const AuthenticationService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
 		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
-			const clientId = process.env.clientID || "";
-			const redirectURI = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "";
-			const code = (lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "";
+			const clientId = validator.escape(process.env.clientID || "");
+			const redirectURI = validator.escape((lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.redirectURI) || "");
+			const code = validator.escape((lambdaEvent.queryStringParameters && lambdaEvent.queryStringParameters.code) || "");
 
 			//Handle the login
 			if (lambdaEvent.path.includes("login")) {
@@ -19,7 +21,7 @@ const AuthenticationService = class {
 					return buildResponseBody(
 						302,
 						JSON.stringify({
-							url: `${process.env.baseURL}/login?client_id=${process.env.clientID}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
+							url: `${process.env.baseURL}/login?client_id=${clientId}&response_type=code&scope=email+openid&redirect_uri=${redirectURI}`,
 						})
 					);
 
