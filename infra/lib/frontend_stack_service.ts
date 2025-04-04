@@ -25,7 +25,7 @@ export class FrontendStackService extends Construct {
 			defaultAction: {
 				allow: {}
 			},
-			scope: 'CLOUDFRONT',
+			scope: 'REGIONAL',
 			visibilityConfig: {
 			cloudWatchMetricsEnabled: true,
 			metricName:'MetricForWebACLCDK',
