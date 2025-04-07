@@ -7,6 +7,7 @@ import { OneTimeSharingCiCdStack } from "../lib/onetimesharing-cicd-stack";
 import { OneTimeSharingFrontendStack } from "../lib/onetimesharing-frontend-stack";
 import { OneTimeSharingCognitoStack } from "../lib/onetimesharing-cognito-stack";
 import { OneTimeSharingAsyncDeleteStackService } from "../lib/onetimesharing-stepfunctions-stack";
+import { OneTimeSharingWAFStack } from "../lib/onetimesharing-waf-stack";
 
 const AWS_ENVIRONMENT = {
 	account: process.env.CDK_DEFAULT_ACCOUNT,
@@ -46,8 +47,11 @@ const ProdApiStack = new OneTimeSharingApiStack(app, "OneTimeSharingApiStack", {
 	env: AWS_ENVIRONMENT,
 });
 
+const ProdWAFStack = new OneTimeSharingWAFStack(app, "OneTimeSharingWAFStack", {});
+
 const ProdFrontendStack = new OneTimeSharingFrontendStack(app, "OneTimeSharingFrontendStack", {
 	environmentName: "prod",
 	apiGateway: ProdApiStack.ApiGateway,
+	cfnWebACLARN: ProdWAFStack.webAclArn,
 	env: AWS_ENVIRONMENT,
 });

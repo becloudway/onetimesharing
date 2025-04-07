@@ -7,6 +7,7 @@ import { RestApi } from "aws-cdk-lib/aws-apigateway";
 interface FrontendStackProps extends cdk.StackProps {
 	environmentName: string;
 	apiGateway: RestApi;
+	cfnWebACLARN: string;
 }
 
 export class OneTimeSharingFrontendStack extends cdk.Stack {
@@ -14,6 +15,6 @@ export class OneTimeSharingFrontendStack extends cdk.Stack {
 		super(scope, id, props);
 
 		// The code that defines your stack goes here
-		const FrontendStackService = new frontend_stack_service.FrontendStackService(this, "Secrets", props.environmentName, props.apiGateway);
+		const FrontendStackService = new frontend_stack_service.FrontendStackService(this, "Secrets", props.environmentName, props.apiGateway, props.cfnWebACLARN);
 	}
 }
