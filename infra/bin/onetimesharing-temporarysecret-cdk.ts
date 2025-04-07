@@ -52,6 +52,5 @@ const ProdWAFStack = new OneTimeSharingWAFStack(app, "OneTimeSharingWAFStack", {
 const ProdFrontendStack = new OneTimeSharingFrontendStack(app, "OneTimeSharingFrontendStack", {
 	environmentName: "prod",
 	apiGateway: ProdApiStack.ApiGateway,
-	cfnWebACLARN: ProdWAFStack.webAclArn,
 	env: AWS_ENVIRONMENT,
 });
