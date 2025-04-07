@@ -12,7 +12,7 @@
 		"integration-test": "npx playwright test --workers=1",
 		"deploy-codecontainer": "cdk deploy -e OneTimeSharingCiCdStack --require-approval='never'",
 		"deploy-cognito": "cdk deploy -e OneTimeSharingCognitoStack --require-approval='never'",
-		"deploy": "npm run synth && npm run deploy-codecontainer && npm run deploy-cognito && npm run deploy-backend && npm run deploy-asyncdelete && npm run deploy-waf && npm run deploy-frontend",
+		"deploy": "npm run synth && npm run deploy-codecontainer && npm run deploy-cognito && npm run deploy-backend && npm run deploy-asyncdelete && npm run deploy-frontend",
 		"deploy-backend": "cdk deploy -e OneTimeSharingStorageStack OneTimeSharingApiStack --require-approval='never'",
 		"deploy-frontend": "cdk deploy -e OneTimeSharingFrontendStack --require-approval='never'",
 		"deploy-asyncdelete": "cdk deploy -e OneTimeSharingAsyncDeleteStack --require-approval='never'",

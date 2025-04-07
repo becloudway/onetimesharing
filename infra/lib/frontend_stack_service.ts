@@ -15,7 +15,7 @@ import { Duration, RemovalPolicy } from "aws-cdk-lib";
 import * as cdk from "aws-cdk-lib";
 
 export class FrontendStackService extends Construct {
-	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any, cfnWebACLARN: string) {
+	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any) {
 		super(scope, id);
 
 		const stack = cdk.Stack.of(this);
@@ -66,7 +66,7 @@ export class FrontendStackService extends Construct {
 					ttl: Duration.seconds(0),
 				},
 			],
-			webAclId: cfnWebACLARN,
+			webAclId: "arn:aws:wafv2:us-east-1:491647458157:global/webacl/GlobalWebACL/35bd810b-6236-414c-ae56-680d7efd78c9",
 		});
 
 		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {
