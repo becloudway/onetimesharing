@@ -12,65 +12,13 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import { RestApiOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
-import { aws_wafv2 as wafv2 } from 'aws-cdk-lib';
 import * as cdk from "aws-cdk-lib";
 
 export class FrontendStackService extends Construct {
-	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any) {
+	constructor(scope: Construct, id: string, environmentName: string, apiGateway: any, cfnWebACLARN: string) {
 		super(scope, id);
 
 		const stack = cdk.Stack.of(this);
-
-		const cfnWebACL = new wafv2.CfnWebACL(this, 'MyCDKWebAcl', {
-			defaultAction: {
-				allow: {}
-			},
-			scope: 'REGIONAL',
-			visibilityConfig: {
-			cloudWatchMetricsEnabled: true,
-			metricName:'MetricForWebACLCDK',
-			sampledRequestsEnabled: true,
-			},
-			name:"MyCDKWebAcl",
-			rules: [
-				{
-				  name: 'CRSRule',
-				  priority: 0,
-				  statement: {
-					managedRuleGroupStatement: {
-					  name: 'AWSManagedRulesCommonRuleSet',
-					  vendorName: 'AWS'
-					}
-				  },
-				  visibilityConfig: {
-					cloudWatchMetricsEnabled: true,
-					metricName: 'MetricForWebACLCDK-CRS',
-					sampledRequestsEnabled: true,
-				  },
-				  overrideAction: {
-					none: {}
-				  }
-				},
-				{
-				  name: 'BruteForceProtection',
-				  priority: 1,
-				  statement: {
-					rateBasedStatement: {
-					  limit: 100, // Max 100 requests per 5 minutes per IP
-					  aggregateKeyType: 'IP'
-					}
-				  },
-				  action: {
-					block: {}
-				  },
-				  visibilityConfig: {
-					cloudWatchMetricsEnabled: true,
-					metricName: 'MetricForWebACLCDK-BruteForce',
-					sampledRequestsEnabled: true,
-				  }
-				}
-			  ]			  
-		});
 
 		const bucket = new s3.Bucket(this, `${stack.account}-onetimesharing-${environmentName}-frontend`, {
 			bucketName: `${stack.account}-onetimesharing-${environmentName}-frontend`,
@@ -118,7 +66,7 @@ export class FrontendStackService extends Construct {
 					ttl: Duration.seconds(0),
 				},
 			],
-			webAclId: cfnWebACL.attrArn,
+			webAclId: cfnWebACLARN,
 		});
 
 		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {
