@@ -4,6 +4,8 @@ import SecretsRepository from "../repositories/SecretsRepository";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { SecretsStructure } from "../types/types";
 
+import validator from "validator";
+
 const PostSecretsService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: SecretsStructure, route: string) {
 		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
@@ -27,20 +29,32 @@ const PostSecretsService = class {
           }
       */
 
+		  let sanitizedData = {
+			Item: Object.fromEntries(
+				Object.entries({
+					encryption_type: route === "/addSHE" ? "SHE" : "E2E",
+					cyphertext: validator.escape(data.Item.cyphertext),
+					second_half_key: data.Item.second_half_key ? validator.escape(data.Item.second_half_key) : undefined,
+					retrievedCount: data.Item.retrievedCount,
+					passwordTries: data.Item.passwordTries,
+					ttl: data.Item.ttl,
+					public_key_uuid: route === "/addE2E" && data.Item.public_key_uuid 
+						? validator.escape(data.Item.public_key_uuid) 
+						: undefined,
+					password: data.Item.password ? validator.escape(data.Item.password) : undefined,
+					version: data.Item.version
+				}).filter(([_, value]) => value !== undefined) // Removes undefined values
+			)
+		} as SecretsStructure;		
+
 			let verification: true | ReturnType<typeof buildResponseBody> = true;
 
-			if (route === "/addSHE") verification = this.#verifyPostSHErequest(data);
-			if (route === "/addE2E") verification = this.#verifyPostE2Erequest(data);
+			if (route === "/addSHE") verification = this.#verifyPostSHErequest(sanitizedData);
+			if (route === "/addE2E") verification = this.#verifyPostE2Erequest(sanitizedData);
 
 			if (verification !== true) return verification;
 
-			data.Item = {
-				...data.Item,
-				encryption_type: route === "/addSHE" ? "SHE" : "E2E",
-				public_key_uuid: route === "/addE2E" ? (data.Item.public_key_uuid ? data.Item.public_key_uuid : undefined) : undefined,
-			};
-
-			const uuid = await SecretsRepository.PostItem(data as SecretsStructure);
+			const uuid = await SecretsRepository.PostItem(sanitizedData);
 			return this.#handlePostRequest({
 				id: uuid,
 			});

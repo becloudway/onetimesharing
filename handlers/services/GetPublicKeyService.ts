@@ -3,10 +3,12 @@ import SecretsRepository from "../repositories/SecretsRepository";
 
 import { APIGatewayProxyEvent } from "aws-lambda";
 
+import validator from "validator";
+
 const GetPublicKeyService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
 		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
-			const uuid = (lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "";
+			const uuid = validator.escape((lambdaEvent.pathParameters && lambdaEvent.pathParameters.uuid) || "");
 			const response: any = await SecretsRepository.GetPublicKey(uuid);
 
 			if (response === undefined) {

@@ -3,12 +3,14 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import CognitoRepository from "../repositories/CognitoRepository";
 import { extractTokensFromCookie } from "../helper_functions/extractTokensFromCookie";
 
+import validator from "validator";
+
 const RefreshTokenService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, route: string) {
 		if (lambdaEvent.httpMethod === "GET" && lambdaEvent.path.includes(route)) {
-			const clientId = process.env.clientID || "";
-			const cookie = lambdaEvent.headers.Cookie || "";
-			const refresh_token = extractTokensFromCookie(cookie, "refresh_token") || "";
+			const clientId = validator.escape(process.env.clientID || "");
+			const cookie = validator.escape(lambdaEvent.headers.Cookie || "");
+			const refresh_token = validator.escape(extractTokensFromCookie(cookie, "refresh_token") || "");
 
             if(refresh_token === "") return buildResponseBody(400, "The request should contain a refresh_token.");
 

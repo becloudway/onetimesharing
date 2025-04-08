@@ -15,6 +15,7 @@ import { Api } from "./classes/api";
 import VerifyScreen from "./components/VerifyScreen";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
+import PasswordEncryption from "./classes/password_encryption";
 
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -66,18 +67,22 @@ function SHEDecryption() {
 
 	const fetchSecret = async (password: string, version: number, needsPassword: boolean) => {
 		const searchParams = new URLSearchParams(window.location.search);
-		const first_half_key = window.location.hash.split("&")[0].split("=")[1];
+		const decryptedURLPart = PasswordEncryption.decrypt(window.location.hash.slice(1), password);
 		const hashValue = {
-			first_half_key: window.location.hash.split("&")[0].split("=")[1],
-			iv: window.location.hash.split("&")[1].split("=")[1],
+			first_half_key: decryptedURLPart.split("&")[0].split("=")[1],
+			iv: decryptedURLPart.split("&")[1].split("=")[1],
 		};
+
+		console.log(hashValue.first_half_key);
+		console.log(password);
+
 		const params = {
 			uuid: searchParams.get("uuid") || "",
 			first_half_key: hashValue.first_half_key || "",
 			iv: hashValue.iv || "",
 		};
 
-		const hashedPassword = needsPassword ? await BcryptJS.encryptPassword(password, first_half_key) : "";
+		const hashedPassword = needsPassword ? await BcryptJS.encryptPassword(password, hashValue.first_half_key) : "";
 
 		handleParamsCheck(params)
 			.then((check) => {

@@ -40,7 +40,7 @@ export class FrontendStackService extends Construct {
 			securityHeadersBehavior: {
 				contentSecurityPolicy: {
 					override: true,
-					contentSecurityPolicy: "default-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self'; script-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self' 'unsafe-inline'; style-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self' 'unsafe-inline'",
+					contentSecurityPolicy: "default-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self'; script-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com https://cdn.jsdelivr.net 'self'; style-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com https://cdn.jsdelivr.net https://fonts.googleapis.com 'self' 'unsafe-inline'; font-src https://fonts.gstatic.com 'self'",
 				},
 				// Optionally, add other security headers here
 				strictTransportSecurity: {
@@ -66,6 +66,7 @@ export class FrontendStackService extends Construct {
 					ttl: Duration.seconds(0),
 				},
 			],
+			webAclId: "arn:aws:wafv2:us-east-1:491647458157:global/webacl/GlobalWebACL/35bd810b-6236-414c-ae56-680d7efd78c9",
 		});
 
 		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {

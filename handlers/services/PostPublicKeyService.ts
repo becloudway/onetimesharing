@@ -4,22 +4,29 @@ import SecretsRepository from "../repositories/SecretsRepository";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { PublicKeyRequestBody, SignedURLResponse } from "../types/types";
 
+import validator from "validator";
+
 const PostPublicKeyService = class {
 	static async routeRequest(lambdaEvent: APIGatewayProxyEvent, data: PublicKeyRequestBody, route: string) {
 		/**
 		 * Check if the request is a POST request and if the route is correct.
 		 */
+
+		let sanitizedData = {
+			public_key: validator.escape(data.public_key)
+		} as PublicKeyRequestBody;
+
 		if (lambdaEvent.httpMethod === "POST" && lambdaEvent.path.includes(route)) {
 			/**
 			 * Verifies the request body.
 			 */
-			const verification: true | ReturnType<typeof buildResponseBody> = this.#verifiyPublicKeyRequest(data);
+			const verification: true | ReturnType<typeof buildResponseBody> = this.#verifiyPublicKeyRequest(sanitizedData);
 			if (verification !== true) return verification;
 
 			/**
 			 * Sends the request to the SecretsRepository.
 			 */
-			const id: any = await SecretsRepository.PostPublicKey(data.public_key);
+			const id: any = await SecretsRepository.PostPublicKey(sanitizedData.public_key);
 
 			/**
 			 * Handles the response from the SecretsRepository.

@@ -16,6 +16,7 @@
 		"deploy-backend": "cdk deploy -e OneTimeSharingStorageStack OneTimeSharingApiStack --require-approval='never'",
 		"deploy-frontend": "cdk deploy -e OneTimeSharingFrontendStack --require-approval='never'",
 		"deploy-asyncdelete": "cdk deploy -e OneTimeSharingAsyncDeleteStack --require-approval='never'",
+		"deploy-waf": "cdk deploy -e OneTimeSharingWAFStack --require-approval='never'",
 		"synth": "npm run build-backend && npm run build-frontend && cdk bootstrap && cdk synth --app 'npx ts-node bin/onetimesharing-temporarysecret-cdk.ts'",
 		"build-backend": "cd ../handlers && npm run build && cd dist && zip -r ../dist.zip *",
 		"build-frontend": "cd ../app && npm run build"

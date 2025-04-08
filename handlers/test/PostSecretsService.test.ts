@@ -18,7 +18,7 @@ describe('PostSecretsService', () => {
   test('should handle successful POST request', async () => {
     const lambdaEvent: any = {
       httpMethod: 'POST',
-      path: '/secrets',
+      path: '/addSHE',
     };
 
     const data: SecretsStructure = {
@@ -34,7 +34,7 @@ describe('PostSecretsService', () => {
     const uuid = 'generated-uuid';
     (SecretsRepository.PostItem as jest.Mock).mockResolvedValueOnce(uuid);
 
-    await PostSecretsService.routeRequest(lambdaEvent, data, '/secrets');
+    await PostSecretsService.routeRequest(lambdaEvent, data, '/addSHE');
 
     expect(SecretsRepository.PostItem).toHaveBeenCalledWith(data);
     expect(buildResponseBody).toHaveBeenCalledWith(200, JSON.stringify({ id: uuid }));

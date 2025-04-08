@@ -14,6 +14,8 @@ import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
+import PasswordEncryption from "./classes/password_encryption";
+import PasswordRules from "./classes/password-rules";
 
 function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -22,6 +24,7 @@ function SHEEncryption() {
 		first_half_key: "",
 		iv: "",
 	});
+	const [encryptedURLPart, setEncryptedURLPart] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>("");
 
@@ -46,6 +49,10 @@ function SHEEncryption() {
 					first_half_key: first_half_key,
 					iv: iv,
 				});
+
+				const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, password);
+				setEncryptedURLPart(generatedEncryptedURLPart);
+
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -58,6 +65,14 @@ function SHEEncryption() {
 		if (!secret) {
 			errorHandling("Please enter a secret");
 			return;
+		}
+
+		if (password) {
+			const passwordRulesResponse = PasswordRules.checkPasswordRules(password);
+			if (!passwordRulesResponse.valid) {
+				errorHandling(passwordRulesResponse.message);
+				return;
+			}
 		}
 
 		await AES256.encryptSecret(secret).then((res) => {
@@ -89,6 +104,9 @@ function SHEEncryption() {
 						onChange={(e) => setSecret(e.target.value)}
 					></textarea>
 					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Add a password to your secret</div>
+					{
+						password !== "" && <ul style={{listStyle: "disc"}} className={`mx-auto ml-[30px] font-bold text-[12px] opacity-60 ${PasswordRules.checkPasswordRules(password).valid ? "text-green-500" : "text-black"}`}><li>Passwords must at least contain 8 characters.</li></ul>
+					}
 					<input
 						type="password"
 						placeholder="Enter your password here"
@@ -104,22 +122,19 @@ function SHEEncryption() {
 					</button>
 					<div className="text-[#007BEC] text-[18px] font-bold mt-[12px]">Send the following link to the recipient</div>
 					<div className="relative">
-						<CopyToClipBoard
-							text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}\#first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`}
-						/>
+						<CopyToClipBoard text={`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#${encryptedURLPart}`} />
 						<input
 							readOnly
 							type="text"
 							placeholder="Your secret link will be generated here"
 							className="text-center w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC] resize-none"
-							value={
-								secretURL.uuid &&
-								`${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#first_half_key=${secretURL.first_half_key}&iv=${secretURL.iv}`
-							}
+							value={secretURL.uuid && `${window.location.origin}/decryptSHE?uuid=${secretURL.uuid}#${encryptedURLPart}`}
 						/>
 					</div>
 				</div>
-				<a className="flex items-center justify-center gap-[10px] mt-[20px]" href="https://cloudway.be/">Powered by <img className="h-5" src={CloudwayLogo} /></a>
+				<a className="flex items-center justify-center gap-[10px] mt-[20px]" href="https://cloudway.be/">
+					Powered by <img className="h-5" src={CloudwayLogo} />
+				</a>
 			</div>
 		</Container>
 	);
