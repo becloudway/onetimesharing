@@ -40,7 +40,7 @@ export class FrontendStackService extends Construct {
 			securityHeadersBehavior: {
 				contentSecurityPolicy: {
 					override: true,
-					contentSecurityPolicy: "default-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self'; script-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self' 'nonce-cKKAVv+9LVgzr0UTThKgog=='; style-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self' 'nonce-cKKAVv+9LVgzr0UTThKgog=='",
+					contentSecurityPolicy: "default-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com 'self'; script-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com https://cdn.jsdelivr.net 'self'; style-src https://cloudway.be https://*.cloudway.be https://onetimesharing.com https://*.onetimesharing.com https://cdn.jsdelivr.net 'self'",
 				},
 				// Optionally, add other security headers here
 				strictTransportSecurity: {
