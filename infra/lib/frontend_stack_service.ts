@@ -66,7 +66,7 @@ export class FrontendStackService extends Construct {
 					ttl: Duration.seconds(0),
 				},
 			],
-			webAclId: "arn:aws:wafv2:us-east-1:491647458157:global/webacl/GlobalWebACL/35bd810b-6236-414c-ae56-680d7efd78c9",
+			webAclId: "arn:aws:wafv2:us-east-1:129820587654:global/webacl/GlobalWebACL/90c9cb1d-05da-4e0f-a73a-b8b0546e6ce9",
 		});
 
 		cloudfrontDistribution.addBehavior("/api/*", new RestApiOrigin(apiGateway), {
