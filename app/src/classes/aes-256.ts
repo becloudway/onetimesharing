@@ -28,10 +28,11 @@ export default class AES256 {
 			const cryptoIV = CryptoJS.enc.Hex.parse(iv);
 
 			// Encrypt the secret
-			const encrypted = CryptoJS.AES.encrypt(secret, cryptoKey, { iv: cryptoIV });
+			const encrypted = CryptoJS.AES.encrypt(secret, cryptoKey, { iv: cryptoIV }).toString();
+			let encData = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted));
 
 			return {
-				encrypted: encrypted.toString(),
+				encrypted: encData,
 				key,
 				iv,
 			};
@@ -47,7 +48,8 @@ export default class AES256 {
 			const cryptoIV = CryptoJS.enc.Hex.parse(iv);
 
 			// Decrypt the secret
-			const decrypted = CryptoJS.AES.decrypt(encrypted, cryptoKey, { iv: cryptoIV });
+			let decData = CryptoJS.enc.Base64.parse(encrypted).toString(CryptoJS.enc.Utf8);
+			const decrypted = CryptoJS.AES.decrypt(decData, cryptoKey, { iv: cryptoIV });
 
 			return decrypted.toString(CryptoJS.enc.Utf8);
 		} catch (error) {
