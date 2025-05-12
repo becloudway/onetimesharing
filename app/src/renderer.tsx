@@ -9,7 +9,6 @@ import E2Edecryption from "./E2E-decryption";
 import GenerateSHE from "./SHE-encryption";
 import SHEDecryption from "./SHE-decryption";
 import Navigation from "./Navigation";
-import Callback from "./Callback";
 import ErrorPage from "./components/ErrorPage";
 
 const rootElement = document.getElementById("root");
@@ -22,15 +21,6 @@ if (rootElement) {
 				<>
 					<GlobalStyle />
 					<Navigation />
-				</>
-			),
-		},
-		{
-			path: "/callback",
-			element: (
-				<>
-					<GlobalStyle />
-					<Callback />
 				</>
 			),
 		},
