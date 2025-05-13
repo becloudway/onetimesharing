@@ -128,10 +128,10 @@ export class ApiStackService extends Construct {
 		// 	},
 		// });
 
-		const cognitoClientID = cdk.Fn.importValue("CognitoClientID");
-		const hostedUI = cdk.Fn.importValue("CognitoHostedURL");
+		// const cognitoClientID = cdk.Fn.importValue("CognitoClientID");
+		// const hostedUI = cdk.Fn.importValue("CognitoHostedURL");
 
-		const login = new lambda.Function(this, "LoginHandler", {
+		/* const login = new lambda.Function(this, "LoginHandler", {
 			functionName: `onetimesharing-${environmentName}-login`,
 			runtime: lambda.Runtime.NODEJS_18_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-login.zip`),
@@ -162,7 +162,7 @@ export class ApiStackService extends Construct {
 				baseURL: hostedUI,
 				clientID: cognitoClientID,
 			},
-		});
+		}); */
 
 		/*
             API Gateway Lambda Integrations
@@ -201,7 +201,7 @@ export class ApiStackService extends Construct {
 		// 	requestTemplates: { "application/json": '{ "statusCode": "200" }' },
 		// });
 
-		const loginIntegration = new apigateway.LambdaIntegration(login, {
+		/* const loginIntegration = new apigateway.LambdaIntegration(login, {
 			requestTemplates: { "application/x-www-form-urlencoded": '{ "statusCode": "200" }' },
 		});
 
@@ -211,7 +211,7 @@ export class ApiStackService extends Construct {
 
 		const refreshTokenIntegration = new apigateway.LambdaIntegration(refreshToken, {
 			requestTemplates: { "application/json": '{ "statusCode": "200" }' },
-		});
+		}); */
 
 		/*
             Defining of the routes from the Gateway to the Lambda functions
@@ -224,9 +224,9 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.GET_SHE_SECRET).addResource("{uuid}").addMethod("POST", getSHESecretsIntegration); // POST /
 		apiRoute.addResource(eMethods.POST_SHE_SECRET).addMethod("POST", postSHESecretsIntegration); // POST /
 
-		apiRoute.addResource(eMethods.LOGIN).addMethod("GET", loginIntegration);
+		/* apiRoute.addResource(eMethods.LOGIN).addMethod("GET", loginIntegration);
 		apiRoute.addResource(eMethods.LOGOUT).addMethod("GET", logoutIntegration);
-		apiRoute.addResource(eMethods.REFRESH).addMethod("GET", refreshTokenIntegration);
+		apiRoute.addResource(eMethods.REFRESH).addMethod("GET", refreshTokenIntegration); */
 
 		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
