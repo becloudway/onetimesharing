@@ -29,23 +29,24 @@ const PostSecretsService = class {
           }
       */
 
-		  let sanitizedData = {
-			Item: Object.fromEntries(
-				Object.entries({
-					encryption_type: route === "/addSHE" ? "SHE" : "E2E",
-					cyphertext: validator.escape(data.Item.cyphertext),
-					second_half_key: data.Item.second_half_key ? validator.escape(data.Item.second_half_key) : undefined,
-					retrievedCount: data.Item.retrievedCount,
-					passwordTries: data.Item.passwordTries,
-					ttl: data.Item.ttl,
-					public_key_uuid: route === "/addE2E" && data.Item.public_key_uuid 
-						? validator.escape(data.Item.public_key_uuid) 
-						: undefined,
-					password: data.Item.password ? validator.escape(data.Item.password) : undefined,
-					version: data.Item.version
-				}).filter(([_, value]) => value !== undefined) // Removes undefined values
-			)
-		} as SecretsStructure;		
+			let sanitizedData: SecretsStructure = {
+				Item: {
+					encryption_type: route === "/addSHE" ? "SHE" : "E2E", // Assign based on route
+					cyphertext: validator.escape(data.Item.cyphertext), // Ensure cyphertext is present
+					second_half_key: data.Item.second_half_key ? validator.escape(data.Item.second_half_key) : undefined, // Optional field
+					retrievedCount: data.Item.retrievedCount, // Ensure retrievedCount is present (even if optional)
+					passwordTries: data.Item.passwordTries, // Ensure passwordTries is present (required)
+					ttl: data.Item.ttl, // Optional field
+					public_key_uuid: route === "/addE2E" && data.Item.public_key_uuid ? validator.escape(data.Item.public_key_uuid) : undefined, // Optional field, only for /addE2E
+					password: data.Item.password ? validator.escape(data.Item.password) : undefined, // Optional field
+					version: data.Item.version, // Optional field
+				},
+			};
+
+			// Filter out undefined values to match the expected shape of SecretsStructure
+			sanitizedData.Item = Object.fromEntries(Object.entries(sanitizedData.Item).filter(([_, value]) => value !== undefined));
+
+			// Now sanitizedData.Item will have the required fields correctly set
 
 			let verification: true | ReturnType<typeof buildResponseBody> = true;
 
