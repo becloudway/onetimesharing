@@ -29,7 +29,7 @@ const PostSecretsService = class {
           }
       */
 
-			let sanitizedData: SecretsStructure = {
+			let sanitizedData = {
 				Item: {
 					encryption_type: route === "/addSHE" ? "SHE" : "E2E", // Assign based on route
 					cyphertext: validator.escape(data.Item.cyphertext), // Ensure cyphertext is present
@@ -41,10 +41,10 @@ const PostSecretsService = class {
 					password: data.Item.password ? validator.escape(data.Item.password) : undefined, // Optional field
 					version: data.Item.version, // Optional field
 				},
-			};
+			} as SecretsStructure;
 
 			// Filter out undefined values to match the expected shape of SecretsStructure
-			sanitizedData.Item = Object.fromEntries(Object.entries(sanitizedData.Item).filter(([_, value]) => value !== undefined));
+			sanitizedData.Item = Object.fromEntries(Object.entries(sanitizedData.Item).filter(([_, value]) => value !== undefined)) as any;
 
 			// Now sanitizedData.Item will have the required fields correctly set
 
