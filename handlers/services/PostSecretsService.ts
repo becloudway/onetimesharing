@@ -111,7 +111,7 @@ const PostSecretsService = class {
 					return buildResponseBody(400, "Missing public_key_uuid field.");
 				}
 
-				return buildResponseBody(400, "The request body must only contain the following fields: cyphertext, public_key_uuid.");
+				return buildResponseBody(400, `The request body must only contain the following fields: cyphertext, public_key_uuid. The following where present: ${Object.keys(data.Item)}`);
 			}
 		} else {
 			if (!Object.keys(data.Item).includes("cyphertext")) {
