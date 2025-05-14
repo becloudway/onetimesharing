@@ -100,14 +100,15 @@ const PostSecretsService = class {
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
 		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
+		const { encryption_type, ...item } = data.Item;
 
 		if (publicKeyIsIncluded) {
-			if (Object.keys(data.Item).length !== 2) {
-				if (!Object.keys(data.Item).includes("cyphertext")) {
+			if (Object.keys(item).length !== 2) {
+				if (!Object.keys(item).includes("cyphertext")) {
 					return buildResponseBody(400, "Missing cyphertext field.");
 				}
 
-				if (!Object.keys(data.Item).includes("public_key_uuid")) {
+				if (!Object.keys(item).includes("public_key_uuid")) {
 					return buildResponseBody(400, "Missing public_key_uuid field.");
 				}
 
