@@ -228,7 +228,7 @@ export class ApiStackService extends Construct {
 		apiRoute.addResource(eMethods.LOGOUT).addMethod("GET", logoutIntegration);
 		apiRoute.addResource(eMethods.REFRESH).addMethod("GET", refreshTokenIntegration); */
 
-		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("GET", getPKISecretsIntegration); // GET /
+		apiRoute.addResource(eMethods.GET_E2E_SECRET).addResource("{uuid}").addMethod("POST", getPKISecretsIntegration); // GET /
 		apiRoute.addResource(eMethods.POST_E2E_SECRET).addMethod("POST", postPKISecretsIntegration); // POST /
 
 		apiRoute.addResource(eMethods.POST_PUBLIC_KEY).addMethod("POST", postPublicKeyIntegration); // GET /
