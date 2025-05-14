@@ -32,7 +32,7 @@ const PostSecretsService = class {
 			let sanitizedData = {
 				Item: {
 					encryption_type: route === "/addSHE" ? "SHE" : "E2E", // Assign based on route
-					cyphertext: validator.escape(data.Item.cyphertext), // Ensure cyphertext is present
+					cyphertext: data.Item.cyphertext, // Ensure cyphertext is present
 					second_half_key: data.Item.second_half_key ? validator.escape(data.Item.second_half_key) : undefined, // Optional field
 					retrievedCount: data.Item.retrievedCount, // Ensure retrievedCount is present (even if optional)
 					passwordTries: data.Item.passwordTries, // Ensure passwordTries is present (required)
