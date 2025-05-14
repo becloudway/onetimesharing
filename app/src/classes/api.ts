@@ -54,7 +54,7 @@ export class Api {
 
 		return new Promise(async (resolve: (value: string) => void, reject) => {
 			await axios
-				.get(`/api/getE2E/${uuid}`, {
+				.post(`/api/getE2E/${uuid}`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
