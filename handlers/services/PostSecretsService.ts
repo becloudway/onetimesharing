@@ -38,7 +38,7 @@ const PostSecretsService = class {
 					passwordTries: data.Item.passwordTries, // Ensure passwordTries is present (required)
 					ttl: data.Item.ttl, // Optional field
 					public_key_uuid: route === "/addE2E" && data.Item.public_key_uuid ? validator.escape(data.Item.public_key_uuid) : undefined, // Optional field, only for /addE2E
-					password: data.Item.password ? validator.escape(data.Item.password) : undefined, // Optional field
+					password: data.Item.password ? validator.escape(data.Item.password) : "", // Optional field
 					version: data.Item.version, // Optional field
 				},
 			} as SecretsStructure;
@@ -100,7 +100,7 @@ const PostSecretsService = class {
 
 	static #verifyPostE2Erequest(data: SecretsStructure) {
 		const publicKeyIsIncluded = Object.keys(data.Item).includes("public_key_uuid");
-		const { encryption_type, ...item } = data.Item;
+		const { encryption_type, password, ...item } = data.Item;
 
 		if (publicKeyIsIncluded) {
 			if (Object.keys(item).length !== 2) {
