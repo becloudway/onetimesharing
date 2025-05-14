@@ -26,6 +26,7 @@ describe('PostSecretsService', () => {
         encryption_type: "SHE",
         cyphertext: "1234",
         second_half_key: "12345678901234567890123456789012",
+        password: "test",
         version: 2,
         passwordTries: 0,
       },
