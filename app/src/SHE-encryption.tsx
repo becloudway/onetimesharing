@@ -16,6 +16,7 @@ import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
 import PasswordEncryption from "./classes/password_encryption";
 import PasswordRules from "./classes/password-rules";
+import ShowHidePassword from "./components/ShowHidePassword";
 
 function SHEEncryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -27,6 +28,7 @@ function SHEEncryption() {
 	const [encryptedURLPart, setEncryptedURLPart] = useState<string>("");
 	const [loading, setLoading] = useState<boolean>(false);
 	const [password, setPassword] = useState<string>("");
+	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
@@ -80,6 +82,10 @@ function SHEEncryption() {
 		});
 	};
 
+	const togglePassword = () => {
+		setShowPassword(!showPassword);
+	};
+
 	return (
 		<Container className="bg-white">
 			<LoadingScreen show={loading} />
@@ -107,13 +113,16 @@ function SHEEncryption() {
 					{
 						password !== "" && <ul style={{listStyle: "disc"}} className={`mx-auto ml-[30px] font-bold text-[12px] opacity-60 ${PasswordRules.checkPasswordRules(password).valid ? "text-green-500" : "text-black"}`}><li>Passwords must at least contain 8 characters.</li></ul>
 					}
-					<input
-						type="password"
-						placeholder="Enter your password here"
-						className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC]"
-						onChange={(e) => setPassword(e.target.value)}
-						value={password}
-					/>
+					<div className="relative">
+						<ShowHidePassword onClick={togglePassword} show={showPassword}/>
+						<input
+							type={showPassword ? "text" : "password"}
+							placeholder="Enter your password here"
+							className="w-full h-[52px] px-[14px] py-[10px]  mt-[6px] rounded-[8px] border-[1px] border-[#007BEC]"
+							onChange={(e) => setPassword(e.target.value)}
+							value={password}
+						/>
+					</div>
 					<button
 						onClick={encryptSecret}
 						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
