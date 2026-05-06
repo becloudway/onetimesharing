@@ -14,21 +14,24 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-          cache-dependency-path: ./infra/package-lock.json
+          cache-dependency-path: |
+            ./app/package-lock.json
+            ./handlers/package-lock.json
+            ./infra/package-lock.json
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
       - name: Add the environment name as env property
-        run: echo "ENVIRONMENT=dev"
+        run: echo "ENVIRONMENT=prod" >> $GITHUB_ENV
       - name: Install deps (Frontend)
         working-directory: ./app
         run: npm ci
