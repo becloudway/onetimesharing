@@ -52,8 +52,9 @@ function SHEEncryption() {
 					iv: iv,
 				});
 
-				const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, password);
-				setEncryptedURLPart(generatedEncryptedURLPart);
+				// const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, password);
+				// setEncryptedURLPart(generatedEncryptedURLPart);
+				setEncryptedURLPart(`first_half_key=${first_half_key}&iv=${iv}`);
 
 				setLoading(false);
 			})
@@ -125,7 +126,7 @@ function SHEEncryption() {
 					</div>
 					<button
 						onClick={encryptSecret}
-						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white cursor-pointer"
 					>
 						Create a secret
 					</button>

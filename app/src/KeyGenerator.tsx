@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { ReactComponent as WarningIcon } from "./assets/warning-icon.svg";
-import { ReactComponent as UploadIcon } from "./assets/upload.svg";
+import WarningIcon from "./assets/warning-icon.svg?react";
+import UploadIcon from "./assets/upload.svg?react";
 import InfoBox from "./components/InfoBox";
 
 import OpenPGP from "./classes/openpgp";

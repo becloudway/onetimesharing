@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import OneTimeSharingLogo from "./assets/logo.png";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 
-import { ReactComponent as OneClickIcon } from "./assets/oneclickicon.svg";
-import { ReactComponent as PKIIcon } from "./assets/pkiicon.svg";
-import { ReactComponent as KeyIcon } from "./assets/keypairicon.svg";
+import OneClickIcon from "./assets/oneclickicon.svg?react";
+import PKIIcon from "./assets/pkiicon.svg?react";
+import KeyIcon from "./assets/keypairicon.svg?react";
 
 const Navigation = () => {
 	const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Navigation = () => {
 				<div className="flex flex-col gap-[20px] max-w-[600px] w-full px-[10px]">
 					<div className="flex flex-wrap gap-[20px]">
 						<button
-							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
+							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] cursor-pointer"
 							onClick={() => {
 								navigate("/encryptshe");
 							}}
@@ -27,7 +27,7 @@ const Navigation = () => {
 							OneClick sharing
 						</button>
 						<button
-							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
+							className="w-full mx-auto max-w-[278px] h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] cursor-pointer"
 							onClick={() => {
 								navigate("/encrypt");
 							}}
@@ -37,7 +37,7 @@ const Navigation = () => {
 						</button>
 					</div>
 					<button
-						className="w-full h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px]"
+						className="w-full h-[120px] bg-white rounded-md shadow border border-stone-300 flex justify-center items-center gap-[12px] cursor-pointer"
 						onClick={() => {
 							navigate("/keygenerator");
 						}}

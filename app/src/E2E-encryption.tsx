@@ -99,7 +99,7 @@ function E2Eencryption() {
 					/>
 					<button
 						onClick={encryptSecret}
-						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
+						className="mx-auto mt-[20px] text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white cursor-pointer"
 					>
 						Create a secret
 					</button>

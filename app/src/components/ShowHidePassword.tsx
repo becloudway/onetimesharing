@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as ShowIcon } from "../assets/show-password.svg";
-import { ReactComponent as HideIcon } from "../assets/hide-password.svg";
+import ShowIcon from "../assets/show-password.svg?react";
+import HideIcon from "../assets/hide-password.svg?react";
 
 interface IShowHidePassword {
     show: boolean
