@@ -8,7 +8,10 @@ export class OneTimeSharingWAFStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, {
       ...props,
-      env: { region: 'us-east-1' }, // 👈 Force WAF in us-east-1
+      env: {
+        account: props?.env?.account,
+        region: 'us-east-1',
+      },
     });
 
     const webACL = new wafv2.CfnWebACL(this, 'GlobalWebACL', {
