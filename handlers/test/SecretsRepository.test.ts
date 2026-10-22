@@ -1,5 +1,4 @@
 import generateTTL from '../helper_functions/timeToLive';
-import { v4 as uuidv4 } from 'uuid';
 import SecretsRepository from '../repositories/SecretsRepository';
 import { SecretsStructure } from '../types/types';
 

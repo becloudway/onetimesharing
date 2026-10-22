@@ -3,9 +3,9 @@ import InvalidatePublicKeyService from "./services/InvalidatePublicKeyService";
 
 import { Handler } from "aws-lambda";
 
-export const handler: Handler = async (event, context, callback) => {
+export const handler: Handler = async (event) => {
 	try {
-		return await InvalidatePublicKeyService.stepFunctionRequest(event, context, callback);
+		return await InvalidatePublicKeyService.stepFunctionRequest(event);
 	} catch (err: any) {
 		return buildResponseBody(500, err.message || "Unknown server error");
 	}
