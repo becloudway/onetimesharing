@@ -1,11 +1,10 @@
 import generateTTL from "../helper_functions/timeToLive";
 import { ConditionalCheckFailedException, DynamoDBClient, ExecuteStatementCommand, DeleteItemCommand, UpdateItemCommand, UpdateItemCommandInput, ReturnValue } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, GetCommand, DeleteCommand, QueryCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "node:crypto";
 import { SecretsStructure } from "../types/types";
 
 import { PutObjectCommand, S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { DynamoDB } from "aws-sdk";
 import { generateSHA256Hash } from "../helper_functions/generateSHA256Hash";
 
 type DynamoDBSecretsStructure = {
@@ -27,7 +26,7 @@ const SecretsRepository = class {
 
 	//This should be of the type that the data is structured in
 	static async PostItem(data: SecretsStructure) {
-		const generatedUuid = uuidv4();
+		const generatedUuid = randomUUID();
 		const time_to_live = generateTTL();
 
 		let item: DynamoDBSecretsStructure = {
@@ -224,7 +223,7 @@ const SecretsRepository = class {
 	}
 
 	static async PostPublicKey(public_key: string) {
-		const id = uuidv4();
+		const id = randomUUID();
 		const fileName = `${id}.gpg`;
 
 		const client = new S3Client({});
@@ -295,7 +294,7 @@ const SecretsRepository = class {
 
 		console.log(gsiResponse);
 
-		const itemsToDelete = gsiResponse.Items as DynamoDB.DocumentClient.AttributeMap[];
+		const itemsToDelete = (gsiResponse.Items ?? []) as Record<string, any>[];
 
 		const deletePromises = itemsToDelete.map((item) =>
 			this.dynamo.send(

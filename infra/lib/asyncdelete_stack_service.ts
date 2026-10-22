@@ -13,7 +13,7 @@ export class AsyncDeleteStackService extends Construct {
 
 		const getPublicKeyLambda = new lambda.Function(this, "Step-GetPublicKey", {
 			functionName: `onetimesharing-${environmentName}-step-getpublickey`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-step-getPublicKey.zip`),
 			handler: "step-getPublicKey.handler",
 			environment: {
@@ -23,7 +23,7 @@ export class AsyncDeleteStackService extends Construct {
 
 		const invalidatePublicKeyLambda = new lambda.Function(this, "Step-InvalidatePublicKey", {
 			functionName: `onetimesharing-${environmentName}-step-invalidatepublickey`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-step-invalidatePublicKey.zip`),
 			handler: "step-invalidatePublicKey.handler",
 			environment: {

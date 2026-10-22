@@ -48,7 +48,7 @@ export class ApiStackService extends Construct {
 
 		const statusHandler = new lambda.Function(this, "StatusHandler", {
 			functionName: `onetimesharing-${environmentName}-statushandler`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-status.zip`),
 			handler: "status.handler",
 			environment: {
@@ -58,7 +58,7 @@ export class ApiStackService extends Construct {
 
 		const getSHESecretHandler = new lambda.Function(this, "GetSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getSHEsecretlambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getSHEsecrets.zip`),
 			handler: "getSHEsecrets.handler",
 			environment: {
@@ -68,7 +68,7 @@ export class ApiStackService extends Construct {
 
 		const postSHESecretHandler = new lambda.Function(this, "PostSecretHandler", {
 			functionName: `onetimesharing-${environmentName}-postSHEsecretlambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postSHEsecrets.zip`),
 			handler: "postSHEsecrets.handler",
 			environment: {
@@ -78,7 +78,7 @@ export class ApiStackService extends Construct {
 
 		const getE2ESecretHandler = new lambda.Function(this, "GetE2ESecretHandler", {
 			functionName: `onetimesharing-${environmentName}-getE2Esecretlambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getE2Esecrets.zip`),
 			handler: "getE2Esecrets.handler",
 			environment: {
@@ -88,7 +88,7 @@ export class ApiStackService extends Construct {
 
 		const postE2ESecretHandler = new lambda.Function(this, "PostE2ESecretHandler", {
 			functionName: `onetimesharing-${environmentName}-postE2Esecretlambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postE2Esecrets.zip`),
 			handler: "postE2Esecrets.handler",
 			environment: {
@@ -98,7 +98,7 @@ export class ApiStackService extends Construct {
 
 		const postPublicKeyHandler = new lambda.Function(this, "PostPublicKeyHandler", {
 			functionName: `onetimesharing-${environmentName}-postPublicKeylambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-postPublicKey.zip`),
 			handler: "postPublicKey.handler",
 			environment: {
@@ -108,7 +108,7 @@ export class ApiStackService extends Construct {
 
 		const getPublicKeyHandler = new lambda.Function(this, "GetPublicKeyHandler", {
 			functionName: `onetimesharing-${environmentName}-getPublicKeylambda`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-getPublicKey.zip`),
 			handler: "getPublicKey.handler",
 			environment: {
@@ -118,7 +118,7 @@ export class ApiStackService extends Construct {
 
 		// const invalidatePublicKey = new lambda.Function(this, "InvalidatePublicKeyHandler", {
 		// 	functionName: `onetimesharing-${environmentName}-invalidatePublicKeylambda`,
-		// 	runtime: lambda.Runtime.NODEJS_18_X,
+		// 	runtime: lambda.Runtime.NODEJS_24_X,
 		// 	code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-invalidatePublicKey.zip`),
 		// 	handler: "invalidatePublicKey.handler",
 		// 	environment: {
@@ -133,7 +133,7 @@ export class ApiStackService extends Construct {
 
 		/* const login = new lambda.Function(this, "LoginHandler", {
 			functionName: `onetimesharing-${environmentName}-login`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-login.zip`),
 			handler: "login.handler",
 			environment: {
@@ -144,7 +144,7 @@ export class ApiStackService extends Construct {
 
 		const logout = new lambda.Function(this, "LogoutHandler", {
 			functionName: `onetimesharing-${environmentName}-logout`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-logout.zip`),
 			handler: "logout.handler",
 			environment: {
@@ -155,7 +155,7 @@ export class ApiStackService extends Construct {
 
 		const refreshToken = new lambda.Function(this, "refreshTokenHandler", {
 			functionName: `onetimesharing-${environmentName}-refreshToken`,
-			runtime: lambda.Runtime.NODEJS_18_X,
+			runtime: lambda.Runtime.NODEJS_24_X,
 			code: lambda.Code.fromAsset(`../handlers/dist/${process.env.SHORT_SHA}-refreshToken.zip`),
 			handler: "refreshToken.handler",
 			environment: {

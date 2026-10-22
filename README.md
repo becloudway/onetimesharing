@@ -26,7 +26,7 @@ For more information on how to use OneTimeSharing, take a look at the [Usage Gui
 
 Prerequisites:
 
-- Node.JS 18.X
+- Node.JS 24.x (24.22.1 or newer, see `.nvmrc`)
 
 First of all install the dependencies in all 3 parts of the application.
 
