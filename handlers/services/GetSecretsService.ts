@@ -20,8 +20,6 @@ const GetSecretsService = class {
 			const password = validator.escape((data && data.Item.password) || "");
 			const response: SecretsStructure = await SecretsRepository.GetSecret(uuid);
 
-			console.log(`Password: ${password}`);
-
 			if (response.Item === undefined) {
 				return buildResponseBody(400, `No secret was found in combination with this UUID.`);
 			} else {

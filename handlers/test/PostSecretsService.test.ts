@@ -41,6 +41,30 @@ describe('PostSecretsService', () => {
     expect(buildResponseBody).toHaveBeenCalledWith(200, JSON.stringify({ id: uuid }));
   });
 
+  test('should accept E2E POST without password or public_key_uuid (pasted PGP key)', async () => {
+    const lambdaEvent: any = {
+      httpMethod: 'POST',
+      path: '/addE2E',
+    };
+
+    const data: SecretsStructure = {
+      Item: {
+        encryption_type: "E2E",
+        cyphertext: "1234",
+        passwordTries: 0,
+        version: 2,
+      },
+    };
+
+    const uuid = 'generated-uuid';
+    (SecretsRepository.PostItem as jest.Mock).mockResolvedValueOnce(uuid);
+
+    await PostSecretsService.routeRequest(lambdaEvent, data, '/addE2E');
+
+    expect(SecretsRepository.PostItem).toHaveBeenCalledWith(data);
+    expect(buildResponseBody).toHaveBeenCalledWith(200, JSON.stringify({ id: uuid }));
+  });
+
   test('should handle unimplemented HTTP method', async () => {
     const lambdaEvent: any = {
       httpMethod: 'GET',
