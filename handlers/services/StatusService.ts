@@ -20,6 +20,7 @@ const StatusService = class {
 					is_available: true,
 					passwordProtected: response.Item.password ? response.Item.password !== "" : false,
 					version: response.Item.version || 1,
+					password_salt: response.Item.password_salt,
 				});
 			}
 		}

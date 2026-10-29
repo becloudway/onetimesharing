@@ -49,11 +49,12 @@ For this reason, we encrypt and decrypt the secrets client side which provides E
 1. The sender creates the secret (preferably with password)
 1. The secret is encrypted using the created encryption key
 1. The encrypted secret and the second half of the encryption key is shared with the OneTimeSharing server
-1. The OneTimeSharing client generates the sharable link which includes the first half of the encryption key
+1. The OneTimeSharing server generates a keypair for this secret, stores the private key alongside the secret and returns the public key
+1. The OneTimeSharing client encrypts the first half of the encryption key with this public key and generates the sharable link which includes this encrypted value
 1. The sender shares this link with the receiver
 1. The receiver opens the link and fills in the password
-1. The OneTimeSharing client receives the encryption secret and the second half of the encryption key from the OneTimeSharing server
-1. The OneTimeSharing client combines both encryption key parts and decrypts the secret
+1. Only when the password is correct, the OneTimeSharing client receives the encrypted secret, the second half of the encryption key and the private key from the OneTimeSharing server
+1. The OneTimeSharing client decrypts the first half of the encryption key with the private key, combines both encryption key parts and decrypts the secret
 1. The receiver can view the secret.
 
 
@@ -87,20 +88,30 @@ Following visual explains how the OneTimesharing client and server communicate w
 
 ![OneClick sharing communication](screenshots/OneClick-communication.png)
 
-1. In this part of the flow a request is sent from the client to the server, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead, the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. If a password was given, it is hashed before it is sent to the server. So the payload of the request to the server will look somthing like this:
+1. In this part of the flow a request is sent from the client to the server, since the encryption of the secret is always handled client-side there is no plain text sent to the server. Instead, the secret is encrypted client-side only the ciphertext and the second half of the encryption key is sent to the server. If a password was given, it is hashed with bcrypt using a random salt before it is sent to the server. The salt is sent along, as the receiver needs it to hash the password in the same way. So the payload of the request to the server will look somthing like this:
 
 ```
 {
   "cyphertext": "nPzPuE0gERShjwmjHtEuMQ==",
   "password": 
-"$2a$10$i5FLINuWe.9DDAZ81vx0WO19lJLnMifkG/i/vFJ5m6wjdGVphw7K2",
+"$2b$10$i5FLINuWe.9DDAZ81vx0WO19lJLnMifkG/i/vFJ5m6wjdGVphw7K2",
+  "password_salt": "$2b$10$i5FLINuWe.9DDAZ81vx0WO",
   "second_half_key": "932e2c06b00b7d4ac624fcbfb727bf4a"
 }
 ```
 
 2. Based on this request, a couple of checks need to be executed. We check the length of the ciphertext and the second half key. The key should be exactly 32 bits long. As the full encryption key is 64 bits.
 2. If these checks pass, the cyphertext and second half key is stored in the database and the ID of these values is returned.
-2. This ID is returned to the frontend and is used to generate a link to the decryption page with this ID in the URL parameters as well as the first half of the key and the initialisation vector (IV) of the encryption:
+2. The server also generates an RSA-OAEP (2048 bit) keypair for this secret. The private key is stored alongside the secret, the public key is returned together with the ID.
+2. The frontend encrypts the first half of the key and the initialisation vector (IV) of the encryption with this public key. The ID and this encrypted value are used to generate a link to the decryption page:
+
+/decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb#k=QmFzZTY0dXJsIGVuY29kZWQgUlNBLU9BRVAgY2lwaGVydGV4dA...
+
+The private key is only returned by the server after the correct password was given, so the maximum of 3 password tries also applies to the encrypted part of the link. Encrypting this part with the password itself would allow anyone with the link to brute-force the password offline, which is why a server-side keypair is used instead.
+
+Note that this encryption only adds protection to password protected secrets: for a secret without a password, the private key is returned to anyone who has the link. Also, as the private key is stored alongside the secret, someone with access to both the database and the link could still decrypt the secret.
+
+Links created before this change (version 2) contain the unencrypted first half of the key and IV and are still supported:
 
 /decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb#first_half_key=a02604a70dafdf7e0b30e493ac7354fc&iv=7e1656a2b9680d73de50cae58ed550df
 
@@ -110,7 +121,7 @@ Both the OneClick and the PGP encrypted sharing follow the same process to retri
 
 ![Secret retrieval](screenshots/secret-retrieval.png)
 
-1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included.
+1. For the fetching of the secrets a request is sent from the frontend to the backend with the ID of the secret included (and the hashed password, if one was set).
 2. The backend will then check if the value exists and will otherwise return a 400 error.
 3. The cyphertext is retrieved from the server and sent back to the frontend.
 4. For the OneClick sharing option, the cyphertext will be decrypted client-side. For the PGP encryption sharing, the cyphertext can be downloaded to decrypt it on the machine of the receiver
@@ -118,9 +129,9 @@ Both the OneClick and the PGP encrypted sharing follow the same process to retri
 Important to understand, is that in step 1 the request from the client to the server only contains the ID of the secret. 
 As mentioned before, the created link for the OneClick sharing looks like this:
 
-/decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb **#first_half_key=a02604a70dafdf7e0b30e493ac7354fc&iv=7e1656a2b9680d73de50cae58ed550df**
+/decryptSHE?uuid=48cb4a64-3768-4294-a348-3d3fd767fbeb **#k=QmFzZTY0dXJsIGVuY29kZWQgUlNBLU9BRVAgY2lwaGVydGV4dA...**
 
-Browsers will not share the information behind the hashtag with any server! This means that also here, the server will not get the first half of the key!
+Browsers will not share the information behind the hashtag with any server! This means that also here, the server will not get the (encrypted) first half of the key! The private key is sent to the client, and the decryption of the link happens client-side.
 
 ### Server-side secret management
 

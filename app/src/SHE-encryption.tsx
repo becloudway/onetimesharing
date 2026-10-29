@@ -14,7 +14,7 @@ import ClickableLogo from "./components/ClickableLogo";
 import { Api } from "./classes/api";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
-import PasswordEncryption from "./classes/password_encryption";
+import FragmentEncryption from "./classes/fragment-encryption";
 import PasswordRules from "./classes/password-rules";
 import ShowHidePassword from "./components/ShowHidePassword";
 
@@ -32,29 +32,31 @@ function SHEEncryption() {
 
 	const postSecret = async (encryptedSecret: string, first_half_key: string, second_half_key: string, iv: string) => {
 		setLoading(true);
-		const hashedPassword = await BcryptJS.encryptPassword(password || "", first_half_key);
+		const passwordSalt = password ? await BcryptJS.generateSalt() : "";
+		const hashedPassword = password ? await BcryptJS.encryptPasswordWithSalt(password, passwordSalt) : "";
 		Api.PostSHESecret(
 			password
 				? {
 						cyphertext: encryptedSecret,
 						second_half_key: second_half_key,
 						password: hashedPassword,
+						password_salt: passwordSalt,
 				  }
 				: {
 						cyphertext: encryptedSecret,
 						second_half_key: second_half_key,
 				  }
 		)
-			.then((response) => {
+			.then(async (response) => {
+				// The fragment is encrypted with the per-secret public key, the private key is only released after the password check
+				const encryptedFragment = await FragmentEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, response.public_key);
+
 				setSecretURL({
-					uuid: response,
+					uuid: response.id,
 					first_half_key: first_half_key,
 					iv: iv,
 				});
-
-				// const generatedEncryptedURLPart = PasswordEncryption.encrypt(`first_half_key=${first_half_key}&iv=${iv}`, password);
-				// setEncryptedURLPart(generatedEncryptedURLPart);
-				setEncryptedURLPart(`first_half_key=${first_half_key}&iv=${iv}`);
+				setEncryptedURLPart(`k=${encryptedFragment}`);
 
 				setLoading(false);
 			})

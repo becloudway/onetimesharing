@@ -15,7 +15,7 @@ import { Api } from "./classes/api";
 import VerifyScreen from "./components/VerifyScreen";
 import CloudwayLogo from "./assets/cloudway-logo.png";
 import BcryptJS from "./classes/bcrypt";
-import PasswordEncryption from "./classes/password_encryption";
+import FragmentEncryption from "./classes/fragment-encryption";
 
 function SHEDecryption() {
 	const [secret, setSecret] = useState<string>("");
@@ -28,6 +28,29 @@ function SHEDecryption() {
 			Api.GetSHESecret(uuid, password)
 				.then((response) => {
 					decryptSecret(response.data.cyphertext, `${first_half_key}${response.data.second_half_key}`, iv);
+					setLoading(false);
+				})
+				.catch((err) => {
+					errorHandling(err);
+					setVerify(true);
+					setLoading(false);
+				});
+		}
+	};
+
+	// Version 3: the fragment is encrypted, its private key is returned together with the secret after a correct password
+	const getEncryptedFragmentSecret = async (uuid: string, encryptedFragment: string, password: string) => {
+		if (uuid && uuid.length !== 0 && uuid !== "" && uuid !== undefined) {
+			setLoading(true);
+			Api.GetSHESecret(uuid, password)
+				.then(async (response) => {
+					try {
+						const decryptedFragment = await FragmentEncryption.decrypt(encryptedFragment, response.data.fragment_private_key || "");
+						const fragmentParams = new URLSearchParams(decryptedFragment);
+						decryptSecret(response.data.cyphertext, `${fragmentParams.get("first_half_key")}${response.data.second_half_key}`, fragmentParams.get("iv") || "");
+					} catch {
+						errorHandling("The link appears to be corrupted, the secret could not be decrypted.");
+					}
 					setLoading(false);
 				})
 				.catch((err) => {
@@ -65,9 +88,23 @@ function SHEDecryption() {
 		});
 	};
 
-	const fetchSecret = async (password: string, version: number, needsPassword: boolean) => {
+	const fetchSecret = async (password: string, version: number, needsPassword: boolean, passwordSalt: string) => {
 		const searchParams = new URLSearchParams(window.location.search);
-		// const decryptedURLPart = PasswordEncryption.decrypt(window.location.hash.slice(1), password);
+
+		if (version >= 3) {
+			const uuid = searchParams.get("uuid") || "";
+			const encryptedFragment = new URLSearchParams(window.location.hash.slice(1)).get("k") || "";
+
+			if (!uuid || !encryptedFragment) {
+				errorHandling("Error checking params: " + (!uuid ? "No uuid provided" : "No encrypted key provided"));
+				return;
+			}
+
+			const hashedPassword = needsPassword ? await BcryptJS.encryptPasswordWithSalt(password, passwordSalt) : "";
+			getEncryptedFragmentSecret(uuid, encryptedFragment, hashedPassword);
+			return;
+		}
+
 		const decryptedURLPart = window.location.hash.slice(1);
 		const hashValue = {
 			first_half_key: decryptedURLPart.split("&")[0].split("=")[1],
@@ -111,9 +148,9 @@ function SHEDecryption() {
 			/>
 			{verify && (
 				<VerifyScreen
-					callback={(password: string, version: number, needsPassword: boolean) => {
+					callback={(password: string, version: number, needsPassword: boolean, passwordSalt: string) => {
 						setVerify(false);
-						fetchSecret(password, version, needsPassword);
+						fetchSecret(password, version, needsPassword, passwordSalt);
 					}}
 				/>
 			)}

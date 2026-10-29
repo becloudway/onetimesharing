@@ -4,7 +4,7 @@ import { Api } from "../classes/api";
 import styled from "styled-components";
 
 type VerifyScreenProps = {
-	callback: (password: string, version: number, needsPassword: boolean) => void;
+	callback: (password: string, version: number, needsPassword: boolean, passwordSalt: string) => void;
 };
 
 const VerifyScreen = ({ callback }: VerifyScreenProps) => {
@@ -14,6 +14,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [secretFound, setSecretFound] = useState<boolean>(false);
 	const [needsPassword, setNeedsPassword] = useState<boolean>(false);
+	const [passwordSalt, setPasswordSalt] = useState<string>("");
 
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
@@ -32,6 +33,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 				setSecretFound(res.is_available);
 				setNeedsPassword(res.passwordProtected);
 				setVersion(res.version);
+				setPasswordSalt(res.password_salt || "");
 				setLoading(false);
 			})
 			.catch((err) => {
@@ -70,7 +72,7 @@ const VerifyScreen = ({ callback }: VerifyScreenProps) => {
 					)}
 					<div className="mx-auto mt-[20px] mb-auto flex gap-[6px]">
 						<button
-							onClick={() => callback(password, version, needsPassword)}
+							onClick={() => callback(password, version, needsPassword, passwordSalt)}
 							className="text-[14px] font-bold bg-[#007BEC] px-[16px] py-[10px] rounded-[8px] text-white"
 						>
 							Get the secret

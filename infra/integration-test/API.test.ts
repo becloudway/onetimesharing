@@ -23,6 +23,7 @@ test("Adding SHE data should return status code 200 and an ID", async () => {
 
 	const responseData = await response.json();
 	expect(response.status).toBe(200);
+	expect(typeof responseData.public_key).toBe("string");
 
 	sheID = responseData.id;
 });
@@ -126,6 +127,7 @@ test("Get SHE data", async () => {
 	expect(response.status).toBe(200);
 	expect(responseData.uuid).toBe(sheID);
 	expect(responseData.cyphertext).toBe(sheData.cyphertext);
+	expect(typeof responseData.fragment_private_key).toBe("string");
 });
 
 test("Get E2E data", async () => {

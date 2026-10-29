@@ -3,6 +3,7 @@ import SecretsRepository from "../repositories/SecretsRepository";
 
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { SecretsStructure } from "../types/types";
+import { generateFragmentKeyPair } from "../helper_functions/generateFragmentKeyPair";
 
 import validator from "validator";
 
@@ -39,6 +40,7 @@ const PostSecretsService = class {
 					ttl: data.Item.ttl, // Optional field
 					public_key_uuid: route === "/addE2E" && data.Item.public_key_uuid ? validator.escape(data.Item.public_key_uuid) : undefined, // Optional field, only for /addE2E
 					password: data.Item.password ? validator.escape(data.Item.password) : undefined, // Optional field
+					password_salt: route === "/addSHE" && data.Item.password_salt ? data.Item.password_salt : undefined, // Optional field, validated (not escaped) as it is returned to the client
 					version: data.Item.version, // Optional field
 				},
 			} as SecretsStructure;
@@ -54,6 +56,16 @@ const PostSecretsService = class {
 			if (route === "/addE2E") verification = this.#verifyPostE2Erequest(sanitizedData);
 
 			if (verification !== true) return verification;
+
+			if (route === "/addSHE") {
+				// The private key is only handed out after a correct password, the public key is used client-side to encrypt the URL fragment
+				const { publicKey, privateKey } = generateFragmentKeyPair();
+				const uuid = await SecretsRepository.PostItem(sanitizedData, privateKey);
+				return this.#handlePostRequest({
+					id: uuid,
+					public_key: publicKey,
+				});
+			}
 
 			const uuid = await SecretsRepository.PostItem(sanitizedData);
 			return this.#handlePostRequest({
@@ -77,6 +89,14 @@ const PostSecretsService = class {
 
 		if (passwordIncluded && data.Item.password === "") {
 			return buildResponseBody(400, "The password field cannot be empty!");
+		}
+
+		if (passwordIncluded && !Object.keys(data.Item).includes("password_salt")) {
+			return buildResponseBody(400, "Missing password_salt field.");
+		}
+
+		if (Object.keys(data.Item).includes("password_salt") && !/^\$2[aby]\$10\$[./A-Za-z0-9]{22}$/.test(data.Item.password_salt || "")) {
+			return buildResponseBody(400, "The password_salt field must be a valid bcrypt salt.");
 		}
 
 		if (data.Item.second_half_key === "") {
@@ -143,7 +163,7 @@ const PostSecretsService = class {
 		return true;
 	}
 
-	static #handlePostRequest(body: { id: string }) {
+	static #handlePostRequest(body: { id: string; public_key?: string }) {
 		return buildResponseBody(200, JSON.stringify(body));
 	}
 };
