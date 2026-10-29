@@ -11,6 +11,15 @@ export default class BcryptJS {
         return hashedPassword;
     }
 
+    // Version 3: random salt, stored server-side and returned by the status endpoint
+    static async generateSalt(): Promise<string> {
+        return await bcrypt.genSalt(10);
+    }
+
+    static async encryptPasswordWithSalt(password: string, salt: string): Promise<string> {
+        return await bcrypt.hash(password, salt);
+    }
+
     private static generateSaltFromKey(key: string): string {
         // Hash the first_half_key using SHA-256
         const hash = CryptoJS.SHA256(key).toString(CryptoJS.enc.Base64); // Use Base64 encoding

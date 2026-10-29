@@ -17,6 +17,8 @@ type DynamoDBSecretsStructure = {
 	ttl: number;
 	password?: string;
 	public_key_uuid?: string;
+	password_salt?: string;
+	fragment_private_key?: string;
 	version: number;
 };
 
@@ -25,7 +27,7 @@ const SecretsRepository = class {
 	static dynamo = DynamoDBDocumentClient.from(this.client);
 
 	//This should be of the type that the data is structured in
-	static async PostItem(data: SecretsStructure) {
+	static async PostItem(data: SecretsStructure, fragmentPrivateKey?: string) {
 		const generatedUuid = randomUUID();
 		const time_to_live = generateTTL();
 
@@ -45,6 +47,21 @@ const SecretsRepository = class {
 			item = {
 				...item,
 				public_key_uuid: data.Item.public_key_uuid,
+			};
+		}
+
+		if (fragmentPrivateKey) {
+			item = {
+				...item,
+				fragment_private_key: fragmentPrivateKey,
+				version: 3,
+			};
+		}
+
+		if (data.Item.password_salt) {
+			item = {
+				...item,
+				password_salt: data.Item.password_salt,
 			};
 		}
 

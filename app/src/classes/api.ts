@@ -9,7 +9,7 @@ export class Api {
 		uuid = DOMPurify.sanitize(uuid);
 		password = DOMPurify.sanitize(password);
 
-		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string } };
+		type ReturnType = { data: { cyphertext: string; second_half_key: string; iv: string; fragment_private_key?: string } };
 		return new Promise(async (resolve: (value: ReturnType) => void, reject) => {
 			await axios
 				.post(`/api/getSHE/${uuid}`, { password: encodeURIComponent(password) }, {
@@ -26,14 +26,15 @@ export class Api {
 		});
 	};
 
-	public static PostSHESecret = async (valuesObject: { cyphertext: string; second_half_key: string; password?: string }) => {
+	public static PostSHESecret = async (valuesObject: { cyphertext: string; second_half_key: string; password?: string; password_salt?: string }) => {
 		valuesObject = {
 			cyphertext: DOMPurify.sanitize(valuesObject.cyphertext),
 			second_half_key: DOMPurify.sanitize(valuesObject.second_half_key),
-			password: encodeURIComponent(DOMPurify.sanitize(valuesObject.password || ""))
+			password: encodeURIComponent(DOMPurify.sanitize(valuesObject.password || "")),
+			password_salt: valuesObject.password_salt && DOMPurify.sanitize(valuesObject.password_salt),
 		}
 
-		return new Promise(async (resolve: (value: string) => void, reject) => {
+		return new Promise(async (resolve: (value: { id: string; public_key: string }) => void, reject) => {
 			await axios
 				.post(`/api/addSHE`, valuesObject, {
 					headers: {
@@ -41,7 +42,7 @@ export class Api {
 					},
 				})
 				.then((res) => {
-					resolve(res.data.id);
+					resolve({ id: res.data.id, public_key: res.data.public_key });
 				})
 				.catch((error) => {
 					reject(error.response.data);
@@ -98,7 +99,7 @@ export class Api {
 	public static GetStatus = async (uuid: string) => {
 		uuid = DOMPurify.sanitize(uuid);
 
-		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number }) => void, reject) => {
+		return new Promise(async (resolve: (value: { is_available: boolean; passwordProtected: boolean; version: number; password_salt?: string }) => void, reject) => {
 			await axios
 				.get(`/api/status/${uuid}`, {
 					headers: {

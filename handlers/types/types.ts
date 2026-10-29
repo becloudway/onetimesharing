@@ -8,6 +8,8 @@ export type SecretsStructure = {
 		ttl?: number;
 		public_key_uuid?: string;
 		password?: string;
+		password_salt?: string;
+		fragment_private_key?: string;
 		version?: number;
 	};
 };
